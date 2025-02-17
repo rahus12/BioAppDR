@@ -18,7 +18,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AppName"),
+        title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500),),
+        backgroundColor: Colors.purple[400],
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
