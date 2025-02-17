@@ -1,31 +1,4 @@
-/*
-Home page, where the user can select different quizes,
-for now lets just do one quiz, and when user clicks he can go to the quiz/mcq page
-
-Need to style the quiz buttons like the Figma design
- */
 import 'package:flutter/material.dart';
-import 'package:bioappdr/components/indexcard.dart';
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500),),
-        backgroundColor: Colors.purple[400],
-        foregroundColor: Colors.white,
-      ),
-      body: IndexCard(),
-    );
-  }
-}
 
 class IndexCard extends StatelessWidget {
   const IndexCard({
@@ -55,17 +28,17 @@ class IndexCard extends StatelessWidget {
                   Text(
                     "Heart Quiz",
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white
                     ),
                   ),
                   Text(
                     "13 Questions",
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF7C7C7C)
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF7C7C7C)
                     ),
                   ),
                   SizedBox(height: 20,),
@@ -81,21 +54,21 @@ class IndexCard extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFFD166),
-                          foregroundColor: Colors.black,
-                          fixedSize: Size(55, 30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6), // Set the radius here
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFFFFD166),
+                              foregroundColor: Colors.black,
+                              fixedSize: Size(55, 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6), // Set the radius here
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5)
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5)
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/question');
-                        },
-                        child: Text("Start", style: TextStyle(
-                          fontSize: 16,
-                        ),)),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/question');
+                          },
+                          child: Text("Start", style: TextStyle(
+                            fontSize: 16,
+                          ),)),
                     ],
                   ),
                 ],
