@@ -6,8 +6,8 @@ void main() {
   runApp(MaterialApp(
     initialRoute: '/',
     routes: {
-      '/': (context) => Home(),
-      '/question': (context) => Mcq()
+      '/': (context) => const Home(),
+      '/question': (context) => const Mcq()
     },
   ));
 }

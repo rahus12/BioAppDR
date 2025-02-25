@@ -6,7 +6,7 @@ class IndexCard extends StatelessWidget {
   String? questions;
   String? progress;
 
-  IndexCard({this.title, this.questions, this.progress});
+  IndexCard({super.key, this.title, this.questions, this.progress});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +14,9 @@ class IndexCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // black box container
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
         Container(
-          padding: EdgeInsets.fromLTRB(20 ,10, 20, 10),
+          padding: const EdgeInsets.fromLTRB(20 ,10, 20, 10),
           width: double.infinity,
           height: 116,
           decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class IndexCard extends StatelessWidget {
             children: [
               Text(
                 "$title",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Colors.white
@@ -36,19 +36,19 @@ class IndexCard extends StatelessWidget {
               ),
               Text(
                 "$questions Questions",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFF7C7C7C)
                 ),
               ),
-              SizedBox(height: 5,),
+              const SizedBox(height: 5,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Progress $progress%",
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFFFFD166)
@@ -56,18 +56,18 @@ class IndexCard extends StatelessWidget {
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFFD166),
+                          backgroundColor: const Color(0xFFFFD166),
                           foregroundColor: Colors.black,
-                          fixedSize: Size(55, 20),
+                          fixedSize: const Size(55, 20),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6), // Set the radius here
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5)
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5)
                       ),
                       onPressed: () {
                         Navigator.pushNamed(context, '/question');
                       },
-                      child: Text("Start", style: TextStyle(
+                      child: const Text("Start", style: TextStyle(
                         fontSize: 16,
                       ),)),
                 ],

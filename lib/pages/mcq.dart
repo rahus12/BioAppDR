@@ -19,9 +19,9 @@ class _McqState extends State<Mcq> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500)),
+        title: const Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500)),
       ),
-      body: Text("MCQ Page", style: TextStyle(fontSize: 30) ),
+      body: const Text("MCQ Page", style: TextStyle(fontSize: 30) ),
     );
   }
 }
