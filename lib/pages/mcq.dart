@@ -49,7 +49,24 @@ class _McqState extends State<Mcq> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Science Mcq")),
+      appBar: AppBar(
+        title: const Text(
+          "Science MCQ",
+          // style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFE6E1F5),
+                Color(0xFFF5F5F5),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Center(
         child: QuestionCard(
           imagePath: questions[currentIndex]["image"],
