@@ -5,8 +5,9 @@ class IndexCard extends StatelessWidget {
   String? title = "";
   String? questions;
   String? progress;
+  String onPress;
 
-  IndexCard({super.key, this.title, this.questions, this.progress});
+  IndexCard({super.key, this.title, this.questions, this.progress, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class IndexCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5)
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/question');
+                        Navigator.pushNamed(context, onPress);
                       },
                       child: const Text("Start", style: TextStyle(
                         fontSize: 16,
