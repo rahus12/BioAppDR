@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class Lesson extends StatefulWidget {
   const Lesson({super.key});
@@ -9,22 +10,38 @@ class Lesson extends StatefulWidget {
 
 class _LessonState extends State<Lesson> {
   int currentIndex = 0;
+  final FlutterTts flutterTts = FlutterTts();
 
   final List<Map<String, String>> lessons = [
     {
       "image": "assets/heart.jpg",
+      "image2": "assets/blood.jpg",
       "title": "Heart",
-      "description": "The heart pumps blood to all parts of the body."
+      "description": "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!"
     },
     {
       "image": "assets/lung.jpg",
+      "image2": "assets/oxygen.jpg",
       "title": "Lungs",
-      "description": "Lungs help us breathe by taking in oxygen and releasing carbon dioxide."
+      "description": "The lungs help us breathe by taking in oxygen and releasing carbon dioxide. They are spongy organs that work with the heart to send oxygen-rich blood throughout the body."
+    },
+    {
+      "image": "assets/brain.jpg",
+      "image2": "assets/nerves.jpg",
+      "title": "Brain",
+      "description": "The brain is the control center of the body, managing movement, thoughts, emotions, and memories. It has about 86 billion neurons that send and receive messages rapidly!"
+    },
+    {
+      "image": "assets/stomach.jpg",
+      "image2": "assets/digestion.jpg",
+      "title": "Stomach",
+      "description": "The stomach helps break down food using acids and enzymes, turning it into energy. It churns food before passing it to the intestines for further digestion."
     },
     {
       "image": "assets/bone.jpg",
+      "image2": "assets/skeleton.jpg",
       "title": "Bones",
-      "description": "Bones give structure to our body and protect our organs."
+      "description": "Bones provide structure to our body and protect vital organs. The human body has 206 bones, which also store minerals like calcium to keep them strong."
     },
   ];
 
@@ -34,33 +51,71 @@ class _LessonState extends State<Lesson> {
     });
   }
 
+  void speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lesson"),
+        title: Text(lessons[currentIndex]["title"]!),
         backgroundColor: Colors.purple,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Translation feature coming soon!")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            onPressed: () => speak(lessons[currentIndex]["description"]!),
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(lessons[currentIndex]["image"]!, height: 250),
-            const SizedBox(height: 20),
-            Text(
-              lessons[currentIndex]["title"]!,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
+            // First Image
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.only(top: 20),
+              child: Image.asset(lessons[currentIndex]["image"]!, height: 200),
+            ),
+
+            // Second Image
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Image.asset(lessons[currentIndex]["image2"]!, height: 200),
+            ),
+
+            // Title
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                lessons[currentIndex]["title"]!,
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            // Description
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Text(
                 lessons[currentIndex]["description"]!,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 18),
               ),
             ),
+
             const SizedBox(height: 30),
+
+            // Next Button
             ElevatedButton(
               onPressed: nextLesson,
               style: ElevatedButton.styleFrom(
@@ -70,6 +125,8 @@ class _LessonState extends State<Lesson> {
               ),
               child: const Text("Next"),
             ),
+
+            const SizedBox(height: 20), // Extra space at the bottom
           ],
         ),
       ),
