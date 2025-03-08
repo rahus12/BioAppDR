@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Update these imports to match your project structure:
 import 'package:bioappdr/components/indexcard.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 
@@ -21,8 +22,8 @@ class _HomeState extends State<Home> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topCenter, 
-              end: Alignment.bottomCenter, 
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: [
                 Color(0xFFE6E1F5),
                 Color(0xFFF5F5F5),
@@ -34,82 +35,78 @@ class _HomeState extends State<Home> {
       body: Container(
         color: const Color(0xFFF5F5F5),
         padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row for "Hi, Jane" and Profile Picture
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Text Column
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Hi, Jane",
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w600,
-                        // letterSpacing is 1% of 36 => 0.36, but you can adjust
-                        letterSpacing: 0.36,
-                      ),
-                    ),
-                    Text(
-                      "Learn. Play. Grow!",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF7C7C7C),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Profile Picture (tap to go to ProfilePage)
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfilePage(
-                          name: "Jane",
-                          surname: "Doe",
-                          phoneNumber: "123-456-7890",
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Greeting + Profile Picture
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Greeting Text
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Hi, Jane",
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.36,
                         ),
                       ),
-                    );
-                  },
-                  child: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/chunli.jpg'),
-                    radius: 40,
+                      Text(
+                        "Learn. Play. Grow!",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF7C7C7C),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 40),
-
-            // "Explore" text
-            const Text(
-              "Explore",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
+                  // Profile Picture (tap to go to ProfilePage)
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    child: const CircleAvatar(
+                      backgroundImage: AssetImage('assets/chunli.jpg'),
+                      radius: 40,
+                    ),
+                  ),
+                ],
               ),
-            ),
+              const SizedBox(height: 40),
 
-            // Quiz index cards
-            IndexCard(
-              title: "Heart Quiz",
-              questions: "13",
-              progress: "17",
-              onPress: "/question",
-            ),
-            IndexCard(
-              title: "Learn lessons? (change the name)",
-              questions: "23",
-              progress: "0",
-              onPress: "/lesson",
-            ),
-          ],
+              // "Explore"
+              const Text(
+                "Explore",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Heart Quiz -> navigates to Drag & Drop Quiz
+              IndexCard(
+                title: "Heart Quiz",
+                questions: "13",
+                progress: "17",
+                onPress: "/dragdropquiz", // <-- Route for your drag-drop page
+              ),
+
+              // Another card
+              IndexCard(
+                title: "Learn lessons? (change the name)",
+                questions: "23",
+                progress: "0",
+                onPress: "/lesson", // or another route
+              ),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
