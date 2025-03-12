@@ -6,6 +6,12 @@ Need to style the quiz buttons like the Figma design
  */
 import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:bioappdr/components/lesson_card.dart';
+import 'package:bioappdr/pages/profile_page.dart';
+
+>>>>>>> Stashed changes
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -52,7 +58,18 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.w600,
+<<<<<<< Updated upstream
                         letterSpacing: 36 * 0.01,
+=======
+                        letterSpacing: 0.36,
+                      ),
+                    ),
+                    Text(
+                      "Learn. Play. Grow!",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF7C7C7C),
+>>>>>>> Stashed changes
                       ),
                     ),
                     Text("Learn. Play. Grow!", style: TextStyle(
@@ -62,6 +79,7 @@ class _HomeState extends State<Home> {
                     ),)
                   ],
                 ),
+<<<<<<< Updated upstream
                 CircleAvatar(
                   backgroundImage: AssetImage('assets/chunli.jpg'),
                   radius: 40,
@@ -74,17 +92,64 @@ class _HomeState extends State<Home> {
               fontWeight: FontWeight.w500
               )),
             //The Quiz index cards
+=======
+                // Profile Picture (tap to go to ProfilePage)
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfilePage(
+                          name: "Jane",
+                          surname: "Doe",
+                          phoneNumber: "123-456-7890",
+                        ),
+                      ),
+                    );
+                  },
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/chunli.jpg'),
+                    radius: 40,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
+            // "Explore" text
+            const Text(
+              "Explore",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            // Quiz card
+>>>>>>> Stashed changes
             IndexCard(
               title: "Heart Quiz",
               questions: "13",
               progress: "17",
             ),
+<<<<<<< Updated upstream
             IndexCard(
               title: "Lorem Ipsum",
               questions: "23",
               progress: "0",
             ),
 
+=======
+            // Lesson card
+            LessonCard(
+              title: "Important parts of the Human Body",
+              slides: "6", // Example: 6 slides
+              onPress: "/lesson",
+            ),
+            LessonCard(
+              title: "Important parts of the Face",
+              slides: "6", // Example: 6 slides
+              onPress: "/faceLesson",
+            ),
+>>>>>>> Stashed changes
           ],
         ),
       ),
