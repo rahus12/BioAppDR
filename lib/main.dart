@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 =======
 import 'package:bioappdr/pages/profile_page.dart';
 import 'package:bioappdr/pages/face_lesson.dart';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 void main() {
@@ -19,6 +22,9 @@ void main() {
       '/question': (context) => Mcq(),
       '/lesson': (context) => Lesson(),
       '/faceLesson': (context) => const FaceLesson(),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     },
   ));

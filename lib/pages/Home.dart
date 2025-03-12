@@ -6,9 +6,6 @@ Need to style the quiz buttons like the Figma design
  */
 import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
-<<<<<<< Updated upstream
-=======
-import 'package:bioappdr/components/lesson_card.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 
 >>>>>>> Stashed changes
@@ -58,9 +55,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.w600,
-<<<<<<< Updated upstream
-                        letterSpacing: 36 * 0.01,
-=======
+                        // letterSpacing is 1% of 36 => 0.36, but you can adjust
                         letterSpacing: 0.36,
                       ),
                     ),
@@ -79,20 +74,7 @@ class _HomeState extends State<Home> {
                     ),)
                   ],
                 ),
-<<<<<<< Updated upstream
-                CircleAvatar(
-                  backgroundImage: AssetImage('assets/chunli.jpg'),
-                  radius: 40,
-                )
-              ],
-            ),
-            SizedBox(height: 40,),
-            Text("Explore", style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500
-              )),
-            //The Quiz index cards
-=======
+
                 // Profile Picture (tap to go to ProfilePage)
                 InkWell(
                   onTap: () {
@@ -123,33 +105,19 @@ class _HomeState extends State<Home> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            // Quiz card
->>>>>>> Stashed changes
+
+            // Quiz index cards
             IndexCard(
               title: "Heart Quiz",
               questions: "13",
               progress: "17",
             ),
-<<<<<<< Updated upstream
             IndexCard(
-              title: "Lorem Ipsum",
+              title: "Learn lessons? (change the name)",
               questions: "23",
               progress: "0",
-            ),
-
-=======
-            // Lesson card
-            LessonCard(
-              title: "Important parts of the Human Body",
-              slides: "6", // Example: 6 slides
               onPress: "/lesson",
             ),
-            LessonCard(
-              title: "Important parts of the Face",
-              slides: "6", // Example: 6 slides
-              onPress: "/faceLesson",
-            ),
->>>>>>> Stashed changes
           ],
         ),
       ),

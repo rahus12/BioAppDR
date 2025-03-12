@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 class Mcq extends StatefulWidget {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const Mcq({super.key});
+=======
+  const Mcq({Key? key}) : super(key: key);
+>>>>>>> Stashed changes
 =======
   const Mcq({Key? key}) : super(key: key);
 >>>>>>> Stashed changes
@@ -95,8 +99,11 @@ class _McqState extends State<Mcq> {
     return Scaffold(
       appBar: AppBar(
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500)),
 =======
+=======
+>>>>>>> Stashed changes
         title: const Text("Science MCQ"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
