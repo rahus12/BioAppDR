@@ -1,14 +1,8 @@
-/*
-Home page, where the user can select different quizes,
-for now lets just do one quiz, and when user clicks he can go to the quiz/mcq page
-
-Need to style the quiz buttons like the Figma design
- */
 import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
+import 'package:bioappdr/components/lesson_card.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 
->>>>>>> Stashed changes
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -21,41 +15,42 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500),),
-        // backgroundColor: Colors.purple[400],
-        // foregroundColor: Colors.white,
+        title: const Text(
+          "BioApp",
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-              begin: Alignment.topCenter, // Start direction
-              end: Alignment.bottomCenter, // End direction
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter, 
+              end: Alignment.bottomCenter, 
               colors: [
-              Color(0xFFE6E1F5), // Start Color
-              Color(0xFFF5F5F5),// End Color
-              ], // Customize your colors here
-              ),
+                Color(0xFFE6E1F5),
+                Color(0xFFF5F5F5),
+              ],
             ),
+          ),
         ),
       ),
       body: Container(
-        color: Color(0xFFF5F5F5),
-        padding: EdgeInsets.fromLTRB(40, 20, 40, 0),
-        // avatar and title
+        color: const Color(0xFFF5F5F5),
+        padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Row for "Hi, Jane" and Profile Picture
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Text Column
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       "Hi, Jane",
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.w600,
-                        // letterSpacing is 1% of 36 => 0.36, but you can adjust
                         letterSpacing: 0.36,
                       ),
                     ),
@@ -64,14 +59,8 @@ class _HomeState extends State<Home> {
                       style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF7C7C7C),
->>>>>>> Stashed changes
                       ),
                     ),
-                    Text("Learn. Play. Grow!", style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF7C7C7C),
-
-                    ),)
                   ],
                 ),
 
@@ -97,6 +86,7 @@ class _HomeState extends State<Home> {
               ],
             ),
             const SizedBox(height: 40),
+
             // "Explore" text
             const Text(
               "Explore",
@@ -106,41 +96,42 @@ class _HomeState extends State<Home> {
               ),
             ),
 
-            // Quiz index cards
+            // Quiz card
             IndexCard(
               title: "Heart Quiz",
               questions: "13",
               progress: "17",
+              onPress: "/question", // Named route for MCQ page
             ),
-            IndexCard(
-              title: "Learn lessons? (change the name)",
-              questions: "23",
-              progress: "0",
-              onPress: "/lesson",
+
+            // Lesson card
+            LessonCard(
+              title: "Important parts of the Human Body",
+              slides: "6", // Example: 6 slides
+              onPress: "/lesson", // Named route for Lesson page
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-      backgroundColor: Colors.black, // Background color
-      selectedItemColor: Colors.white, // Active item color
-      unselectedItemColor: Colors.white, // Inactive item color
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-    ),
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
-

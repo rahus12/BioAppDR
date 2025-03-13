@@ -12,45 +12,44 @@ class _FaceLessonState extends State<FaceLesson> {
   int currentIndex = 0;
   final FlutterTts flutterTts = FlutterTts();
 
-  // A list of face-related parts
   final List<Map<String, String>> faceLessons = [
     {
-      "image": "assets/eyes.jpeg",
+      "image": "assets/eyes.jpg",
       "title": "Eyes",
       "function": "Allow vision, interpret light and color, provide sense of sight.",
       "location": "Front of the face, within the eye sockets.",
       "importance": "Essential for visual perception; many daily tasks rely on sight."
     },
     {
-      "image": "assets/ears.jpeg",
+      "image": "assets/ears.jpg",
       "title": "Ears",
       "function": "Capture sound waves, enabling hearing and balance.",
       "location": "On either side of the head.",
       "importance": "Vital for communication and spatial awareness; helps maintain balance."
     },
     {
-      "image": "assets/nose.jpeg",
+      "image": "assets/nose.jpg",
       "title": "Nose",
       "function": "Filters, warms, and moistens air; provides sense of smell.",
       "location": "Center of the face, above the mouth.",
       "importance": "Crucial for breathing, smell, and flavor perception."
     },
     {
-      "image": "assets/mouth.jpeg",
+      "image": "assets/mouth.jpg",
       "title": "Mouth",
       "function": "Ingests food, initiates digestion, enables speech.",
       "location": "Lower center of the face.",
       "importance": "Key for eating, communication, and facial expressions."
     },
     {
-      "image": "assets/teeth.jpeg",
+      "image": "assets/teeth.jpg",
       "title": "Teeth",
       "function": "Chew food into smaller pieces for easier digestion.",
       "location": "Inside the mouth, anchored in the gums.",
       "importance": "Essential for proper nutrition and clear speech; also a key aspect of facial aesthetics."
     },
     {
-      "image": "assets/tongue.jpeg",
+      "image": "assets/tongue.jpg",
       "title": "Tongue",
       "function": "Facilitates taste, aids in chewing, swallowing, and speech.",
       "location": "Inside the mouth, floor of the oral cavity.",
@@ -74,7 +73,6 @@ class _FaceLessonState extends State<FaceLesson> {
   Widget build(BuildContext context) {
     final lesson = faceLessons[currentIndex];
 
-    // Prepare text to be spoken:
     String speakText = "";
     if (lesson.containsKey("function")) {
       speakText = "Function: ${lesson["function"]}\n"
@@ -125,42 +123,39 @@ class _FaceLessonState extends State<FaceLesson> {
             ),
             const SizedBox(height: 20),
 
-            // If function, location, importance exist, show them in colorful containers
             if (lesson.containsKey("function")) ...[
               _buildColorfulBlock(
                 icon: Icons.build,
                 label: "Function",
                 text: lesson["function"]!,
-                backgroundColor: Colors.blue[100]!,
-                iconColor: Colors.blue,
+                backgroundColor: Colors.blueAccent.withOpacity(0.1),
+                iconColor: Colors.blueAccent,
               ),
               _buildColorfulBlock(
                 icon: Icons.location_on,
                 label: "Location",
                 text: lesson["location"]!,
-                backgroundColor: Colors.green[100]!,
+                backgroundColor: Colors.greenAccent.withOpacity(0.1),
                 iconColor: Colors.green,
               ),
               _buildColorfulBlock(
                 icon: Icons.warning,
                 label: "Importance",
                 text: lesson["importance"]!,
-                backgroundColor: Colors.yellow[100]!,
+                backgroundColor: Colors.yellowAccent.withOpacity(0.1),
                 iconColor: Colors.orange,
               ),
             ] else if (lesson.containsKey("description")) ...[
-              // Otherwise, show the description in a single container
               _buildColorfulBlock(
                 icon: Icons.info,
                 label: "Description",
                 text: lesson["description"]!,
-                backgroundColor: Colors.teal[100]!,
+                backgroundColor: Colors.tealAccent.withOpacity(0.1),
                 iconColor: Colors.teal,
               ),
             ],
 
             const SizedBox(height: 30),
-            // Next Button
             ElevatedButton(
               onPressed: nextLesson,
               style: ElevatedButton.styleFrom(
@@ -180,7 +175,6 @@ class _FaceLessonState extends State<FaceLesson> {
     );
   }
 
-  /// A helper method to build a colorful block of text
   Widget _buildColorfulBlock({
     required IconData icon,
     required String label,

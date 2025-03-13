@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Mcq extends StatefulWidget {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  const Mcq({super.key});
-=======
   const Mcq({Key? key}) : super(key: key);
->>>>>>> Stashed changes
-=======
-  const Mcq({Key? key}) : super(key: key);
->>>>>>> Stashed changes
 
   @override
-  State<Mcq> createState() => _McqState();
+  _McqState createState() => _McqState();
 }
 
 class _McqState extends State<Mcq> {
-<<<<<<< Updated upstream
-=======
   int currentIndex = 0;
 
   // Track the user's selection
@@ -91,19 +81,12 @@ class _McqState extends State<Mcq> {
     }
   }
 
->>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     final questionData = questions[currentIndex];
 
     return Scaffold(
       appBar: AppBar(
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        title: Text("BioApp", style: TextStyle(fontWeight: FontWeight.w500)),
-=======
-=======
->>>>>>> Stashed changes
         title: const Text("Science MCQ"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -255,9 +238,7 @@ class QuestionCard extends StatelessWidget {
             ),
           ),
         ],
->>>>>>> Stashed changes
       ),
-      body: Text("MCQ Page", style: TextStyle(fontSize: 30) ),
     );
   }
 }

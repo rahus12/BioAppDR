@@ -22,14 +22,17 @@ class _LessonState extends State<Lesson> {
     {
       "image": "assets/heart.jpg",
       "title": "Heart",
-      "function": "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
+      "function":
+          "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
       "location": "Center of the chest.",
-      "importance": "Essential for circulation; without it, life cannot be sustained"
+      "importance":
+          "Essential for circulation; without it, life cannot be sustained"
     },
     {
       "image": "assets/lung.jpg",
       "title": "Lungs",
-      "function": "Facilitate the exchange of oxygen and carbon dioxide between the air and blood.",
+      "function":
+          "Facilitate the exchange of oxygen and carbon dioxide between the air and blood.",
       "location": "On either side of the chest.",
       "importance": "Vital for breathing and oxygen supply to tissues"
     },
@@ -38,35 +41,42 @@ class _LessonState extends State<Lesson> {
       "title": "Brain",
       "function": "Controls all bodily functions, thoughts, emotions, and memory.",
       "location": "Inside the skull",
-      "importance": "Acts as the control center of the body; damage can severely impair or end life"
+      "importance":
+          "Acts as the control center of the body; damage can severely impair or end life"
     },
     {
       "image": "assets/stomach.jpeg",
       "title": "Stomach",
       "function": "Food storage, mixing, and initial digestion",
       "location": "Center of the body.",
-      "importance": "Essential for digestion; without it, life cannot be sustained"
+      "importance":
+          "Essential for digestion; without it, life cannot be sustained"
     },
     {
       "image": "assets/liver.jpeg",
       "title": "Liver",
-      "function": "Filters toxins from blood, produces bile for digestion, regulates blood sugar, and synthesizes proteins.",
+      "function":
+          "Filters toxins from blood, produces bile for digestion, regulates blood sugar, and synthesizes proteins.",
       "location": "Upper right abdomen.",
-      "importance": "Performs over 500 essential functions; damage can lead to severe health issues"
+      "importance":
+          "Performs over 500 essential functions; damage can lead to severe health issues"
     },
     {
       "image": "assets/kidney.jpeg",
       "title": "Kidneys",
-      "function": "Filter blood to remove waste and excess fluids, producing urine.",
+      "function":
+          "Filter blood to remove waste and excess fluids, producing urine.",
       "location": "Center of the chest.",
-      "importance": "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis"
+      "importance":
+          "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis"
     },
     {
       "image": "assets/bone.jpg",
       "title": "Bones",
       "function": "Provide structure, support, and protection for the body",
       "location": "Everywhere",
-      "importance": "Essential for support; without it, life cannot be sustained"
+      "importance":
+          "Essential for support; without it, life cannot be sustained"
     },
   ];
 
@@ -86,7 +96,6 @@ class _LessonState extends State<Lesson> {
   Widget build(BuildContext context) {
     final lesson = lessons[currentIndex];
 
-    // Prepare text to be spoken:
     String speakText;
     if (lesson.containsKey("function")) {
       speakText = "Function: ${lesson["function"]}\n"
@@ -117,98 +126,104 @@ class _LessonState extends State<Lesson> {
           ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Image
-              Image.asset(
-                lesson["image"]!,
-                height: 200,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          children: [
+            // Image
+            Image.asset(
+              lesson["image"]!,
+              height: 200,
+            ),
+            const SizedBox(height: 20),
+            // Title
+            Text(
+              lesson["title"]!,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 20),
+            ),
+            const SizedBox(height: 20),
 
-              // Title
-              Text(
-                lesson["title"]!,
-                style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
+            // Show function, location, importance in blocks, or a single description
+            if (lesson.containsKey("function")) ...[
+              _buildColorfulBlock(
+                icon: Icons.build,
+                label: "Function",
+                text: lesson["function"]!,
+                backgroundColor: Colors.blueAccent.withOpacity(0.1),
+                iconColor: Colors.blueAccent,
               ),
-              const SizedBox(height: 20),
-
-              // If function, location, importance are present, show them in separate color blocks
-              // Otherwise, show the description in a single block
-              if (lesson.containsKey("function")) ...[
-                _buildColorBlock(
-                  label: "Function",
-                  content: lesson["function"]!,
-                  color: Colors.blue[50]!,
-                ),
-                _buildColorBlock(
-                  label: "Location",
-                  content: lesson["location"]!,
-                  color: Colors.green[50]!,
-                ),
-                _buildColorBlock(
-                  label: "Importance",
-                  content: lesson["importance"]!,
-                  color: Colors.orange[50]!,
-                ),
-              ] else ...[
-                _buildColorBlock(
-                  label: "Description",
-                  content: lesson["description"]!,
-                  color: Colors.blueGrey[50]!,
-                ),
-              ],
-
-              const SizedBox(height: 30),
-
-              // Next Button
-              ElevatedButton(
-                onPressed: nextLesson,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 15,
-                  ),
-                ),
-                child: const Text("Next"),
+              _buildColorfulBlock(
+                icon: Icons.location_on,
+                label: "Location",
+                text: lesson["location"]!,
+                backgroundColor: Colors.greenAccent.withOpacity(0.1),
+                iconColor: Colors.green,
               ),
-              const SizedBox(height: 20),
+              _buildColorfulBlock(
+                icon: Icons.warning,
+                label: "Importance",
+                text: lesson["importance"]!,
+                backgroundColor: Colors.yellowAccent.withOpacity(0.1),
+                iconColor: Colors.orange,
+              ),
+            ] else ...[
+              _buildColorfulBlock(
+                icon: Icons.info,
+                label: "Description",
+                text: lesson["description"]!,
+                backgroundColor: Colors.tealAccent.withOpacity(0.1),
+                iconColor: Colors.teal,
+              ),
             ],
-          ),
+
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: nextLesson,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 15,
+                ),
+              ),
+              child: const Text("Next"),
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );
   }
 
-  // A helper widget that displays a label and content in a colorful block
-  Widget _buildColorBlock({
+  Widget _buildColorfulBlock({
+    required IconData icon,
     required String label,
-    required String content,
-    required Color color,
+    required String text,
+    required Color backgroundColor,
+    required Color iconColor,
   }) {
     return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: color,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        "$label: $content",
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          fontSize: 18,
-        ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              "$label: $text",
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -23,7 +23,7 @@ class LessonCard extends StatelessWidget {
           width: double.infinity,
           height: 116,
           decoration: BoxDecoration(
-            color: Colors.blue, // <-- Blue background
+            color: Colors.blue, // Blue background
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
@@ -44,7 +44,7 @@ class LessonCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 3, 3, 3),
+                  color: Color(0xFF7C7C7C),
                 ),
               ),
               const SizedBox(height: 5),
