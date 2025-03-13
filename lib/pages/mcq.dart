@@ -16,19 +16,19 @@ class _McqState extends State<Mcq> {
 
   final List<Map<String, dynamic>> questions = [
     {
-      "image": "assets/heart.jpg",
+      "image": "assets/heart.jpeg",
       "question": "What does the heart do?",
       "options": ["Pumps blood", "Helps breathe", "Digests food", "Sees light"],
       "correctOption": "Pumps blood",
     },
     {
-      "image": "assets/lung.jpg",
+      "image": "assets/lungs.jpeg",
       "question": "Which organ helps us breathe?",
       "options": ["Heart", "Lungs", "Liver", "Stomach"],
       "correctOption": "Lungs",
     },
     {
-      "image": "assets/bone.jpg",
+      "image": "assets/bone.jpeg",
       "question": "What gives our body structure?",
       "options": ["Bones", "Skin", "Lungs", "Eyes"],
       "correctOption": "Bones",
@@ -101,14 +101,17 @@ class _McqState extends State<Mcq> {
           ),
         ),
       ),
-      body: Center(
-        child: QuestionCard(
-          imagePath: questionData["image"],
-          question: questionData["question"],
-          options: List<String>.from(questionData["options"]),
-          onOptionSelected: checkAnswer,
-          selectedOption: _selectedOption,
-          isCorrect: _isCorrect,
+      // Wrap body in a SingleChildScrollView
+      body: SingleChildScrollView(
+        child: Center(
+          child: QuestionCard(
+            imagePath: questionData["image"],
+            question: questionData["question"],
+            options: List<String>.from(questionData["options"]),
+            onOptionSelected: checkAnswer,
+            selectedOption: _selectedOption,
+            isCorrect: _isCorrect,
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -140,8 +143,7 @@ class QuestionCard extends StatelessWidget {
   final List<String> options;
   final Function(String) onOptionSelected;
 
-  /// These two fields tell us which button (if any) is currently selected,
-  /// and whether it's correct or not.
+  /// Tracks which button is currently selected, and whether it's correct.
   final String? selectedOption;
   final bool? isCorrect;
 
@@ -152,8 +154,8 @@ class QuestionCard extends StatelessWidget {
     required this.onOptionSelected,
     required this.selectedOption,
     required this.isCorrect,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +164,7 @@ class QuestionCard extends StatelessWidget {
       color: const Color(0xFFF5F5F5),
       child: Column(
         children: [
+          // Top image
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 100),
             child: Image.asset(imagePath, height: 250),
@@ -176,6 +179,7 @@ class QuestionCard extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(10, 40, 10, 20),
                 child: Column(
                   children: [
+                    // Question text
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -188,21 +192,19 @@ class QuestionCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Render all options
+                    // Option buttons
                     Column(
                       children: options.map((option) {
                         // Decide button color based on selection
-                        Color buttonColor = Colors.white; // default
+                        Color buttonColor = Colors.white;
                         Color textColor = Colors.black;
 
                         if (selectedOption == option) {
                           // The user has selected this option
                           if (isCorrect == true) {
-                            // Correct => highlight green
                             buttonColor = Colors.green;
                             textColor = Colors.white;
                           } else if (isCorrect == false) {
-                            // Wrong => highlight red
                             buttonColor = Colors.red;
                             textColor = Colors.white;
                           }

@@ -12,71 +12,121 @@ class _LessonState extends State<Lesson> {
   int currentIndex = 0;
   final FlutterTts flutterTts = FlutterTts();
 
+  // Toggle: false = English, true = Spanish
+  bool _isSpanish = false;
+
   final List<Map<String, String>> lessons = [
     {
       "image": "assets/body.jpg",
-      "title": "Human Body",
-      "description":
-          "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!"
+      "title_en": "Human Body",
+      "title_es": "Cuerpo Humano",
+      "description_en":
+          "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!",
+      "description_es":
+          "El corazón es un órgano poderoso que bombea sangre a todo el cuerpo, suministrando oxígeno y nutrientes a las células. ¡Late alrededor de 100,000 veces al día y es del tamaño de tu puño!"
     },
     {
-      "image": "assets/heart.jpg",
-      "title": "Heart",
-      "function":
+      "image": "assets/heart.jpeg",
+      "title_en": "Heart",
+      "title_es": "Corazón",
+      "function_en":
           "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
-      "location": "Center of the chest.",
-      "importance":
-          "Essential for circulation; without it, life cannot be sustained"
+      "function_es":
+          "Bombea sangre, entregando oxígeno y nutrientes al cuerpo mientras elimina desechos.",
+      "location_en": "Center of the chest.",
+      "location_es": "Centro del pecho.",
+      "importance_en":
+          "Essential for circulation; without it, life cannot be sustained",
+      "importance_es":
+          "Esencial para la circulación; sin él, la vida no puede sostenerse"
     },
     {
-      "image": "assets/lung.jpg",
-      "title": "Lungs",
-      "function":
+      "image": "assets/lungs.jpeg",
+      "title_en": "Lungs",
+      "title_es": "Pulmones",
+      "function_en":
           "Facilitate the exchange of oxygen and carbon dioxide between the air and blood.",
-      "location": "On either side of the chest.",
-      "importance": "Vital for breathing and oxygen supply to tissues"
+      "function_es":
+          "Facilitan el intercambio de oxígeno y dióxido de carbono entre el aire y la sangre.",
+      "location_en": "On either side of the chest.",
+      "location_es": "A cada lado del pecho.",
+      "importance_en": "Vital for breathing and oxygen supply to tissues",
+      "importance_es":
+          "Vitales para la respiración y el suministro de oxígeno a los tejidos"
     },
     {
       "image": "assets/brain.jpg",
-      "title": "Brain",
-      "function": "Controls all bodily functions, thoughts, emotions, and memory.",
-      "location": "Inside the skull",
-      "importance":
-          "Acts as the control center of the body; damage can severely impair or end life"
+      "title_en": "Brain",
+      "title_es": "Cerebro",
+      "function_en":
+          "Controls all bodily functions, thoughts, emotions, and memory.",
+      "function_es":
+          "Controla todas las funciones corporales, pensamientos, emociones y memoria.",
+      "location_en": "Inside the skull",
+      "location_es": "Dentro del cráneo.",
+      "importance_en":
+          "Acts as the control center of the body; damage can severely impair or end life",
+      "importance_es":
+          "Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida"
     },
     {
       "image": "assets/stomach.jpeg",
-      "title": "Stomach",
-      "function": "Food storage, mixing, and initial digestion",
-      "location": "Center of the body.",
-      "importance":
-          "Essential for digestion; without it, life cannot be sustained"
+      "title_en": "Stomach",
+      "title_es": "Estómago",
+      "function_en": "Food storage, mixing, and initial digestion",
+      "function_es":
+          "Almacena, mezcla e inicia la digestión de los alimentos.",
+      "location_en": "Center of the body.",
+      "location_es": "Centro del cuerpo.",
+      "importance_en":
+          "Essential for digestion; without it, life cannot be sustained",
+      "importance_es":
+          "Esencial para la digestión; sin él, la vida no puede sostenerse"
     },
     {
       "image": "assets/liver.jpeg",
-      "title": "Liver",
-      "function":
+      "title_en": "Liver",
+      "title_es": "Hígado",
+      "function_en":
           "Filters toxins from blood, produces bile for digestion, regulates blood sugar, and synthesizes proteins.",
-      "location": "Upper right abdomen.",
-      "importance":
-          "Performs over 500 essential functions; damage can lead to severe health issues"
+      "function_es":
+          "Filtra toxinas de la sangre, produce bilis para la digestión, regula el azúcar en la sangre y sintetiza proteínas.",
+      "location_en": "Upper right abdomen.",
+      "location_es": "Parte superior derecha del abdomen.",
+      "importance_en":
+          "Performs over 500 essential functions; damage can lead to severe health issues",
+      "importance_es":
+          "Realiza más de 500 funciones esenciales; su daño puede causar graves problemas de salud"
     },
     {
       "image": "assets/kidney.jpeg",
-      "title": "Kidneys",
-      "function":
+      "title_en": "Kidneys",
+      "title_es": "Riñones",
+      "function_en":
           "Filter blood to remove waste and excess fluids, producing urine.",
-      "location": "Center of the chest.",
-      "importance":
-          "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis"
+      "function_es":
+          "Filtran la sangre para eliminar desechos y exceso de fluidos, produciendo orina.",
+      "location_en": "Center of the chest.",
+      "location_es": "Centro del pecho.",
+      "importance_en":
+          "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis",
+      "importance_es":
+          "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis"
     },
     {
-      "image": "assets/bone.jpg",
-      "title": "Bones",
-      "function": "Provide structure, support, and protection for the body",
-      "location": "Everywhere",
-      "importance":
-          "Essential for support; without it, life cannot be sustained"
+      "image": "assets/bone.jpeg",
+      "title_en": "Bones",
+      "title_es": "Huesos",
+      "function_en":
+          "Provide structure, support, and protection for the body",
+      "function_es":
+          "Brindan estructura, soporte y protección para el cuerpo.",
+      "location_en": "Everywhere",
+      "location_es": "En todas partes.",
+      "importance_en":
+          "Essential for support; without it, life cannot be sustained",
+      "importance_es":
+          "Esenciales para el soporte; sin ellos, la vida no puede sostenerse"
     },
   ];
 
@@ -86,8 +136,15 @@ class _LessonState extends State<Lesson> {
     });
   }
 
+  void _toggleLanguage() {
+    setState(() {
+      _isSpanish = !_isSpanish;
+    });
+  }
+
   void speak(String text) async {
-    await flutterTts.setLanguage("en-US");
+    // Use Spanish or English TTS
+    await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
@@ -96,29 +153,46 @@ class _LessonState extends State<Lesson> {
   Widget build(BuildContext context) {
     final lesson = lessons[currentIndex];
 
+    // Decide which title to display
+    final String title = _isSpanish
+        ? (lesson["title_es"] ?? lesson["title_en"] ?? "")
+        : (lesson["title_en"] ?? "");
+
+    // Check if we have function-based fields
+    final bool hasFunctionBlock = lesson.containsKey("function_en") ||
+        lesson.containsKey("function_es");
+
+    // Prepare text for TTS
     String speakText;
-    if (lesson.containsKey("function")) {
-      speakText = "Function: ${lesson["function"]}\n"
-          "Location: ${lesson["location"]}\n"
-          "Importance: ${lesson["importance"]}";
+    if (hasFunctionBlock) {
+      // Safely retrieve each field, fallback to "" if missing
+      final String func = _isSpanish
+          ? (lesson["function_es"] ?? lesson["function_en"] ?? "")
+          : (lesson["function_en"] ?? "");
+      final String loc = _isSpanish
+          ? (lesson["location_es"] ?? lesson["location_en"] ?? "")
+          : (lesson["location_en"] ?? "");
+      final String imp = _isSpanish
+          ? (lesson["importance_es"] ?? lesson["importance_en"] ?? "")
+          : (lesson["importance_en"] ?? "");
+      speakText = "Function: $func\nLocation: $loc\nImportance: $imp";
     } else {
-      speakText = lesson["description"]!;
+      // Single description-based item
+      final String desc = _isSpanish
+          ? (lesson["description_es"] ?? lesson["description_en"] ?? "")
+          : (lesson["description_en"] ?? "");
+      speakText = desc;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(lesson["title"]!),
+        title: Text(title),
         backgroundColor: Colors.purple,
         actions: [
+          // Language toggle icon
           IconButton(
-            icon: const Icon(Icons.translate),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Translation feature coming soon!"),
-                ),
-              );
-            },
+            icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
+            onPressed: _toggleLanguage,
           ),
           IconButton(
             icon: const Icon(Icons.volume_up),
@@ -132,13 +206,14 @@ class _LessonState extends State<Lesson> {
           children: [
             // Image
             Image.asset(
-              lesson["image"]!,
+              lesson["image"] ?? "",
               height: 200,
             ),
             const SizedBox(height: 20),
+
             // Title
             Text(
-              lesson["title"]!,
+              title,
               style: const TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -146,40 +221,48 @@ class _LessonState extends State<Lesson> {
             ),
             const SizedBox(height: 20),
 
-            // Show function, location, importance in blocks, or a single description
-            if (lesson.containsKey("function")) ...[
+            if (hasFunctionBlock) ...[
               _buildColorfulBlock(
                 icon: Icons.build,
-                label: "Function",
-                text: lesson["function"]!,
+                label: _isSpanish ? "Función" : "Function",
+                text: _isSpanish
+                    ? (lesson["function_es"] ?? lesson["function_en"] ?? "")
+                    : (lesson["function_en"] ?? ""),
                 backgroundColor: Colors.blueAccent.withOpacity(0.1),
                 iconColor: Colors.blueAccent,
               ),
               _buildColorfulBlock(
                 icon: Icons.location_on,
-                label: "Location",
-                text: lesson["location"]!,
+                label: _isSpanish ? "Ubicación" : "Location",
+                text: _isSpanish
+                    ? (lesson["location_es"] ?? lesson["location_en"] ?? "")
+                    : (lesson["location_en"] ?? ""),
                 backgroundColor: Colors.greenAccent.withOpacity(0.1),
                 iconColor: Colors.green,
               ),
               _buildColorfulBlock(
                 icon: Icons.warning,
-                label: "Importance",
-                text: lesson["importance"]!,
+                label: _isSpanish ? "Importancia" : "Importance",
+                text: _isSpanish
+                    ? (lesson["importance_es"] ?? lesson["importance_en"] ?? "")
+                    : (lesson["importance_en"] ?? ""),
                 backgroundColor: Colors.yellowAccent.withOpacity(0.1),
                 iconColor: Colors.orange,
               ),
             ] else ...[
               _buildColorfulBlock(
                 icon: Icons.info,
-                label: "Description",
-                text: lesson["description"]!,
+                label: _isSpanish ? "Descripción" : "Description",
+                text: _isSpanish
+                    ? (lesson["description_es"] ?? lesson["description_en"] ?? "")
+                    : (lesson["description_en"] ?? ""),
                 backgroundColor: Colors.tealAccent.withOpacity(0.1),
                 iconColor: Colors.teal,
               ),
             ],
-
             const SizedBox(height: 30),
+
+            // Next Button
             ElevatedButton(
               onPressed: nextLesson,
               style: ElevatedButton.styleFrom(
@@ -190,7 +273,7 @@ class _LessonState extends State<Lesson> {
                   vertical: 15,
                 ),
               ),
-              child: const Text("Next"),
+              child: Text(_isSpanish ? "Siguiente" : "Next"),
             ),
             const SizedBox(height: 20),
           ],

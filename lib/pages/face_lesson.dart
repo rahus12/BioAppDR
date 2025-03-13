@@ -12,48 +12,82 @@ class _FaceLessonState extends State<FaceLesson> {
   int currentIndex = 0;
   final FlutterTts flutterTts = FlutterTts();
 
+  // Track whether we're showing Spanish or English
+  bool _isSpanish = false;
+
+  // Updated list with both English (en) and Spanish (es) fields
   final List<Map<String, String>> faceLessons = [
     {
-      "image": "assets/eyes.jpg",
-      "title": "Eyes",
-      "function": "Allow vision, interpret light and color, provide sense of sight.",
-      "location": "Front of the face, within the eye sockets.",
-      "importance": "Essential for visual perception; many daily tasks rely on sight."
+      // EYES
+      "image": "assets/eyes.jpeg",
+      "title_en": "Eyes",
+      "title_es": "Ojos",
+      "function_en": "Allow vision, interpret light and color, provide sense of sight.",
+      "function_es": "Permiten la visión, interpretan la luz y el color, y brindan el sentido de la vista.",
+      "location_en": "Front of the face, within the eye sockets.",
+      "location_es": "Parte frontal de la cara, dentro de las cuencas oculares.",
+      "importance_en": "Essential for visual perception; many daily tasks rely on sight.",
+      "importance_es": "Esenciales para la percepción visual; muchas tareas diarias dependen de la vista."
     },
     {
-      "image": "assets/ears.jpg",
-      "title": "Ears",
-      "function": "Capture sound waves, enabling hearing and balance.",
-      "location": "On either side of the head.",
-      "importance": "Vital for communication and spatial awareness; helps maintain balance."
+      // EARS
+      "image": "assets/ears.jpeg",
+      "title_en": "Ears",
+      "title_es": "Oídos",
+      "function_en": "Capture sound waves, enabling hearing and balance.",
+      "function_es": "Captan ondas sonoras, permitiendo la audición y el equilibrio.",
+      "location_en": "On either side of the head.",
+      "location_es": "A cada lado de la cabeza.",
+      "importance_en": "Vital for communication and spatial awareness; helps maintain balance.",
+      "importance_es": "Vitales para la comunicación y la percepción espacial; ayudan a mantener el equilibrio."
     },
     {
-      "image": "assets/nose.jpg",
-      "title": "Nose",
-      "function": "Filters, warms, and moistens air; provides sense of smell.",
-      "location": "Center of the face, above the mouth.",
-      "importance": "Crucial for breathing, smell, and flavor perception."
+      // NOSE
+      "image": "assets/nose.jpeg",
+      "title_en": "Nose",
+      "title_es": "Nariz",
+      "function_en": "Filters, warms, and moistens air; provides sense of smell.",
+      "function_es": "Filtra, calienta y humedece el aire; proporciona el sentido del olfato.",
+      "location_en": "Center of the face, above the mouth.",
+      "location_es": "Centro de la cara, sobre la boca.",
+      "importance_en": "Crucial for breathing, smell, and flavor perception.",
+      "importance_es": "Crucial para la respiración, el olfato y la percepción de sabores."
     },
     {
-      "image": "assets/mouth.jpg",
-      "title": "Mouth",
-      "function": "Ingests food, initiates digestion, enables speech.",
-      "location": "Lower center of the face.",
-      "importance": "Key for eating, communication, and facial expressions."
+      // MOUTH
+      "image": "assets/mouth.png",
+      "title_en": "Mouth",
+      "title_es": "Boca",
+      "function_en": "Ingests food, initiates digestion, enables speech.",
+      "function_es": "Ingiere alimentos, inicia la digestión y permite el habla.",
+      "location_en": "Lower center of the face.",
+      "location_es": "Parte inferior central de la cara.",
+      "importance_en": "Key for eating, communication, and facial expressions.",
+      "importance_es": "Clave para comer, comunicarse y las expresiones faciales."
     },
     {
-      "image": "assets/teeth.jpg",
-      "title": "Teeth",
-      "function": "Chew food into smaller pieces for easier digestion.",
-      "location": "Inside the mouth, anchored in the gums.",
-      "importance": "Essential for proper nutrition and clear speech; also a key aspect of facial aesthetics."
+      // TEETH
+      "image": "assets/teeth.jpeg",
+      "title_en": "Teeth",
+      "title_es": "Dientes",
+      "function_en": "Chew food into smaller pieces for easier digestion.",
+      "function_es": "Mastican la comida en trozos más pequeños para facilitar la digestión.",
+      "location_en": "Inside the mouth, anchored in the gums.",
+      "location_es": "Dentro de la boca, anclados en las encías.",
+      "importance_en": "Essential for proper nutrition and clear speech; also a key aspect of facial aesthetics.",
+      "importance_es": "Esenciales para una buena nutrición y una pronunciación clara; también son clave en la estética facial."
     },
     {
-      "image": "assets/tongue.jpg",
-      "title": "Tongue",
-      "function": "Facilitates taste, aids in chewing, swallowing, and speech.",
-      "location": "Inside the mouth, floor of the oral cavity.",
-      "importance": "Critical for flavor detection, speech articulation, and initiating swallowing."
+      // TONGUE
+      "image": "assets/tongue.jpeg",
+      "title_en": "Tongue",
+      "title_es": "Lengua",
+      "function_en": "Facilitates taste, aids in chewing, swallowing, and speech.",
+      "function_es": "Facilita el gusto y ayuda a masticar, tragar y hablar.",
+      "location_en": "Inside the mouth, floor of the oral cavity.",
+      "location_es": "Dentro de la boca, en el piso de la cavidad bucal.",
+      "importance_en": "Critical for flavor detection, speech articulation, and initiating swallowing.",
+      "importance_es": "Crítica para la detección de sabores, la articulación del habla y el inicio de la deglución."
     },
   ];
 
@@ -64,38 +98,46 @@ class _FaceLessonState extends State<FaceLesson> {
   }
 
   void speak(String text) async {
-    await flutterTts.setLanguage("en-US");
+    // Choose language for TTS based on _isSpanish
+    await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
+  }
+
+  // Toggle between English and Spanish
+  void _toggleLanguage() {
+    setState(() {
+      _isSpanish = !_isSpanish;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final lesson = faceLessons[currentIndex];
 
+    // Decide which fields to use (en vs es) based on _isSpanish
+    final title = _isSpanish ? lesson["title_es"] : lesson["title_en"];
+    final func = _isSpanish ? lesson["function_es"] : lesson["function_en"];
+    final loc = _isSpanish ? lesson["location_es"] : lesson["location_en"];
+    final imp = _isSpanish ? lesson["importance_es"] : lesson["importance_en"];
+
+    // Build speakText
     String speakText = "";
-    if (lesson.containsKey("function")) {
-      speakText = "Function: ${lesson["function"]}\n"
-          "Location: ${lesson["location"]}\n"
-          "Importance: ${lesson["importance"]}";
-    } else if (lesson.containsKey("description")) {
-      speakText = lesson["description"]!;
+    if (func != null && loc != null && imp != null) {
+      speakText = "Function: $func\nLocation: $loc\nImportance: $imp";
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(lesson["title"]!),
+        title: Text(title ?? ""),
         backgroundColor: Colors.purple,
         actions: [
+          // Language toggle icon
           IconButton(
-            icon: const Icon(Icons.translate),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Translation feature coming soon!"),
-                ),
-              );
-            },
+            icon: Icon(
+              _isSpanish ? Icons.translate : Icons.g_translate,
+            ),
+            onPressed: _toggleLanguage,
           ),
           IconButton(
             icon: const Icon(Icons.volume_up),
@@ -113,9 +155,10 @@ class _FaceLessonState extends State<FaceLesson> {
               height: 200,
             ),
             const SizedBox(height: 20),
+
             // Title
             Text(
-              lesson["title"]!,
+              title ?? "",
               style: const TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -123,37 +166,30 @@ class _FaceLessonState extends State<FaceLesson> {
             ),
             const SizedBox(height: 20),
 
-            if (lesson.containsKey("function")) ...[
-              _buildColorfulBlock(
-                icon: Icons.build,
-                label: "Function",
-                text: lesson["function"]!,
-                backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                iconColor: Colors.blueAccent,
-              ),
-              _buildColorfulBlock(
-                icon: Icons.location_on,
-                label: "Location",
-                text: lesson["location"]!,
-                backgroundColor: Colors.greenAccent.withOpacity(0.1),
-                iconColor: Colors.green,
-              ),
-              _buildColorfulBlock(
-                icon: Icons.warning,
-                label: "Importance",
-                text: lesson["importance"]!,
-                backgroundColor: Colors.yellowAccent.withOpacity(0.1),
-                iconColor: Colors.orange,
-              ),
-            ] else if (lesson.containsKey("description")) ...[
-              _buildColorfulBlock(
-                icon: Icons.info,
-                label: "Description",
-                text: lesson["description"]!,
-                backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                iconColor: Colors.teal,
-              ),
-            ],
+            // Function
+            _buildColorfulBlock(
+              icon: Icons.build,
+              label: _isSpanish ? "Función" : "Function",
+              text: func ?? "",
+              backgroundColor: Colors.blueAccent.withOpacity(0.1),
+              iconColor: Colors.blueAccent,
+            ),
+            // Location
+            _buildColorfulBlock(
+              icon: Icons.location_on,
+              label: _isSpanish ? "Ubicación" : "Location",
+              text: loc ?? "",
+              backgroundColor: Colors.greenAccent.withOpacity(0.1),
+              iconColor: Colors.green,
+            ),
+            // Importance
+            _buildColorfulBlock(
+              icon: Icons.warning,
+              label: _isSpanish ? "Importancia" : "Importance",
+              text: imp ?? "",
+              backgroundColor: Colors.yellowAccent.withOpacity(0.1),
+              iconColor: Colors.orange,
+            ),
 
             const SizedBox(height: 30),
             ElevatedButton(
@@ -166,7 +202,7 @@ class _FaceLessonState extends State<FaceLesson> {
                   vertical: 15,
                 ),
               ),
-              child: const Text("Next"),
+              child: Text(_isSpanish ? "Siguiente" : "Next"),
             ),
             const SizedBox(height: 20),
           ],
