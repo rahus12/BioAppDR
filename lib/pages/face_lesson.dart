@@ -98,13 +98,15 @@ class _FaceLessonState extends State<FaceLesson> {
   }
 
   void speak(String text) async {
-    // Choose language for TTS based on _isSpanish
+    // Stop any ongoing speech before starting a new one.
+    await flutterTts.stop();
+    // Choose language for TTS based on _isSpanish.
     await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
 
-  // Toggle between English and Spanish
+  // Toggle between English and Spanish.
   void _toggleLanguage() {
     setState(() {
       _isSpanish = !_isSpanish;
@@ -112,16 +114,23 @@ class _FaceLessonState extends State<FaceLesson> {
   }
 
   @override
+  void dispose() {
+    // Stop TTS when the widget is disposed.
+    flutterTts.stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final lesson = faceLessons[currentIndex];
 
-    // Decide which fields to use (en vs es) based on _isSpanish
+    // Decide which fields to use (en vs es) based on _isSpanish.
     final title = _isSpanish ? lesson["title_es"] : lesson["title_en"];
     final func = _isSpanish ? lesson["function_es"] : lesson["function_en"];
     final loc = _isSpanish ? lesson["location_es"] : lesson["location_en"];
     final imp = _isSpanish ? lesson["importance_es"] : lesson["importance_en"];
 
-    // Build speakText
+    // Build speakText.
     String speakText = "";
     if (func != null && loc != null && imp != null) {
       speakText = "Function: $func\nLocation: $loc\nImportance: $imp";
@@ -131,12 +140,11 @@ class _FaceLessonState extends State<FaceLesson> {
       appBar: AppBar(
         title: Text(title ?? ""),
         backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
         actions: [
-          // Language toggle icon
+          // Language toggle icon.
           IconButton(
-            icon: Icon(
-              _isSpanish ? Icons.translate : Icons.g_translate,
-            ),
+            icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
             onPressed: _toggleLanguage,
           ),
           IconButton(
@@ -149,14 +157,13 @@ class _FaceLessonState extends State<FaceLesson> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
-            // Image
+            // Image.
             Image.asset(
               lesson["image"]!,
               height: 200,
             ),
             const SizedBox(height: 20),
-
-            // Title
+            // Title.
             Text(
               title ?? "",
               style: const TextStyle(
@@ -165,8 +172,7 @@ class _FaceLessonState extends State<FaceLesson> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Function
+            // Function.
             _buildColorfulBlock(
               icon: Icons.build,
               label: _isSpanish ? "Función" : "Function",
@@ -174,7 +180,7 @@ class _FaceLessonState extends State<FaceLesson> {
               backgroundColor: Colors.blueAccent.withOpacity(0.1),
               iconColor: Colors.blueAccent,
             ),
-            // Location
+            // Location.
             _buildColorfulBlock(
               icon: Icons.location_on,
               label: _isSpanish ? "Ubicación" : "Location",
@@ -182,7 +188,7 @@ class _FaceLessonState extends State<FaceLesson> {
               backgroundColor: Colors.greenAccent.withOpacity(0.1),
               iconColor: Colors.green,
             ),
-            // Importance
+            // Importance.
             _buildColorfulBlock(
               icon: Icons.warning,
               label: _isSpanish ? "Importancia" : "Importance",
@@ -190,7 +196,6 @@ class _FaceLessonState extends State<FaceLesson> {
               backgroundColor: Colors.yellowAccent.withOpacity(0.1),
               iconColor: Colors.orange,
             ),
-
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: nextLesson,

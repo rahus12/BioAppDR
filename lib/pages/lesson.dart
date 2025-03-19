@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter/foundation.dart'; // Needed for kIsWeb
 
 class Lesson extends StatefulWidget {
   const Lesson({super.key});
@@ -21,53 +22,53 @@ class _LessonState extends State<Lesson> {
       "title_en": "Human Body",
       "title_es": "Cuerpo Humano",
       "description_en":
-          "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!",
+      "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!",
       "description_es":
-          "El corazón es un órgano poderoso que bombea sangre a todo el cuerpo, suministrando oxígeno y nutrientes a las células. ¡Late alrededor de 100,000 veces al día y es del tamaño de tu puño!"
+      "El corazón es un órgano poderoso que bombea sangre a todo el cuerpo, suministrando oxígeno y nutrientes a las células. ¡Late alrededor de 100,000 veces al día y es del tamaño de tu puño!"
     },
     {
       "image": "assets/heart.jpeg",
       "title_en": "Heart",
       "title_es": "Corazón",
       "function_en":
-          "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
+      "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
       "function_es":
-          "Bombea sangre, entregando oxígeno y nutrientes al cuerpo mientras elimina desechos.",
+      "Bombea sangre, entregando oxígeno y nutrientes al cuerpo mientras elimina desechos.",
       "location_en": "Center of the chest.",
       "location_es": "Centro del pecho.",
       "importance_en":
-          "Essential for circulation; without it, life cannot be sustained",
+      "Essential for circulation; without it, life cannot be sustained",
       "importance_es":
-          "Esencial para la circulación; sin él, la vida no puede sostenerse"
+      "Esencial para la circulación; sin él, la vida no puede sostenerse"
     },
     {
       "image": "assets/lungs.jpeg",
       "title_en": "Lungs",
       "title_es": "Pulmones",
       "function_en":
-          "Facilitate the exchange of oxygen and carbon dioxide between the air and blood.",
+      "Facilitate the exchange of oxygen and carbon dioxide between the air and blood.",
       "function_es":
-          "Facilitan el intercambio de oxígeno y dióxido de carbono entre el aire y la sangre.",
+      "Facilitan el intercambio de oxígeno y dióxido de carbono entre el aire y la sangre.",
       "location_en": "On either side of the chest.",
       "location_es": "A cada lado del pecho.",
       "importance_en": "Vital for breathing and oxygen supply to tissues",
       "importance_es":
-          "Vitales para la respiración y el suministro de oxígeno a los tejidos"
+      "Vitales para la respiración y el suministro de oxígeno a los tejidos"
     },
     {
       "image": "assets/brain.jpg",
       "title_en": "Brain",
       "title_es": "Cerebro",
       "function_en":
-          "Controls all bodily functions, thoughts, emotions, and memory.",
+      "Controls all bodily functions, thoughts, emotions, and memory.",
       "function_es":
-          "Controla todas las funciones corporales, pensamientos, emociones y memoria.",
+      "Controla todas las funciones corporales, pensamientos, emociones y memoria.",
       "location_en": "Inside the skull",
       "location_es": "Dentro del cráneo.",
       "importance_en":
-          "Acts as the control center of the body; damage can severely impair or end life",
+      "Acts as the control center of the body; damage can severely impair or end life",
       "importance_es":
-          "Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida"
+      "Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida"
     },
     {
       "image": "assets/stomach.jpeg",
@@ -75,60 +76,83 @@ class _LessonState extends State<Lesson> {
       "title_es": "Estómago",
       "function_en": "Food storage, mixing, and initial digestion",
       "function_es":
-          "Almacena, mezcla e inicia la digestión de los alimentos.",
+      "Almacena, mezcla e inicia la digestión de los alimentos.",
       "location_en": "Center of the body.",
       "location_es": "Centro del cuerpo.",
       "importance_en":
-          "Essential for digestion; without it, life cannot be sustained",
+      "Essential for digestion; without it, life cannot be sustained",
       "importance_es":
-          "Esencial para la digestión; sin él, la vida no puede sostenerse"
+      "Esencial para la digestión; sin él, la vida no puede sostenerse"
     },
     {
       "image": "assets/liver.jpeg",
       "title_en": "Liver",
       "title_es": "Hígado",
       "function_en":
-          "Filters toxins from blood, produces bile for digestion, regulates blood sugar, and synthesizes proteins.",
+      "Filters toxins from blood, produces bile for digestion, regulates blood sugar, and synthesizes proteins.",
       "function_es":
-          "Filtra toxinas de la sangre, produce bilis para la digestión, regula el azúcar en la sangre y sintetiza proteínas.",
+      "Filtra toxinas de la sangre, produce bilis para la digestión, regula el azúcar en la sangre y sintetiza proteínas.",
       "location_en": "Upper right abdomen.",
       "location_es": "Parte superior derecha del abdomen.",
       "importance_en":
-          "Performs over 500 essential functions; damage can lead to severe health issues",
+      "Performs over 500 essential functions; damage can lead to severe health issues",
       "importance_es":
-          "Realiza más de 500 funciones esenciales; su daño puede causar graves problemas de salud"
+      "Realiza más de 500 funciones esenciales; su daño puede causar graves problemas de salud"
     },
     {
       "image": "assets/kidney.jpeg",
       "title_en": "Kidneys",
       "title_es": "Riñones",
       "function_en":
-          "Filter blood to remove waste and excess fluids, producing urine.",
+      "Filter blood to remove waste and excess fluids, producing urine.",
       "function_es":
-          "Filtran la sangre para eliminar desechos y exceso de fluidos, produciendo orina.",
+      "Filtran la sangre para eliminar desechos y exceso de fluidos, produciendo orina.",
       "location_en": "Center of the chest.",
       "location_es": "Centro del pecho.",
       "importance_en":
-          "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis",
+      "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis",
       "importance_es":
-          "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis"
+      "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis"
     },
     {
       "image": "assets/bone.jpeg",
       "title_en": "Bones",
       "title_es": "Huesos",
       "function_en":
-          "Provide structure, support, and protection for the body",
+      "Provide structure, support, and protection for the body",
       "function_es":
-          "Brindan estructura, soporte y protección para el cuerpo.",
+      "Brindan estructura, soporte y protección para el cuerpo.",
       "location_en": "Everywhere",
       "location_es": "En todas partes.",
       "importance_en":
-          "Essential for support; without it, life cannot be sustained",
+      "Essential for support; without it, life cannot be sustained",
       "importance_es":
-          "Esenciales para el soporte; sin ellos, la vida no puede sostenerse"
+      "Esenciales para el soporte; sin ellos, la vida no puede sostenerse"
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Configure TTS settings.
+    flutterTts.setSpeechRate(0.5);
+    flutterTts.setVolume(1.0);
+    // For debugging: print supported languages if not on web.
+    if (!kIsWeb) {
+      // getLanguages is a getter that returns a Future<dynamic>; do not use parentheses.
+      Future<dynamic> languagesFuture = flutterTts.getLanguages;
+      languagesFuture.then((langs) {
+        print("Supported languages: $langs");
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Stop any ongoing speech when the widget is disposed.
+    flutterTts.stop();
+    super.dispose();
+  }
 
   void nextLesson() {
     setState(() {
@@ -143,7 +167,9 @@ class _LessonState extends State<Lesson> {
   }
 
   void speak(String text) async {
-    // Use Spanish or English TTS
+    // Stop any ongoing speech before starting a new one.
+    await flutterTts.stop();
+    // Set language based on the toggle.
     await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
@@ -153,19 +179,18 @@ class _LessonState extends State<Lesson> {
   Widget build(BuildContext context) {
     final lesson = lessons[currentIndex];
 
-    // Decide which title to display
+    // Decide which title to display.
     final String title = _isSpanish
         ? (lesson["title_es"] ?? lesson["title_en"] ?? "")
         : (lesson["title_en"] ?? "");
 
-    // Check if we have function-based fields
+    // Check if we have function-based fields.
     final bool hasFunctionBlock = lesson.containsKey("function_en") ||
         lesson.containsKey("function_es");
 
-    // Prepare text for TTS
+    // Prepare text for TTS.
     String speakText;
     if (hasFunctionBlock) {
-      // Safely retrieve each field, fallback to "" if missing
       final String func = _isSpanish
           ? (lesson["function_es"] ?? lesson["function_en"] ?? "")
           : (lesson["function_en"] ?? "");
@@ -177,7 +202,6 @@ class _LessonState extends State<Lesson> {
           : (lesson["importance_en"] ?? "");
       speakText = "Function: $func\nLocation: $loc\nImportance: $imp";
     } else {
-      // Single description-based item
       final String desc = _isSpanish
           ? (lesson["description_es"] ?? lesson["description_en"] ?? "")
           : (lesson["description_en"] ?? "");
@@ -188,8 +212,8 @@ class _LessonState extends State<Lesson> {
       appBar: AppBar(
         title: Text(title),
         backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
         actions: [
-          // Language toggle icon
           IconButton(
             icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
             onPressed: _toggleLanguage,
@@ -204,14 +228,11 @@ class _LessonState extends State<Lesson> {
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
-            // Image
             Image.asset(
               lesson["image"] ?? "",
               height: 200,
             ),
             const SizedBox(height: 20),
-
-            // Title
             Text(
               title,
               style: const TextStyle(
@@ -220,7 +241,6 @@ class _LessonState extends State<Lesson> {
               ),
             ),
             const SizedBox(height: 20),
-
             if (hasFunctionBlock) ...[
               _buildColorfulBlock(
                 icon: Icons.build,
@@ -261,8 +281,6 @@ class _LessonState extends State<Lesson> {
               ),
             ],
             const SizedBox(height: 30),
-
-            // Next Button
             ElevatedButton(
               onPressed: nextLesson,
               style: ElevatedButton.styleFrom(
