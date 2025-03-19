@@ -4,6 +4,7 @@ import 'package:bioappdr/pages/mcq.dart';
 import 'package:flutter/material.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 import 'package:bioappdr/pages/face_lesson.dart';
+import 'DragDrop.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -13,6 +14,7 @@ void main() {
       '/question': (context) => Mcq(),
       '/lesson': (context) => Lesson(),
       '/facelesson': (context) => FaceLesson(),
+      '/dragdrop': (context) => DragDrop(),
     },
   ));
 }

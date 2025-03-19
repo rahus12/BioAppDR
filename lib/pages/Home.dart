@@ -115,6 +115,14 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 16),
 
+              IndexCard(
+                title: "Drag drop Quiz",
+                questions: "7",
+                progress: "69",
+                onPress: "/dragdrop", // Named route for MCQ page
+              ),
+              const SizedBox(height: 16),
+
               // LESSON CARDS
               LessonCard(
                 title: "Important parts of the Human Body",
