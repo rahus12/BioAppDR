@@ -8,7 +8,7 @@ import 'DragDrop.dart';
 
 void main() {
   runApp(MaterialApp(
-    initialRoute: '/',
+    initialRoute  : '/',
     routes: {
       '/': (context) => const Home(),
       '/question': (context) => Mcq(),
