@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class DragDrop extends StatefulWidget {
-  const DragDrop({Key? key}) : super(key: key);
+  const DragDrop({super.key});
 
   @override
   State<DragDrop> createState() => _DragDropQuizState();
@@ -208,8 +208,8 @@ class _DragDropQuizState extends State<DragDrop> {
           );
         },
         backgroundColor: theme.colorScheme.primary,
-        child: const Icon(Icons.volume_up),
         tooltip: _showSpanish ? 'Pronunciar' : 'Pronounce',
+        child: const Icon(Icons.volume_up),
       ),
       body: Container(
         // Use colorScheme for a more dynamic background
@@ -421,7 +421,7 @@ class _DragDropQuizState extends State<DragDrop> {
             ? Colors.green.withOpacity(0.2)
             : _isWrongMatch
             ? Colors.red.withOpacity(0.2)
-            : theme.colorScheme.surfaceVariant.withOpacity(0.8);
+            : theme.colorScheme.surfaceContainerHighest.withOpacity(0.8);
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
