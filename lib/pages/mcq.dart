@@ -1,13 +1,8 @@
-/*
-Need to build the MCQ page, which idealy has a picture and 4 options.
-Questions can later come from FireBase
-For now use a list if u want
- */
-
-
 import 'package:flutter/material.dart';
 
 class Mcq extends StatefulWidget {
+  const Mcq({Key? key}) : super(key: key);
+
   @override
   _McqState createState() => _McqState();
 }
@@ -15,45 +10,84 @@ class Mcq extends StatefulWidget {
 class _McqState extends State<Mcq> {
   int currentIndex = 0;
 
+  // Track the user's selection
+  String? _selectedOption;
+  bool? _isCorrect;
+
   final List<Map<String, dynamic>> questions = [
     {
-      "image": "assets/heart.jpg",
+      "image": "assets/heart.jpeg",
       "question": "What does the heart do?",
       "options": ["Pumps blood", "Helps breathe", "Digests food", "Sees light"],
+      "correctOption": "Pumps blood",
     },
     {
-      "image": "assets/lung.jpg",
+      "image": "assets/lungs.jpeg",
       "question": "Which organ helps us breathe?",
       "options": ["Heart", "Lungs", "Liver", "Stomach"],
+      "correctOption": "Lungs",
     },
     {
-      "image": "assets/bone.jpg",
+      "image": "assets/bone.jpeg",
       "question": "What gives our body structure?",
       "options": ["Bones", "Skin", "Lungs", "Eyes"],
+      "correctOption": "Bones",
     },
   ];
 
-  void nextQuestion(String selectedOption) {
-    if (currentIndex < questions.length - 1) {
+  /// Checks the answer, highlights if correct, shows popup if wrong
+  void checkAnswer(String selectedOption) {
+    final correct = questions[currentIndex]["correctOption"];
+    if (selectedOption == correct) {
+      // Correct answer
       setState(() {
-        currentIndex++;
+        _selectedOption = selectedOption;
+        _isCorrect = true;
+      });
+      // Wait 1 second, then go to next question
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          // Move to next question
+          if (currentIndex < questions.length - 1) {
+            currentIndex++;
+          } else {
+            currentIndex = 0; // or navigate to a results screen
+          }
+          // Reset
+          _selectedOption = null;
+          _isCorrect = null;
+        });
       });
     } else {
-      // Reset Mcq or navigate to a results screen
+      // Wrong answer
       setState(() {
-        currentIndex = 0; // Restart Mcq
+        _selectedOption = selectedOption;
+        _isCorrect = false;
       });
+      // Show red popup
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Incorrect!"),
+          content: const Text("Please try again."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("OK"),
+            )
+          ],
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final questionData = questions[currentIndex];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Science MCQ",
-          // style: TextStyle(fontWeight: FontWeight.w500),
-        ),
+        title: const Text("Science MCQ"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -67,12 +101,17 @@ class _McqState extends State<Mcq> {
           ),
         ),
       ),
-      body: Center(
-        child: QuestionCard(
-          imagePath: questions[currentIndex]["image"],
-          question: questions[currentIndex]["question"],
-          options: List<String>.from(questions[currentIndex]["options"]),
-          onOptionSelected: nextQuestion,
+      // Wrap body in a SingleChildScrollView
+      body: SingleChildScrollView(
+        child: Center(
+          child: QuestionCard(
+            imagePath: questionData["image"],
+            question: questionData["question"],
+            options: List<String>.from(questionData["options"]),
+            onOptionSelected: checkAnswer,
+            selectedOption: _selectedOption,
+            isCorrect: _isCorrect,
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -80,20 +119,20 @@ class _McqState extends State<Mcq> {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white,
         items: const [
-        BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-        BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-        BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-        ]
-      )
+        ],
+      ),
     );
   }
 }
@@ -104,55 +143,91 @@ class QuestionCard extends StatelessWidget {
   final List<String> options;
   final Function(String) onOptionSelected;
 
+  /// Tracks which button is currently selected, and whether it's correct.
+  final String? selectedOption;
+  final bool? isCorrect;
+
   const QuestionCard({
     required this.imagePath,
     required this.question,
     required this.options,
     required this.onOptionSelected,
-    super.key,
-  });
+    required this.selectedOption,
+    required this.isCorrect,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Color(0xFFF5F5F5),
+      color: const Color(0xFFF5F5F5),
       child: Column(
         children: [
+          // Top image
           Padding(
-            padding: const EdgeInsets.fromLTRB(0,50,0,100),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 100),
             child: Image.asset(imagePath, height: 250),
-          ), // Display image on top,
+          ),
+          // Card for the question and options
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
               color: Colors.white,
               elevation: 10,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10,40,10,20),
+                padding: const EdgeInsets.fromLTRB(10, 40, 10, 20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Question text
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(question, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      child: Text(
+                        question,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 30,),
+                    const SizedBox(height: 30),
+                    // Option buttons
                     Column(
                       children: options.map((option) {
+                        // Decide button color based on selection
+                        Color buttonColor = Colors.white;
+                        Color textColor = Colors.black;
+
+                        if (selectedOption == option) {
+                          // The user has selected this option
+                          if (isCorrect == true) {
+                            buttonColor = Colors.green;
+                            textColor = Colors.white;
+                          } else if (isCorrect == false) {
+                            buttonColor = Colors.red;
+                            textColor = Colors.white;
+                          }
+                        }
+
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 20,
+                          ),
                           child: ElevatedButton(
                             onPressed: () => onOptionSelected(option),
                             style: ElevatedButton.styleFrom(
-                              minimumSize: Size(250, 50),
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
+                              minimumSize: const Size(250, 50),
+                              backgroundColor: buttonColor,
+                              foregroundColor: textColor,
                               elevation: 5,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: BorderSide(color: Color(0xFFC0BABA))
-                              )
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(
+                                  color: Color(0xFFC0BABA),
+                                ),
+                              ),
                             ),
                             child: Text(option),
                           ),
