@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header with background color & avatar
+
             Container(
               width: double.infinity,
               color: Colors.blueAccent, // pick any color you like

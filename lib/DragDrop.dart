@@ -13,9 +13,9 @@ class _DragDropQuizState extends State<DragDrop> {
   bool _isCorrectMatch = false;
   bool _isWrongMatch = false;
   int _score = 0;
-  bool _showSpanish = false; // Default to English
+  bool _showSpanish = false;
 
-  // Text-to-speech engine
+
   final FlutterTts _textToSpeech = FlutterTts();
 
   @override
@@ -92,7 +92,6 @@ class _DragDropQuizState extends State<DragDrop> {
       if (_currentQuestionIndex < _quizData.length - 1) {
         _currentQuestionIndex++;
       } else {
-        // Show completion dialog when all questions are answered
         _showQuizCompletionDialog();
       }
     });
@@ -167,10 +166,10 @@ class _DragDropQuizState extends State<DragDrop> {
         ),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
-        // Elevation is less emphasized in Material 3, but you can tweak:
+
         elevation: 0,
         actions: [
-          // Language toggle
+
           TextButton.icon(
             icon: Icon(Icons.translate, color: theme.colorScheme.onPrimary),
             label: Text(
@@ -184,7 +183,7 @@ class _DragDropQuizState extends State<DragDrop> {
               });
             },
           ),
-          // Progress indicator
+
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -212,7 +211,7 @@ class _DragDropQuizState extends State<DragDrop> {
         child: const Icon(Icons.volume_up),
       ),
       body: Container(
-        // Use colorScheme for a more dynamic background
+
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
