@@ -1,4 +1,3 @@
-// lib/pages/profile_page.dart
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -7,11 +6,11 @@ class ProfilePage extends StatelessWidget {
   final String phoneNumber;
 
   const ProfilePage({
-    super.key,
+    Key? key,
     required this.name,
     required this.surname,
     required this.phoneNumber,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class ProfilePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header with background color & avatar
+
             Container(
               width: double.infinity,
               color: Colors.blueAccent, // pick any color you like
@@ -33,7 +32,7 @@ class ProfilePage extends StatelessWidget {
                   // Profile picture
                   const CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/chunli.jpg'),
+                    backgroundImage: AssetImage('assets/images/chunli.jpg'),
                     // or NetworkImage("https://example.com/jane.jpg")
                   ),
                   const SizedBox(height: 10),
@@ -46,7 +45,7 @@ class ProfilePage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // Phone (small text under name)
+                  // Phone
                   Text(
                     phoneNumber,
                     style: const TextStyle(
@@ -57,7 +56,6 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
 
             // Card with extra details
@@ -89,8 +87,6 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Add more sections or widgets here if needed
             const SizedBox(height: 20),
           ],
         ),

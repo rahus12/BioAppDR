@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// Update these imports to match your project structure:
 import 'package:bioappdr/components/indexcard.dart';
+import 'package:bioappdr/components/lesson_card.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +14,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Gradient AppBar
       appBar: AppBar(
         title: const Text(
           "BioApp",
@@ -32,10 +33,12 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      body: Container(
-        color: const Color(0xFFF5F5F5),
-        padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-        child: SingleChildScrollView(
+      // Main content
+      body: SingleChildScrollView(
+        // Ensures the screen is scrollable if content is large
+        child: Container(
+          color: const Color(0xFFF5F5F5),
+          padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,6 +58,7 @@ class _HomeState extends State<Home> {
                           letterSpacing: 0.36,
                         ),
                       ),
+                      SizedBox(height: 4),
                       Text(
                         "Learn. Play. Grow!",
                         style: TextStyle(
@@ -64,10 +68,20 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  // Profile Picture (tap to go to ProfilePage)
+
+                  // Profile Picture
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(
+                            name: "Jane",
+                            surname: "Doe",
+                            phoneNumber: "123-456-7890",
+                          ),
+                        ),
+                      );
                     },
                     child: const CircleAvatar(
                       backgroundImage: AssetImage('assets/chunli.jpg'),
@@ -78,37 +92,56 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 40),
 
-              // "Explore"
+              // "Explore" heading
               const Text(
                 "Explore",
                 style: TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 20),
+              const Divider(
+                thickness: 2,
+                color: Colors.black12,
+                height: 30,
+              ),
 
-              // Heart Quiz -> navigates to Drag & Drop Quiz
+              // QUIZ CARD
               IndexCard(
-                title: "Heart Quiz",
+                title: "Human Body Quiz",
                 questions: "13",
                 progress: "17",
-                onPress: "/dragdropquiz", // <-- Route for your drag-drop page
+                onPress: "/question", // Named route for MCQ page
               ),
+              const SizedBox(height: 16),
 
-              // Another card
               IndexCard(
-                title: "Learn lessons? (change the name)",
-                questions: "23",
-                progress: "0",
-                onPress: "/lesson", // or another route
+                title: "Drag drop Quiz",
+                questions: "7",
+                progress: "69",
+                onPress: "/dragdrop", // Named route for MCQ page
               ),
+              const SizedBox(height: 16),
 
+              // LESSON CARDS
+              LessonCard(
+                title: "Important parts of the Human Body",
+                slides: "6", // Example: 6 slides
+                onPress: "/lesson", // Named route for Lesson page
+              ),
+              const SizedBox(height: 16),
+
+              LessonCard(
+                title: "Important parts of the Face",
+                slides: "6",
+                onPress: "/facelesson", // Named route for Face lesson page
+              ),
               const SizedBox(height: 40),
             ],
           ),
         ),
       ),
+      // Bottom Nav
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         selectedItemColor: Colors.white,
