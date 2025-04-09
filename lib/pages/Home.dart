@@ -114,7 +114,18 @@ class _HomeState extends State<Home> {
                 onPress: "/question", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
-
+              IndexCard(
+                title: "Organ Word Scramble",
+                questions: "5", // number of words to scramble
+                progress: "0",  // your desired progress (or logic to track it)
+                onPress: "/wordscramble",
+              ),
+              IndexCard(
+                title: "Memory Game",
+                questions: "8", // e.g., 8 total cards or 4 pairs
+                progress: "0",
+                onPress: "/memorygame",
+              ),
               IndexCard(
                 title: "Drag drop Quiz",
                 questions: "7",
