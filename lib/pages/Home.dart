@@ -133,6 +133,13 @@ class _HomeState extends State<Home> {
                 onPress: "/dragdrop", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
+              IndexCard(
+                title: "Game",
+                questions: "7",
+                progress: "90",
+                onPress: "/facequizgame", // Named route for MCQ page
+              ),
+              const SizedBox(height: 16),
 
               // LESSON CARDS
               LessonCard(

@@ -6,19 +6,22 @@ import 'package:bioappdr/pages/profile_page.dart';
 import 'package:bioappdr/pages/face_lesson.dart';
 import 'package:bioappdr/pages/word_scramble_game.dart';
 import 'package:bioappdr/pages/memory_game.dart';
+import 'package:bioappdr/pages/FaceQuizGame.dart';
 import 'DragDrop.dart';
+
 
 void main() {
   runApp(MaterialApp(
     initialRoute  : '/',
     routes: {
       '/': (context) => const Home(),
-      '/question': (context) => Mcq(),
-      '/lesson': (context) => Lesson(),
-      '/facelesson': (context) => FaceLesson(),
+      '/question': (context) => const Mcq(),
+      '/lesson': (context) => const Lesson(),
+      '/facelesson': (context) => const FaceLesson(),
       '/memorygame': (context) => const MemoryGame(),
-      '/dragdrop': (context) => DragDrop(),
-       "/wordscramble": (context) => const WordScrambleGame(),
+      '/dragdrop': (context) => const DragDrop(),
+       "/wordscramble": (context) => const WordScrambleGameV2(),
+      "/facequizgame": (context) => const FaceQuizGame(),
     },
   ));
 }

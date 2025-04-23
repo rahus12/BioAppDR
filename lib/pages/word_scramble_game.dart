@@ -1,265 +1,216 @@
+import 'dart:math';
+import 'dart:math' as math show sin, pi;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class WordScrambleGame extends StatefulWidget {
-  const WordScrambleGame({Key? key}) : super(key: key);
-
+class WordScrambleGameV2 extends StatefulWidget {
+  const WordScrambleGameV2({super.key});
   @override
-  State<WordScrambleGame> createState() => _WordScrambleGameState();
+  State<WordScrambleGameV2> createState() => _WordScrambleGameV2State();
 }
 
-class _WordScrambleGameState extends State<WordScrambleGame> {
-  // List of organs or words to scramble.
-  // Each entry has: 'word' (the correct word), 'hint' (optional help text),
-  // and 'image' (optional: path to an asset image).
-  final List<Map<String, String>> _scrambleItems = [
+class _WordScrambleGameV2State extends State<WordScrambleGameV2>
+    with SingleTickerProviderStateMixin {
+  final List<Map<String, String>> _items = [
     {
-      "word": "HEART",
-      "hint": "It pumps blood throughout the body.",
-      "image": "assets/heart.jpeg"
+      'en': 'HEART',
+      'es': 'CORAZÓN',
+      'hint_en': 'It pumps blood.',
+      'hint_es': 'Bombea la sangre.',
+      'img': 'assets/heart.jpeg'
     },
     {
-      "word": "LUNGS",
-      "hint": "They help you breathe in oxygen.",
-      "image": "assets/lungs.jpeg"
+      'en': 'LUNGS',
+      'es': 'PULMONES',
+      'hint_en': 'They help you breathe.',
+      'hint_es': 'Te ayudan a respirar.',
+      'img': 'assets/lungs.jpeg'
     },
     {
-      "word": "BRAIN",
-      "hint": "The control center of the body.",
-      "image": "assets/brain.jpg"
+      'en': 'BRAIN',
+      'es': 'CEREBRO',
+      'hint_en': 'Body control centre.',
+      'hint_es': 'Centro de control del cuerpo.',
+      'img': 'assets/brain.jpg'
     },
     {
-      "word": "LIVER",
-      "hint": "Filters toxins from your blood.",
-      "image": "assets/liver.jpeg"
+      'en': 'LIVER',
+      'es': 'HÍGADO',
+      'hint_en': 'Filters your blood.',
+      'hint_es': 'Filtra tu sangre.',
+      'img': 'assets/liver.jpeg'
     },
     {
-      "word": "STOMACH",
-      "hint": "It churns and digests your food.",
-      "image": "assets/stomach.jpeg"
+      'en': 'STOMACH',
+      'es': 'ESTÓMAGO',
+      'hint_en': 'Digests food.',
+      'hint_es': 'Digiere la comida.',
+      'img': 'assets/stomach.jpeg'
     },
   ];
 
-  // Keep track of which word we're currently on.
-  int _currentIndex = 0;
+  int _index = 0;
+  bool _spanish = false; // master translation toggle
+  late List<String> _pool;
+  final List<String> _typed = [];
+  late final AnimationController _shake;
 
-  // Store the letters for the scrambled word.
-  late List<String> _scrambledLetters;
-
-  // Store the letters that the user has tapped in order.
-  List<String> _userInput = [];
-
-  // Lifecycle: scramble the first word on init.
   @override
   void initState() {
     super.initState();
-    _resetGameState();
+    _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _reset();
   }
 
-  // Helper: scramble the letters of a word.
-  List<String> _scrambleWord(String word) {
-    List<String> letters = word.split('');
-    letters.shuffle();
-    return letters;
+  void _reset() {
+    _typed.clear();
+    final word = _items[_index]['en'] ?? '';
+    _pool = word.split('')..shuffle(Random());
   }
 
-  // Resets the userInput and scrambles the current word.
-  void _resetGameState() {
-    // 1. Get the current word from the list.
-    final currentWord = _scrambleItems[_currentIndex]["word"] ?? "";
-
-    // 2. Scramble the letters of that word.
-    _scrambledLetters = _scrambleWord(currentWord);
-
-    // 3. Clear the user’s current selections.
-    _userInput = [];
-  }
-
-  // Called whenever the user taps a letter.
-  void _onLetterTap(String letter, int letterIndex) {
+  void _tap(int i) {
     setState(() {
-      // Add the tapped letter to userInput.
-      _userInput.add(letter);
-      // Remove that letter from the scrambled array so user cannot tap it again.
-      _scrambledLetters[letterIndex] = "";
+      _typed.add(_pool[i]);
+      _pool[i] = '';
     });
+    _verify();
+  }
 
-    final correctWord = _scrambleItems[_currentIndex]["word"] ?? "";
-    // If userInput is the length of the correct word, check correctness.
-    if (_userInput.length == correctWord.length) {
-      final userGuess = _userInput.join("");
-      if (userGuess.toUpperCase() == correctWord.toUpperCase()) {
-        // Show success
-        _showResultDialog(true);
-      } else {
-        // Show fail
-        _showResultDialog(false);
-      }
+  void _verify() {
+    final answer = _items[_index]['en'] ?? '';
+    if (_typed.length < answer.length) return;
+
+    final correct = _typed.join() == answer;
+    _showSnack(correct);
+    if (correct) {
+      Future.delayed(const Duration(milliseconds: 600), _next);
+    } else {
+      _shake.forward(from: 0);
+      HapticFeedback.vibrate();
+      Future.delayed(const Duration(milliseconds: 600), () => setState(_reset));
     }
   }
 
-  // Reset the state for the next word or re-try the same word.
-  void _showResultDialog(bool success) {
-    final String title = success ? "Correct!" : "Incorrect!";
-    final String content = success
-        ? "Great job! You unscrambled the word correctly."
-        : "That’s not the right spelling. Try again?";
+  void _next() => setState(() {
+    _index = (_index + 1) % _items.length;
+    _reset();
+  });
 
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop(); // Close the dialog
+  void _shuffleUnused() => setState(() => _pool.shuffle(Random()));
 
-              setState(() {
-                if (success) {
-                  // Move to next word
-                  _currentIndex = (_currentIndex + 1) % _scrambleItems.length;
-                }
-                // Reset for next attempt or next word.
-                _resetGameState();
-              });
-            },
-            child: const Text("OK"),
-          )
-        ],
-      ),
-    );
-  }
+  void _showSnack(bool good) => ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(good ? (_spanish ? '¡Correcto!' : 'Correct!') : (_spanish ? 'Inténtalo de nuevo' : 'Try again')),
+      backgroundColor: good ? Colors.green : Colors.red,
+      duration: const Duration(milliseconds: 600),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
-    // Current puzzle data
-    final item = _scrambleItems[_currentIndex];
-    final String correctWord = item["word"] ?? "";
-    final String hint = item["hint"] ?? "";
-    final String imagePath = item["image"] ?? "";
+    final theme = Theme.of(context);
+    final item = _items[_index];
+    final progress = (_index + 1) / _items.length;
+
+    final wordEn = item['en'] ?? '';
+    final wordEs = item['es'] ?? '';
+    final hint = _spanish ? (item['hint_es'] ?? '') : (item['hint_en'] ?? '');
+    final imagePath = item['img'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Word Scramble"),
-        flexibleSpace: Container(
-          // Optional gradient matching your other screens
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFE6E1F5), Color(0xFFF5F5F5)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+        title: Text(_spanish ? 'Anagrama' : 'Word Scramble'),
+        actions: [
+          IconButton(
+            tooltip: _spanish ? 'Traducir' : 'Translate',
+            icon: const Icon(Icons.translate),
+            onPressed: () => setState(() => _spanish = !_spanish),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Center(
+              child: Text('${_index + 1}/${_items.length}', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
             ),
           ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4),
+          child: LinearProgressIndicator(value: progress, color: theme.colorScheme.onPrimary),
         ),
       ),
-      body: SingleChildScrollView(
+      floatingActionButton: FloatingActionButton(
+        tooltip: _spanish ? 'Barajar' : 'Shuffle',
+        onPressed: _shuffleUnused,
+        child: const Icon(Icons.shuffle),
+      ),
+      body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 16.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              // Optional: Show the related image
-              if (imagePath.isNotEmpty) ...[
-                Image.asset(
-                  imagePath,
-                  height: 200,
-                ),
-                const SizedBox(height: 20),
-              ],
-              // Display a hint
+              if (imagePath.isNotEmpty) Image.asset(imagePath, height: 160),
+              const SizedBox(height: 12),
+              Text('${_spanish ? 'Pista' : 'Hint'}: $hint', style: theme.textTheme.bodyLarge),
+              const SizedBox(height: 6),
               Text(
-                "Hint: $hint",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.black54,
-                ),
+                _spanish ? 'English: $wordEn' : 'Spanish: $wordEs',
+                style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic, color: theme.colorScheme.onSurfaceVariant),
               ),
-              const SizedBox(height: 20),
-
-              // Display the user's input as underscores or joined letters
-              // Example: H _ A _ T
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  correctWord.length,
-                  (index) {
-                    String displayLetter =
-                        index < _userInput.length ? _userInput[index] : "_";
-                    return Container(
-                      margin: const EdgeInsets.all(4),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        displayLetter.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              const SizedBox(height: 24),
+              Wrap(
+                children: List.generate(wordEn.length, (i) {
+                  final char = i < _typed.length ? _typed[i] : '_';
+                  return AnimatedBuilder(
+                    animation: _shake,
+                    builder: (_, child) => Transform.translate(
+                      offset: Offset(math.sin(_shake.value * math.pi * 4) * 6, 0),
+                      child: child,
+                    ),
+                    child: _slot(char, filled: i < _typed.length, theme: theme),
+                  );
+                }),
               ),
-              const SizedBox(height: 20),
-
-              // Display the scrambled letters as buttons
+              const SizedBox(height: 24),
               Wrap(
                 alignment: WrapAlignment.center,
-                children: List.generate(
-                  _scrambledLetters.length,
-                  (index) {
-                    final letter = _scrambledLetters[index];
-                    if (letter.isEmpty) {
-                      // Already tapped letter
-                      return const SizedBox(width: 0, height: 0);
-                    }
-                    return Container(
-                      margin: const EdgeInsets.all(4),
-                      child: ElevatedButton(
-                        onPressed: () => _onLetterTap(letter, index),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(16),
-                          backgroundColor: Colors.blueAccent,
-                        ),
-                        child: Text(
-                          letter.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                children: List.generate(_pool.length, (i) {
+                  final l = _pool[i];
+                  return l.isEmpty
+                      ? const SizedBox(width: 0)
+                      : Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ElevatedButton(
+                      onPressed: () => _tap(i),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primaryContainer,
+                        foregroundColor: theme.colorScheme.onPrimaryContainer,
+                        padding: const EdgeInsets.all(16),
                       ),
-                    );
-                  },
-                ),
+                      child: Text(l, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    ),
+                  );
+                }),
               ),
             ],
           ),
         ),
       ),
-      // Optional: bottom nav to stay consistent with your other screens
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
     );
+  }
+
+  Widget _slot(String letter, {required bool filled, required ThemeData theme}) => Container(
+    margin: const EdgeInsets.all(4),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: filled ? Colors.green.shade100 : Colors.grey.shade300,
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Text(letter, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+  );
+
+  @override
+  void dispose() {
+    _shake.dispose();
+    super.dispose();
   }
 }
