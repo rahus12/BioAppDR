@@ -140,6 +140,13 @@ class _HomeState extends State<Home> {
                 onPress: "/facequizgame", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
+              IndexCard(
+                title: "Body Parts Connections Game",
+                questions: "7",
+                progress: "90",
+                onPress: "/bodypartsconnections", // Named route for MCQ page
+              ),
+              const SizedBox(height: 16),
 
               // LESSON CARDS
               LessonCard(

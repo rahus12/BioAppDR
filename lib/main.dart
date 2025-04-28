@@ -7,6 +7,7 @@ import 'package:bioappdr/pages/face_lesson.dart';
 import 'package:bioappdr/pages/word_scramble_game.dart';
 import 'package:bioappdr/pages/memory_game.dart';
 import 'package:bioappdr/pages/FaceQuizGame.dart';
+import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'DragDrop.dart';
 
 
@@ -22,6 +23,7 @@ void main() {
       '/dragdrop': (context) => const DragDrop(),
        "/wordscramble": (context) => const WordScrambleGameV2(),
       "/facequizgame": (context) => const FaceQuizGame(),
+      "/bodypartsconnections": (context) => const BodyPartsConnections(),
     },
   ));
 }
