@@ -170,6 +170,13 @@ class _HomeState extends State<Home> {
                 onPress: "/facelesson", // Named route for Face lesson page
               ),
               const SizedBox(height: 40),
+
+              LessonCard(
+                title: "Speech to learning",
+                slides: "6",
+                onPress: "/learningpage", // Named route for Face lesson page
+              ),
+              const SizedBox(height: 40),
             ],
           ),
         ),

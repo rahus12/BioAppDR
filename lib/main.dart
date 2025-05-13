@@ -10,6 +10,7 @@ import 'package:bioappdr/pages/FaceQuizGame.dart';
 import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
+import 'package:bioappdr/pages/LearningPage.dart';
 
 
 void main() {
@@ -26,6 +27,8 @@ void main() {
       "/facequizgame": (context) => const FaceQuizGame(),
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
+      "/learningpage": (context) => const LearningPage(),
+
     },
   ));
 }
