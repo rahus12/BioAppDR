@@ -13,6 +13,8 @@ import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 
 
+
+
 void main() {
   runApp(MaterialApp(
     initialRoute  : '/',
@@ -28,6 +30,7 @@ void main() {
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
       "/learningpage": (context) => const LearningPage(),
+
 
     },
   ));
