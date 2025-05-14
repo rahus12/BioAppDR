@@ -12,6 +12,7 @@
 .swiftpm/
 android/app/.cxx/
 migrate_working_dir/
+android/app/.cxx/
 
 # IntelliJ related
 *.iml

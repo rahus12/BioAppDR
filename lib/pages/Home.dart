@@ -148,6 +148,14 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 16),
 
+              IndexCard(
+                title: "Body Parts Assembly",
+                questions: "6", // Number of body parts to place
+                progress: "0",  // Start at 0 progress
+                onPress: "/bodyassembly", // Named route for the new game
+              ),
+              const SizedBox(height: 16),
+
               // LESSON CARDS
               LessonCard(
                 title: "Important parts of the Human Body",
@@ -160,6 +168,13 @@ class _HomeState extends State<Home> {
                 title: "Important parts of the Face",
                 slides: "6",
                 onPress: "/facelesson", // Named route for Face lesson page
+              ),
+              const SizedBox(height: 40),
+
+              LessonCard(
+                title: "Speech to learning",
+                slides: "6",
+                onPress: "/learningpage", // Named route for Face lesson page
               ),
               const SizedBox(height: 40),
             ],
