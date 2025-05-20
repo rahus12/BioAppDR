@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
 import 'package:bioappdr/components/lesson_card.dart';
 import 'package:bioappdr/pages/profile_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,6 +12,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int _totalScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTotalScore();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Use addPostFrameCallback to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadTotalScore();
+    });
+  }
+
+  Future<void> _loadTotalScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _totalScore = prefs.getDouble('totalScore')?.round() ?? 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +115,40 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
+              // Add total score display
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade100,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withOpacity(0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 28),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Total Score: $_totalScore',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.brown,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
 
               // "Explore" heading
               const Text(
