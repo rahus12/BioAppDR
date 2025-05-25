@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:math' as math show sin, pi;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WordScrambleGameV2 extends StatefulWidget {
   const WordScrambleGameV2({super.key});
@@ -49,7 +50,12 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
     },
   ];
 
-  int _index = 0;
+  late List<int> _wordOrder; // shuffled order of indices
+  int _currentWord = 0; // index in _wordOrder
+  int _attempts = 0; // attempts for current word
+  double _sessionScore = 0.0;
+  double _totalScore = 0.0;
+  bool _gameOver = false;
   bool _spanish = false; // master translation toggle
   late List<String> _pool;
   final List<String> _typed = [];
@@ -59,12 +65,36 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   void initState() {
     super.initState();
     _shake = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _initGame();
+    _loadTotalScore();
+  }
+
+  void _initGame() {
+    _wordOrder = List.generate(_items.length, (i) => i)..shuffle(Random());
+    _currentWord = 0;
+    _sessionScore = 0.0;
+    _gameOver = false;
     _reset();
+  }
+
+  Future<void> _loadTotalScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _totalScore = prefs.getDouble('total_score') ?? 0.0;
+    });
+  }
+
+  Future<void> _addToTotalScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    _totalScore += _sessionScore;
+    await prefs.setDouble('total_score', _totalScore);
+    setState(() {});
   }
 
   void _reset() {
     _typed.clear();
-    final word = _items[_index]['en'] ?? '';
+    _attempts = 0;
+    final word = _items[_wordOrder[_currentWord]]['en'] ?? '';
     _pool = word.split('')..shuffle(Random());
   }
 
@@ -77,46 +107,132 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   }
 
   void _verify() {
-    final answer = _items[_index]['en'] ?? '';
+    final answer = _items[_wordOrder[_currentWord]]['en'] ?? '';
     if (_typed.length < answer.length) return;
-
+    _attempts++;
     final correct = _typed.join() == answer;
-    _showSnack(correct);
     if (correct) {
+      double earned = 0.0;
+      if (_attempts == 1) {
+        earned = 1.0;
+      } else if (_attempts == 2) {
+        earned = 0.5;
+      }
+      _sessionScore += earned;
+      _showSnack(true, earned);
       Future.delayed(const Duration(milliseconds: 600), _next);
     } else {
+      _showSnack(false, 0);
       _shake.forward(from: 0);
       HapticFeedback.vibrate();
       Future.delayed(const Duration(milliseconds: 600), () => setState(_reset));
     }
   }
 
-  void _next() => setState(() {
-    _index = (_index + 1) % _items.length;
-    _reset();
-  });
+  void _next() {
+    if (_currentWord + 1 >= _wordOrder.length) {
+      setState(() {
+        _gameOver = true;
+      });
+      _onGameComplete();
+    } else {
+      setState(() {
+        _currentWord++;
+        _reset();
+      });
+    }
+  }
 
   void _shuffleUnused() => setState(() => _pool.shuffle(Random()));
 
-  void _showSnack(bool good) => ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(good ? (_spanish ? '¡Correcto!' : 'Correct!') : (_spanish ? 'Inténtalo de nuevo' : 'Try again')),
-      backgroundColor: good ? Colors.green : Colors.red,
-      duration: const Duration(milliseconds: 600),
-    ),
-  );
+  void _showSnack(bool good, double earned) {
+    String msg;
+    if (good) {
+      msg = (_spanish ? '¡Correcto!' : 'Correct!') + (earned > 0 ? ' (+$earned)' : '');
+    } else {
+      msg = _spanish ? 'Inténtalo de nuevo' : 'Try again';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg + (_gameOver ? '' : '  Score: ${_sessionScore.toStringAsFixed(1)}')),
+        backgroundColor: good ? Colors.green : Colors.red,
+        duration: const Duration(milliseconds: 800),
+      ),
+    );
+  }
+
+  Future<void> _onGameComplete() async {
+    await _addToTotalScore();
+    await Future.delayed(const Duration(milliseconds: 400));
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(_spanish ? 'Juego terminado' : 'Game Complete'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text((_spanish ? 'Puntuación de la sesión: ' : 'Session Score: ') + _sessionScore.toStringAsFixed(1)),
+            const SizedBox(height: 8),
+            Text((_spanish ? 'Puntuación total: ' : 'Total Score: ') + _totalScore.toStringAsFixed(1),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Return to home
+            },
+            child: Text(_spanish ? 'Volver a inicio' : 'Return to Home'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final item = _items[_index];
-    final progress = (_index + 1) / _items.length;
-
+    if (_gameOver) {
+      // Show a summary screen instead of a blank screen
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(_spanish ? 'Juego terminado' : 'Game Complete'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                (_spanish ? 'Puntuación de la sesión: ' : 'Session Score: ') + _sessionScore.toStringAsFixed(1),
+                style: theme.textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                (_spanish ? 'Puntuación total: ' : 'Total Score: ') + _totalScore.toStringAsFixed(1),
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(_spanish ? 'Volver a inicio' : 'Return to Home'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    final item = _items[_wordOrder[_currentWord]];
+    final progress = (_currentWord + 1) / _wordOrder.length;
     final wordEn = item['en'] ?? '';
     final wordEs = item['es'] ?? '';
     final hint = _spanish ? (item['hint_es'] ?? '') : (item['hint_en'] ?? '');
     final imagePath = item['img'] ?? '';
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_spanish ? 'Anagrama' : 'Word Scramble'),
@@ -129,7 +245,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Center(
-              child: Text('${_index + 1}/${_items.length}', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
+              child: Text('${_currentWord + 1}/${_wordOrder.length}', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary)),
             ),
           ),
         ],
@@ -190,6 +306,11 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
                     ),
                   );
                 }),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                (_spanish ? 'Puntuación de la sesión: ' : 'Session Score: ') + _sessionScore.toStringAsFixed(1),
+                style: theme.textTheme.titleMedium?.copyWith(color: Colors.blueGrey, fontWeight: FontWeight.bold),
               ),
             ],
           ),

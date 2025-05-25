@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FaceQuizGame extends StatefulWidget {
   const FaceQuizGame({Key? key}) : super(key: key);
@@ -12,8 +13,10 @@ class FaceQuizGame extends StatefulWidget {
 class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMixin {
   final FlutterTts _flutterTts = FlutterTts();
   bool _isSpanish = false;
-  int _score = 0;
-  int _quizIndex = 0;
+  int _currentQuestion = 0;
+  int _attempts = 0;
+  double _sessionScore = 0.0;
+  List<int> _questionOrder = [];
   bool _showFeedback = false;
   bool _isCorrect = false;
   String _feedbackMessage = '';
@@ -30,7 +33,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
     super.initState();
     _setupLessons();
     _initAnimations();
-    _prepareQuestion();
+    _startQuiz();
   }
 
   void _setupLessons() {
@@ -54,43 +57,128 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
     );
   }
 
+  void _startQuiz() {
+    _sessionScore = 0.0;
+    _currentQuestion = 0;
+    _attempts = 0;
+    _questionOrder = List.generate(_lessons.length, (i) => i)..shuffle();
+    _prepareQuestion();
+  }
+
   void _prepareQuestion() {
     setState(() {
       _showFeedback = false;
       _isCorrect = false;
-      _quizIndex = Random().nextInt(_lessons.length);
-      final lesson = _lessons[_quizIndex];
-      _correctAnswer = lesson['desc_en']!;
-
-      // Create options list with correct answer and 2 random different answers
-      _options = [];
-      _options.add(_correctAnswer);
-
-      // Add two more unique options
-      while (_options.length < 3) {
-        int randomIndex = Random().nextInt(_lessons.length);
-        String randomAnswer = _lessons[randomIndex]['desc_en']!;
-        if (!_options.contains(randomAnswer)) {
-          _options.add(randomAnswer);
+      if (_currentQuestion < _lessons.length) {
+        final lesson = _lessons[_questionOrder[_currentQuestion]];
+        _correctAnswer = lesson['desc_en']!;
+        // Create options list with correct answer and 2 random different answers
+        _options = [];
+        _options.add(_correctAnswer);
+        while (_options.length < 3) {
+          int randomIndex = Random().nextInt(_lessons.length);
+          String randomAnswer = _lessons[randomIndex]['desc_en']!;
+          if (!_options.contains(randomAnswer)) {
+            _options.add(randomAnswer);
+          }
         }
+        _options.shuffle();
+        _attempts = 0;
       }
-
-      _options.shuffle();
     });
   }
 
-  void _checkAnswer(String choice) {
+  void _checkAnswer(String choice) async {
+    if (_showFeedback) return;
     setState(() {
       _showFeedback = true;
       _isCorrect = choice == _correctAnswer;
       if (_isCorrect) {
-        _score += 1;
+        if (_attempts == 0) {
+          _sessionScore += 1.0;
+        } else if (_attempts == 1) {
+          _sessionScore += 0.5;
+        }
         _feedbackMessage = 'Correct!';
       } else {
-        _feedbackMessage = 'Wrong! Answer: $_correctAnswer';
+        _feedbackMessage = _attempts == 1 ? 'Try one more time!' : 'Wrong! Try again.';
       }
     });
-    Future.delayed(const Duration(seconds: 2), _prepareQuestion);
+
+    if (_isCorrect) {
+      await Future.delayed(const Duration(seconds: 2));
+      if (_currentQuestion < _lessons.length - 1) {
+        setState(() {
+          _currentQuestion++;
+          _showFeedback = false;
+          _attempts = 0;
+        });
+        _prepareQuestion();
+      } else {
+        // Quiz is complete - show completion dialog, then add score and exit
+        if (mounted) {
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Quiz Complete!'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _sessionScore >= _lessons.length * 0.7 ? Icons.stars : Icons.star,
+                    color: Colors.amber,
+                    size: 50,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Final Score: ${_sessionScore.toStringAsFixed(1)}/${_lessons.length}',
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _sessionScore >= _lessons.length * 0.7 
+                        ? 'Great job!' 
+                        : 'Keep practicing!',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    Navigator.pushReplacementNamed(context, '/');
+                  },
+                  child: const Text('Return to Home'),
+                ),
+              ],
+            ),
+          );
+          // After dialog, add score to total and exit to homepage
+          await _addToTotalScore(_sessionScore);
+          Navigator.pushReplacementNamed(context, '/');
+        }
+      }
+    } else {
+      setState(() {
+        _attempts++;
+        if (_attempts > 1) {
+          _feedbackMessage = 'Keep trying until you get it right!';
+        }
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      setState(() {
+        _showFeedback = false;
+      });
+    }
+  }
+
+  Future<void> _addToTotalScore(double sessionScore) async {
+    final prefs = await SharedPreferences.getInstance();
+    double total = prefs.getDouble('totalScore') ?? 0.0;
+    total += sessionScore;
+    await prefs.setDouble('totalScore', total);
   }
 
   void _toggleLanguage() {
@@ -111,7 +199,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    final lesson = _lessons[_quizIndex];
+    final lesson = _lessons[_questionOrder[_currentQuestion]];
     final questionText = _isSpanish
         ? '¿Para qué sirven los ${lesson['title_en']?.toLowerCase()}?'
         : 'What does the ${lesson['title_en']?.toLowerCase()} do?';
@@ -149,7 +237,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                   const Icon(Icons.star, color: Colors.amber),
                   const SizedBox(width: 10),
                   Text(
-                    'Score: $_score',
+                    'Score: ${_sessionScore.toStringAsFixed(1)}',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

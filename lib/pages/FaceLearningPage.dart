@@ -32,19 +32,19 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LearningPage(),
+      home: const Facelearningpage(),
     );
   }
 }
 
-class LearningPage extends StatefulWidget {
-  const LearningPage({Key? key}) : super(key: key);
+class Facelearningpage extends StatefulWidget {
+  const Facelearningpage({Key? key}) : super(key: key);
 
   @override
-  State<LearningPage> createState() => _LearningPageState();
+  State<Facelearningpage> createState() => _Facelearningpage();
 }
 
-class _LearningPageState extends State<LearningPage> {
+class _Facelearningpage extends State<Facelearningpage> {
   final FlutterTts _flutterTts = FlutterTts();
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
@@ -54,104 +54,83 @@ class _LearningPageState extends State<LearningPage> {
   bool _isSpanish = false;
 
   final List<Map<String, String>> _lessons = [
+    // — face parts entries —
     {
-      'image': 'assets/Body.png',
-      'title_en': 'Human Body',
-      'title_es': 'Cuerpo Humano',
-      'description_en':
-      'The human body is a complex structure composed of multiple organ systems working together to maintain life and health. Each system, like the skeletal, muscular, and nervous systems, plays a vital role in bodily functions.',
-      'description_es':
-      'El cuerpo humano es una estructura compleja compuesta por múltiples sistemas de órganos que trabajan juntos para mantener la vida y la salud. Cada sistema, como el esquelético, muscular y nervioso, desempeña un papel vital en las funciones corporales.'
-    },
-    {
-      'image': 'assets/heart.png',
-      'title_en': 'Heart',
-      'title_es': 'Corazón',
+      'image': 'assets/teeth.jpeg',
+      'title_en': 'Teeth',
+      'title_es': 'Dientes',
       'function_en':
-      'Pumps blood, delivering oxygen and nutrients to the body while removing waste products.',
+      'Chews and breaks down food into smaller pieces.',
       'function_es':
-      'Bombea sangre, entregando oxígeno y nutrientes al cuerpo mientras elimina desechos.',
-      'location_en': 'Center of the chest.',
-      'location_es': 'Centro del pecho.',
+      'Mastica y descompone los alimentos en trozos más pequeños.',
+      'location_en': 'Inside the mouth, attached to the jawbones.',
+      'location_es': 'Dentro de la boca, adheridos a los huesos de la mandíbula.',
       'importance_en':
-      'Essential for circulation; without it, life cannot be sustained',
+      'Essential for digestion and proper nutrition.',
       'importance_es':
-      'Esencial para la circulación; sin él, la vida no puede sostenerse'
+      'Esenciales para la digestión y la nutrición adecuada.'
     },
     {
-      'image': 'assets/Lungs.png',
-      'title_en': 'Lungs',
-      'title_es': 'Pulmones',
+      'image': 'assets/tongue.jpeg',
+      'title_en': 'Tongue',
+      'title_es': 'Lengua',
       'function_en':
-      'Facilitate the exchange of oxygen and carbon dioxide between the air and blood.',
+      'Helps taste food, manipulate it for chewing, and enables speech.',
       'function_es':
-      'Facilitan el intercambio de oxígeno y dióxido de carbono entre el aire y la sangre.',
-      'location_en': 'On either side of the chest.',
-      'location_es': 'A cada lado del pecho.',
-      'importance_en': 'Vital for breathing and oxygen supply to tissues',
-      'importance_es':
-      'Vitales para la respiración y el suministro de oxígeno a los tejidos'
-    },
-    {
-      'image': 'assets/Brain.png',
-      'title_en': 'Brain',
-      'title_es': 'Cerebro',
-      'function_en':
-      'Controls all bodily functions, thoughts, emotions, and memory.',
-      'function_es':
-      'Controla todas las funciones corporales, pensamientos, emociones y memoria.',
-      'location_en': 'Inside the skull',
-      'location_es': 'Dentro del cráneo.',
+      'Ayuda a saborear los alimentos, manipularlos para masticar y permite el habla.',
+      'location_en': 'Inside the mouth, resting on the floor of the oral cavity.',
+      'location_es': 'Dentro de la boca, apoyada en el suelo de la cavidad oral.',
       'importance_en':
-      'Acts as the control center of the body; damage can severely impair or end life',
+      'Vital for taste perception, swallowing, and clear speech.',
       'importance_es':
-      'Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida'
+      'Vital para la percepción del gusto, la deglución y el habla clara.'
     },
     {
-      'image': 'assets/Stomach.png',
-      'title_en': 'Stomach',
-      'title_es': 'Estómago',
+      'image': 'assets/mouth.png',
+      'title_en': 'Mouth',
+      'title_es': 'Boca',
       'function_en':
-      'Breaks down and digests food, mixing it with gastric juices.',
+      'Ingests food and liquids, starts digestion, and forms speech sounds.',
       'function_es':
-      'Descompone y digiere los alimentos, mezclándolos con jugos gástricos.',
-      'location_en': 'Upper abdomen, just below the ribs.',
-      'location_es': 'Parte superior del abdomen, justo debajo de las costillas.',
+      'Ingiere alimentos y líquidos, inicia la digestión y forma sonidos del habla.',
+      'location_en': 'Lower part of the face, below the nose.',
+      'location_es': 'Parte inferior de la cara, debajo de la nariz.',
       'importance_en':
-      'Essential for digestion and nutrient absorption.',
+      'First step in both digestion and verbal communication.',
       'importance_es':
-      'Esencial para la digestión y la absorción de nutrientes.'
+      'Primer paso en la digestión y la comunicación verbal.'
     },
     {
-      'image': 'assets/liver.jpeg',
-      'title_en': 'Liver',
-      'title_es': 'Hígado',
+      'image': 'assets/eyes.jpeg',
+      'title_en': 'Eyes',
+      'title_es': 'Ojos',
       'function_en':
-      'Processes nutrients from food, detoxifies chemicals, and produces bile.',
+      'Detects light and sends visual information to the brain.',
       'function_es':
-      'Procesa nutrientes de los alimentos, desintoxica sustancias químicas y produce bilis.',
-      'location_en': 'Upper right portion of the abdomen.',
-      'location_es': 'Parte superior derecha del abdomen.',
+      'Detecta la luz y envía información visual al cerebro.',
+      'location_en': 'In the eye sockets (orbits) of the skull.',
+      'location_es': 'En las cuencas de los ojos (órbitas) del cráneo.',
       'importance_en':
-      'Crucial for metabolism, detoxification, and bile production.',
+      'Primary organs for vision and spatial awareness.',
       'importance_es':
-      'Crucial para el metabolismo, la desintoxicación y la producción de bilis.'
+      'Órganos principales para la visión y la conciencia espacial.'
     },
     {
-      'image': 'assets/Kidney.png',
-      'title_en': 'Kidney',
-      'title_es': 'Riñón',
+      'image': 'assets/ears.jpeg',
+      'title_en': 'Ears',
+      'title_es': 'Oídos',
       'function_en':
-      'Filters blood to remove waste products and excess fluid, balancing electrolytes.',
+      'Hears sound and helps maintain balance.',
       'function_es':
-      'Filtra la sangre para eliminar desechos y exceso de líquido, equilibrando los electrolitos.',
-      'location_en': 'On both sides of the spine, just below the rib cage.',
-      'location_es': 'A ambos lados de la columna vertebral, justo debajo de la caja torácica.',
+      'Percibe sonidos y ayuda a mantener el equilibrio.',
+      'location_en': 'On both sides of the head, just above the jawline.',
+      'location_es': 'A ambos lados de la cabeza, justo encima de la línea de la mandíbula.',
       'importance_en':
-      'Vital for waste removal, fluid balance, and blood pressure regulation.',
+      'Crucial for hearing, communication, and balance control.',
       'importance_es':
-      'Vital para la eliminación de desechos, el equilibrio de líquidos y la regulación de la presión arterial.'
+      'Cruciales para la audición, la comunicación y el control del equilibrio.'
     },
+
   ];
 
   @override

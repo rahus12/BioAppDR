@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Mcq extends StatefulWidget {
   const Mcq({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class _McqState extends State<Mcq> {
   // Track the user's selection
   String? _selectedOption;
   bool? _isCorrect;
+  double _sessionScore = 0.0;
+  int _attempts = 0;
 
   final List<Map<String, dynamic>> questions = [
     {
@@ -38,47 +41,90 @@ class _McqState extends State<Mcq> {
   /// Checks the answer, highlights if correct, shows popup if wrong
   void checkAnswer(String selectedOption) {
     final correct = questions[currentIndex]["correctOption"];
+    if (_selectedOption != null && _isCorrect == true) return; // Prevent further scoring after correct
+
     if (selectedOption == correct) {
-      // Correct answer
       setState(() {
         _selectedOption = selectedOption;
         _isCorrect = true;
       });
-      // Wait 1 second, then go to next question
+      if (_attempts == 0) {
+        _sessionScore += 1.0;
+      } else if (_attempts == 1) {
+        _sessionScore += 0.5;
+      }
       Future.delayed(const Duration(seconds: 1), () {
-        setState(() {
-          // Move to next question
-          if (currentIndex < questions.length - 1) {
+        if (currentIndex < questions.length - 1) {
+          setState(() {
             currentIndex++;
-          } else {
-            currentIndex = 0; // or navigate to a results screen
-          }
-          // Reset
-          _selectedOption = null;
-          _isCorrect = null;
-        });
+            _selectedOption = null;
+            _isCorrect = null;
+            _attempts = 0;
+          });
+        } else {
+          _addToTotalScore(_sessionScore); // Save to total score
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Quiz Complete!'),
+              content: Text('You scored $_sessionScore out of ${questions.length} possible!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    Navigator.pushReplacementNamed(context, '/');
+                  },
+                  child: const Text('Return to Home'),
+                ),
+              ],
+            ),
+          );
+        }
       });
     } else {
-      // Wrong answer
       setState(() {
         _selectedOption = selectedOption;
         _isCorrect = false;
       });
-      // Show red popup
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text("Incorrect!"),
-          content: const Text("Please try again."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text("OK"),
-            )
-          ],
-        ),
-      );
+      _attempts++;
+      if (_attempts < 2) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Incorrect!"),
+            content: Text("Score: $_sessionScore"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text("OK"),
+              )
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Incorrect!"),
+            content: Text("No points for this question. Try until correct.\nScore: $_sessionScore"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text("OK"),
+              )
+            ],
+          ),
+        );
+      }
     }
+  }
+
+  Future<void> _addToTotalScore(double sessionScore) async {
+    final prefs = await SharedPreferences.getInstance();
+    double total = prefs.getDouble('totalScore') ?? 0.0;
+    total += sessionScore;
+    await prefs.setDouble('totalScore', total);
   }
 
   @override
@@ -103,15 +149,25 @@ class _McqState extends State<Mcq> {
       ),
       // Wrap body in a SingleChildScrollView
       body: SingleChildScrollView(
-        child: Center(
-          child: QuestionCard(
-            imagePath: questionData["image"],
-            question: questionData["question"],
-            options: List<String>.from(questionData["options"]),
-            onOptionSelected: checkAnswer,
-            selectedOption: _selectedOption,
-            isCorrect: _isCorrect,
-          ),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            // Score display
+            Text(
+              'Score: $_sessionScore',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.purple),
+            ),
+            Center(
+              child: QuestionCard(
+                imagePath: questionData["image"],
+                question: questionData["question"],
+                options: List<String>.from(questionData["options"]),
+                onOptionSelected: checkAnswer,
+                selectedOption: _selectedOption,
+                isCorrect: _isCorrect,
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
