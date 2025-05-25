@@ -12,6 +12,9 @@ import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
+import 'package:bioappdr/pages/FaceLearningPage.dart';
+
+
 
 
 
@@ -31,6 +34,7 @@ void main() {
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
       "/learningpage": (context) => const LearningPage(),
+      "/facelearningpage": (context) => const Facelearningpage(),
 
 
     },

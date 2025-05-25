@@ -11,6 +11,41 @@ class SelectImagePage extends StatefulWidget {
 class _SelectImagePageState extends State<SelectImagePage> {
   int _selectedIndex = 0; // For bottom navigation
   final FlutterTts _flutterTts = FlutterTts();
+  bool _answered = false;
+  int _currentQuestion = 0;
+  int _score = 0;
+  final List<Map<String, dynamic>> _questions = [
+    {
+      'spanish': 'El corazón',
+      'answer': 'Heart',
+      'options': [
+        {'label': 'Heart', 'image': 'assets/images/heart.png'},
+        {'label': 'Lungs', 'image': 'assets/images/lungs.png'},
+        {'label': 'Muscle', 'image': 'assets/images/muscle.png'},
+        {'label': 'Tongue', 'image': 'assets/images/tongue.png'},
+      ],
+    },
+    {
+      'spanish': 'Los pulmones',
+      'answer': 'Lungs',
+      'options': [
+        {'label': 'Lungs', 'image': 'assets/images/lungs.png'},
+        {'label': 'Heart', 'image': 'assets/images/heart.png'},
+        {'label': 'Bone', 'image': 'assets/bone.jpeg'},
+        {'label': 'Tongue', 'image': 'assets/images/tongue.png'},
+      ],
+    },
+    {
+      'spanish': 'El hueso',
+      'answer': 'Bone',
+      'options': [
+        {'label': 'Bone', 'image': 'assets/bone.jpeg'},
+        {'label': 'Lungs', 'image': 'assets/images/lungs.png'},
+        {'label': 'Heart', 'image': 'assets/images/heart.png'},
+        {'label': 'Tongue', 'image': 'assets/images/tongue.png'},
+      ],
+    },
+  ];
 
   // Example function to handle bottom nav taps with navigation logic
   void _onItemTapped(int index) {
@@ -38,8 +73,14 @@ class _SelectImagePageState extends State<SelectImagePage> {
 
   // Function to check if the selected answer is correct
   void _checkAnswer(String selectedAnswer) {
-    // "El corazón" corresponds to "Heart"
-    final isCorrect = selectedAnswer == "Heart";
+    if (_answered) return;
+    _answered = true;
+
+    final isCorrect = selectedAnswer == _questions[_currentQuestion]['answer'];
+    if (isCorrect) {
+      _score++;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(isCorrect ? "Correct Answer!" : "Incorrect Answer!"),
@@ -47,10 +88,40 @@ class _SelectImagePageState extends State<SelectImagePage> {
         duration: const Duration(seconds: 2),
       ),
     );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      setState(() {
+        if (_currentQuestion < _questions.length - 1) {
+          _currentQuestion++;
+          _answered = false;
+        } else {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Quiz Complete!'),
+              content: Text('You got $_score out of ${_questions.length} questions correct!'),
+              actions: [
+                TextButton(
+                  child: const Text('Return to Home'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    Navigator.pushReplacementNamed(context, '/');
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final question = _questions[_currentQuestion];
     return Scaffold(
       appBar: AppBar(
         title: const Text('DR Biology'),
@@ -65,13 +136,11 @@ class _SelectImagePageState extends State<SelectImagePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title
-              const Text(
-                'Select the correct image',
-                style: TextStyle(
-                  fontSize: 22,
+              Text(
+                'Question ${_currentQuestion + 1} of ${_questions.length}',
+                style: const TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 10),
@@ -81,15 +150,15 @@ class _SelectImagePageState extends State<SelectImagePage> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // Play TTS for "El corazón"
-                      _speak("El corazón");
+                      // Play TTS for the current question's Spanish text
+                      _speak(question['spanish']);
                     },
                     icon: const Icon(Icons.volume_up),
                     color: Colors.blueAccent,
                   ),
-                  const Text(
-                    'El corazón',
-                    style: TextStyle(
+                  Text(
+                    question['spanish'],
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Colors.black87,
                     ),
@@ -98,7 +167,7 @@ class _SelectImagePageState extends State<SelectImagePage> {
               ),
               const SizedBox(height: 20),
 
-              // 4 Cards in a Grid
+              // Cards in a Grid
               GridView.count(
                 shrinkWrap: true, // So it doesn't take infinite height
                 physics: const NeverScrollableScrollPhysics(),
@@ -106,38 +175,12 @@ class _SelectImagePageState extends State<SelectImagePage> {
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 children: [
-                  _buildImageCard(
-                    imageUrl: 'assets/images/heart.png', // Example local asset
-                    label: 'Heart',
-                    onTap: () {
-                      // Check if this is the correct answer (it is)
-                      _checkAnswer("Heart");
-                    },
-                  ),
-                  _buildImageCard(
-                    imageUrl: 'assets/images/lungs.png',
-                    label: 'Lungs',
-                    onTap: () {
-                      // Check answer for "Lungs" (incorrect for "El corazón")
-                      _checkAnswer("Lungs");
-                    },
-                  ),
-                  _buildImageCard(
-                    imageUrl: 'assets/images/muscle.png',
-                    label: 'Muscle',
-                    onTap: () {
-                      // Check answer for "Muscle" (incorrect for "El corazón")
-                      _checkAnswer("Muscle");
-                    },
-                  ),
-                  _buildImageCard(
-                    imageUrl: 'assets/images/tongue.png',
-                    label: 'Tongue',
-                    onTap: () {
-                      // Check answer for "Tongue" (incorrect for "El corazón")
-                      _checkAnswer("Tongue");
-                    },
-                  ),
+                  for (final opt in question['options'])
+                    _buildImageCard(
+                      imageUrl: opt['image'],
+                      label: opt['label'],
+                      onTap: () => _checkAnswer(opt['label']),
+                    ),
                 ],
               ),
             ],
