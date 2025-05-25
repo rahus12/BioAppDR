@@ -232,9 +232,16 @@ class _HomeState extends State<Home> {
               const SizedBox(height: 40),
 
               LessonCard(
-                title: "Speech to learning",
+                title: "Body learning - Speech recognition",
                 slides: "6",
                 onPress: "/learningpage", // Named route for Face lesson page
+              ),
+              const SizedBox(height: 40),
+
+              LessonCard(
+                title: "Face learning - Speech recognition",
+                slides: "6",
+                onPress: "/facelearningpage", // Named route for Face lesson page
               ),
               const SizedBox(height: 40),
             ],
