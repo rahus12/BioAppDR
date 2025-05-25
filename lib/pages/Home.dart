@@ -205,6 +205,7 @@ class _HomeState extends State<Home> {
                 onPress: "/bodypartsconnections", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
+
               IndexCard(
                 title: "Body Parts Assembly",
                 questions: "6", // Number of body parts to place
@@ -212,10 +213,6 @@ class _HomeState extends State<Home> {
                 onPress: "/bodyassembly", // Named route for the new game
               ),
               const SizedBox(height: 16),
-
-
-
-
               // LESSON CARDS
               LessonCard(
                 title: "Important parts of the Human Body",

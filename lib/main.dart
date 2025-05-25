@@ -8,10 +8,13 @@ import 'package:bioappdr/pages/word_scramble_game.dart';
 import 'package:bioappdr/pages/memory_game.dart';
 import 'package:bioappdr/pages/FaceQuizGame.dart';
 import 'package:bioappdr/pages/BodyPartsConnections.dart';
+
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
+
+
 
 
 
@@ -32,6 +35,7 @@ void main() {
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
       "/learningpage": (context) => const LearningPage(),
       "/facelearningpage": (context) => const Facelearningpage(),
+
 
     },
   ));
