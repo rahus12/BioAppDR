@@ -27,7 +27,7 @@ class _LessonState extends State<Lesson> {
       "El corazón es un órgano poderoso que bombea sangre a todo el cuerpo, suministrando oxígeno y nutrientes a las células. ¡Late alrededor de 100,000 veces al día y es del tamaño de tu puño!"
     },
     {
-      "image": "assets/heart.jpeg",
+      "image": "assets/Heart.png",
       "title_en": "Heart",
       "title_es": "Corazón",
       "function_en":

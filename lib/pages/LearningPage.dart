@@ -64,7 +64,7 @@ class _LearningPageState extends State<LearningPage> {
       'El cuerpo humano es una estructura compleja compuesta por múltiples sistemas de órganos que trabajan juntos para mantener la vida y la salud. Cada sistema, como el esquelético, muscular y nervioso, desempeña un papel vital en las funciones corporales.'
     },
     {
-      'image': 'assets/heart.png',
+      'image': 'assets/Heart.png',
       'title_en': 'Heart',
       'title_es': 'Corazón',
       'function_en':
