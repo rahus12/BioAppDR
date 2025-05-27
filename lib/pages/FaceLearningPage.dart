@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bilingual Body Parts',
+      title: 'Bilingual Face Parts',
       theme: ThemeData(
         primarySwatch: Colors.purple,
         fontFamily: 'Nunito',
@@ -287,7 +287,7 @@ class _Facelearningpage extends State<Facelearningpage> {
   Widget build(BuildContext context) {
     final title = _selectedLesson != null
         ? (_isSpanish ? _selectedLesson!['title_es']! : _selectedLesson!['title_en']!)
-        : (_isSpanish ? 'Explorador del Cuerpo 🚀' : 'Body Explorer Adventure! 🚀');
+        : (_isSpanish ? 'Explorador de la Cara 🚀' : 'Face Explorer Adventure! 🚀');
     return Scaffold(
       appBar: AppBar(
         title: Text(title, style: const TextStyle(color: Colors.white)),
@@ -337,7 +337,7 @@ class _Facelearningpage extends State<Facelearningpage> {
       child: Column(
         children: [
           Text(
-            _isSpanish ? '¡Toca una Parte del Cuerpo!' : 'Tap a Body Part!',
+            _isSpanish ? '¡Toca una Parte de la Cara!' : 'Tap a Face Part!',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[700]),
           ),
           const SizedBox(height: 15),
@@ -380,8 +380,8 @@ class _Facelearningpage extends State<Facelearningpage> {
         decoration: BoxDecoration(color: Colors.green[50], borderRadius: BorderRadius.circular(12)),
         child: Text(
           _isSpanish
-              ? '¡Selecciona una parte del cuerpo arriba para aprender más!'
-              : 'Select a body part above to learn more!',
+              ? '¡Selecciona una parte de la cara arriba para aprender más!'
+              : 'Select a Face part above to learn more!',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 18, color: Colors.green[800], fontStyle: FontStyle.italic),
         ),
