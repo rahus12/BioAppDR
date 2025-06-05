@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -54,7 +53,6 @@ class _Facelearningpage extends State<Facelearningpage> {
   bool _isSpanish = false;
 
   final List<Map<String, String>> _lessons = [
-    // — face parts entries —
     {
       'image': 'assets/teeth.jpeg',
       'title_en': 'Teeth',
@@ -130,7 +128,6 @@ class _Facelearningpage extends State<Facelearningpage> {
       'importance_es':
       'Cruciales para la audición, la comunicación y el control del equilibrio.'
     },
-
   ];
 
   @override
@@ -338,7 +335,7 @@ class _Facelearningpage extends State<Facelearningpage> {
         children: [
           Text(
             _isSpanish ? '¡Toca una Parte de la Cara!' : 'Tap a Face Part!',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[700]),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[200]),
           ),
           const SizedBox(height: 15),
           Image.asset(
@@ -355,12 +352,20 @@ class _Facelearningpage extends State<Facelearningpage> {
               final sel = _selectedLesson?['title_en'] == lesson['title_en'];
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: sel ? Colors.amber[700] : Colors.deepPurple[300],
+                  backgroundColor: sel
+                      ? Colors.amber[700]
+                      : Colors.deepPurple[100], // lighter purple for unselected
+                  foregroundColor: sel
+                      ? Colors.white
+                      : Colors.black,            // dark text on light background
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
                 onPressed: () => _onLessonTapped(lesson),
-                child: Text(_isSpanish ? lesson['title_es']! : lesson['title_en']!),
+                child: Text(
+                  _isSpanish ? lesson['title_es']! : lesson['title_en']!,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
               )
                   .animate(target: sel ? 1 : 0)
                   .scale(duration: 200.ms, begin: const Offset(0.9,0.9), end: const Offset(1,1))
