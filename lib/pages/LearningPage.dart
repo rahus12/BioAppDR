@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -25,7 +24,8 @@ class MyApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.orangeAccent,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            textStyle: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -146,7 +146,8 @@ class _LearningPageState extends State<LearningPage> {
       'function_es':
       'Filtra la sangre para eliminar desechos y exceso de líquido, equilibrando los electrolitos.',
       'location_en': 'On both sides of the spine, just below the rib cage.',
-      'location_es': 'A ambos lados de la columna vertebral, justo debajo de la caja torácica.',
+      'location_es':
+      'A ambos lados de la columna vertebral, justo debajo de la caja torácica.',
       'importance_en':
       'Vital for waste removal, fluid balance, and blood pressure regulation.',
       'importance_es':
@@ -353,13 +354,13 @@ class _LearningPageState extends State<LearningPage> {
       decoration: BoxDecoration(
         color: Colors.purple[50],
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 5, offset: const Offset(0,3))],
+        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 5, offset: const Offset(0, 3))],
       ),
       child: Column(
         children: [
           Text(
             _isSpanish ? '¡Toca una Parte del Cuerpo!' : 'Tap a Body Part!',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[700]),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[200]),
           ),
           const SizedBox(height: 15),
           Image.asset(
@@ -376,15 +377,23 @@ class _LearningPageState extends State<LearningPage> {
               final sel = _selectedLesson?['title_en'] == lesson['title_en'];
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: sel ? Colors.amber[700] : Colors.deepPurple[300],
+                  backgroundColor: sel
+                      ? Colors.amber[700]
+                      : Colors.deepPurple[100],   // lighter purple shade
+                  foregroundColor: sel
+                      ? Colors.white
+                      : Colors.black,             // darker text on light background
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
                 onPressed: () => _onLessonTapped(lesson),
-                child: Text(_isSpanish ? lesson['title_es']! : lesson['title_en']!),
+                child: Text(
+                  _isSpanish ? lesson['title_es']! : lesson['title_en']!,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
               )
                   .animate(target: sel ? 1 : 0)
-                  .scale(duration: 200.ms, begin: const Offset(0.9,0.9), end: const Offset(1,1))
+                  .scale(duration: 200.ms, begin: const Offset(0.9, 0.9), end: const Offset(1, 1))
                   .shake(hz: sel ? 4 : 0, duration: 300.ms);
             }).toList(),
           ),
