@@ -8,20 +8,20 @@ import 'package:bioappdr/pages/memory_game.dart';
 import 'package:bioappdr/pages/FaceQuizGame.dart';
 import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'package:bioappdr/pages/search.dart';
-
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
-
-
-
-
-
+import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
 
 void main() {
+  // 2. Initialize Gemini with your API Key
+  Gemini.init(
+    apiKey: " ",
+  );
+
   runApp(MaterialApp(
-    initialRoute  : '/',
+    initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
       '/question': (context) => const Mcq(),
@@ -29,7 +29,7 @@ void main() {
       '/facelesson': (context) => const FaceLesson(),
       '/memorygame': (context) => const MemoryGame(),
       '/dragdrop': (context) => const DragDrop(),
-      "/wordscramble": (context) => const WordScrambleGameV2(),
+      "/wordscramble": (context) => const WordScrambleGameV2(), 
       "/facequizgame": (context) => const FaceQuizGame(),
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
@@ -73,6 +73,7 @@ void main() {
       }
 
       return null; // Fallback to routes or onUnknownRoute
+
     },
   ));
 }
