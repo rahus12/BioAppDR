@@ -72,7 +72,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed(target);
             });
-            return const Scaffold(
+            return Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           },
