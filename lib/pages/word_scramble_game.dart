@@ -3,6 +3,7 @@ import 'dart:math' as math show sin, pi;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 
 class WordScrambleGameV2 extends StatefulWidget {
   const WordScrambleGameV2({super.key});
@@ -80,15 +81,20 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   Future<void> _loadTotalScore() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _totalScore = prefs.getDouble('total_score') ?? 0.0;
+      _totalScore = prefs.getDouble('totalScore') ?? 0.0;
     });
   }
 
   Future<void> _addToTotalScore() async {
     final prefs = await SharedPreferences.getInstance();
     _totalScore += _sessionScore;
-    await prefs.setDouble('total_score', _totalScore);
+    await prefs.setDouble('totalScore', _totalScore);
     setState(() {});
+  }
+
+  Future<void> _updateProgress(int wordsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('wordscramble_progress', wordsCompleted);
   }
 
   void _reset() {
@@ -119,6 +125,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
         earned = 0.5;
       }
       _sessionScore += earned;
+      _updateProgress(_currentWord + 1); // Update progress for each completed word
       _showSnack(true, earned);
       Future.delayed(const Duration(milliseconds: 600), _next);
     } else {
@@ -162,8 +169,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   }
 
   Future<void> _onGameComplete() async {
-    await _addToTotalScore();
-    await Future.delayed(const Duration(milliseconds: 400));
+    await _addToTotalScore(); // Ensure score is saved before showing dialog
     if (!mounted) return;
     showDialog(
       context: context,
@@ -184,7 +190,11 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Return to home
+              Navigator.pushReplacementNamed(context, '/');
+              // Refresh home data after navigation
+              Future.delayed(const Duration(milliseconds: 100), () {
+                Home.refreshHomeData();
+              });
             },
             child: Text(_spanish ? 'Volver a inicio' : 'Return to Home'),
           ),
@@ -219,6 +229,10 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  // Refresh home data after navigation
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    Home.refreshHomeData();
+                  });
                 },
                 child: Text(_spanish ? 'Volver a inicio' : 'Return to Home'),
               ),

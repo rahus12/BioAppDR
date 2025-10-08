@@ -3,6 +3,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 
 class BodyPartsButtonGame extends StatefulWidget {
   const BodyPartsButtonGame({Key? key}) : super(key: key);
@@ -269,6 +271,10 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
         // Correct part selected
         _partsPlaced[idx] = true;
         _score += 10;
+        
+        // Update progress for each completed part
+        int completedParts = _partsPlaced.where((placed) => placed).length;
+        _updateProgress(completedParts);
 
         _isCorrect = true;
         _feedbackMessage = _isSpanish ? '¡Correcto! (+10)' : 'Correct! (+10)';
@@ -280,7 +286,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
         // Check for game completion or advance to next part
         Future.delayed(const Duration(milliseconds: 800), () {
           if (_partsPlaced.every((placed) => placed)) {
-            _showCompletionDialog();
+            _onGameComplete();
           } else {
             _advanceToNextPart();
           }
@@ -318,6 +324,25 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
     });
 
     _speakCurrentPartDescription();
+  }
+
+  Future<void> _addToTotalScore(double sessionScore) async {
+    final prefs = await SharedPreferences.getInstance();
+    double total = prefs.getDouble('totalScore') ?? 0.0;
+    total += sessionScore;
+    await prefs.setDouble('totalScore', total);
+  }
+
+  Future<void> _updateProgress(int partsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('assembly_progress', partsCompleted);
+  }
+
+  Future<void> _onGameComplete() async {
+    // Save score and progress before showing dialog
+    await _addToTotalScore(_score.toDouble());
+    await _updateProgress(_bodyParts.length); // Mark all parts as completed
+    _showCompletionDialog();
   }
 
   void _showCompletionDialog() {
@@ -408,32 +433,62 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
 
               const SizedBox(height: 24),
 
-              // Play again button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() => _imagesLoaded = false);
-                  _preloadImages().then((_) {
-                    if (mounted) {
-                      setState(() => _imagesLoaded = true);
-                      _setupGame();
-                      _speakCurrentPartDescription();
-                    }
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              // Buttons row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Play again button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      setState(() => _imagesLoaded = false);
+                      _preloadImages().then((_) {
+                        if (mounted) {
+                          setState(() => _imagesLoaded = true);
+                          _setupGame();
+                          _speakCurrentPartDescription();
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 4,
+                    ),
+                    child: Text(
+                      _isSpanish ? 'Jugar de Nuevo' : 'Play Again',
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ),
-                  elevation: 4,
-                ),
-                child: Text(
-                  _isSpanish ? 'Jugar de Nuevo' : 'Play Again',
-                  style: const TextStyle(fontSize: 16),
-                ),
+                  // Return to home button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context, '/');
+                      // Refresh home data after navigation
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        Home.refreshHomeData();
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 4,
+                    ),
+                    child: Text(
+                      _isSpanish ? 'Volver al Inicio' : 'Return to Home',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
