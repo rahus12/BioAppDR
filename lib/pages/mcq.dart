@@ -132,10 +132,11 @@ class _McqState extends State<Mcq> {
     final questionData = questions[currentIndex];
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: const Text("Science MCQ"),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

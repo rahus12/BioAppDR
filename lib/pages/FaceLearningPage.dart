@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bilingual Face Parts',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.orange,
         fontFamily: 'Nunito',
         visualDensity: VisualDensity.adaptivePlatformDensity,
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -286,6 +286,7 @@ class _Facelearningpage extends State<Facelearningpage> {
         ? (_isSpanish ? _selectedLesson!['title_es']! : _selectedLesson!['title_en']!)
         : (_isSpanish ? 'Explorador de la Cara 🚀' : 'Face Explorer Adventure! 🚀');
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(title, style: const TextStyle(color: Colors.white)),
         centerTitle: true,
@@ -327,7 +328,7 @@ class _Facelearningpage extends State<Facelearningpage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.purple[50],
+        color: Colors.orange[50],
         borderRadius: BorderRadius.circular(15),
         boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 5, offset: const Offset(0,3))],
       ),
@@ -335,7 +336,7 @@ class _Facelearningpage extends State<Facelearningpage> {
         children: [
           Text(
             _isSpanish ? '¡Toca una Parte de la Cara!' : 'Tap a Face Part!',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[200]),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.orange[400]),
           ),
           const SizedBox(height: 15),
           Image.asset(
@@ -354,7 +355,7 @@ class _Facelearningpage extends State<Facelearningpage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: sel
                       ? Colors.amber[700]
-                      : Colors.deepPurple[100], // lighter purple for unselected
+                      : Colors.orange[100], // lighter purple for unselected
                   foregroundColor: sel
                       ? Colors.white
                       : Colors.black,            // dark text on light background
