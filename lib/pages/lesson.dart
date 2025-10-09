@@ -209,6 +209,7 @@ class _LessonState extends State<Lesson> {
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(title),
         backgroundColor: Colors.purple,
@@ -284,7 +285,7 @@ class _LessonState extends State<Lesson> {
             ElevatedButton(
               onPressed: nextLesson,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+            backgroundColor: Colors.purple,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,

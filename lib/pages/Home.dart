@@ -84,17 +84,21 @@ class _HomeState extends State<Home> {
       // Gradient AppBar
       appBar: AppBar(
         title: const Text(
-          "BioApp",
-          style: TextStyle(fontWeight: FontWeight.w500),
+          "Bio App!",
+          style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 35,
+              letterSpacing: 0.5,
+              fontFamily:'Kablammo'),
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFFE6E1F5),
-                Color(0xFFF5F5F5),
+                Colors.orange.shade300,
+                Colors.orange.shade500,
               ],
             ),
           ),
@@ -104,7 +108,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         // Ensures the screen is scrollable if content is large
         child: Container(
-          color: const Color(0xFFF5F5F5),
+          color: const Color(0xFFFFF3E0), // Changed background to light orange
           padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +126,8 @@ class _HomeState extends State<Home> {
                         style: TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 0.36,
+                          letterSpacing: 0.5,
+                          fontFamily: 'Sunshine',
                         ),
                       ),
                       SizedBox(height: 4),

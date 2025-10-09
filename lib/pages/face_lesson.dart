@@ -137,6 +137,7 @@ class _FaceLessonState extends State<FaceLesson> {
     }
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(title ?? ""),
         backgroundColor: Colors.purple,

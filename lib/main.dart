@@ -8,20 +8,28 @@ import 'package:bioappdr/pages/memory_game.dart';
 import 'package:bioappdr/pages/FaceQuizGame.dart';
 import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'package:bioappdr/pages/search.dart';
-
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
-
-
-
-
-
+import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
 
 void main() {
+  // 2. Initialize Gemini with your API Key
+  Gemini.init(
+    apiKey: " ",
+  );
+
   runApp(MaterialApp(
-    initialRoute  : '/',
+    theme: ThemeData(
+      primarySwatch: Colors.orange,
+      fontFamily: 'Luckiest Guy', // Set default fun font
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(fontSize: 16.0),
+        bodyLarge: TextStyle(fontSize: 18.0),
+      ),
+    ),
+    initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
       '/question': (context) => const Mcq(),
@@ -64,7 +72,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed(target);
             });
-            return const Scaffold(
+            return Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           },
@@ -73,6 +81,7 @@ void main() {
       }
 
       return null; // Fallback to routes or onUnknownRoute
+
     },
   ));
 }

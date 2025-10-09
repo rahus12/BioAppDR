@@ -185,6 +185,7 @@ class _DragDropQuizState extends State<DragDrop> {
     List<Map<String, String>>.from(currentQuestion['options']);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(
           _showSpanish

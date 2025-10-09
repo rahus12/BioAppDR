@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bioappdr/pages/Home.dart';
@@ -145,16 +147,24 @@ class _McqState extends State<Mcq> {
     final questionData = questions[currentIndex];
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
-        title: const Text("Science MCQ"),
+        title: const Text(
+            "Science MCQ",
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 35,
+                letterSpacing: 0.5,
+                fontFamily:'LuckiestGuy')),
+
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFFE6E1F5),
-                Color(0xFFF5F5F5),
+                Colors.orange.shade300,
+                Colors.orange.shade500,
               ],
             ),
           ),
@@ -168,10 +178,11 @@ class _McqState extends State<Mcq> {
             // Score display
             Text(
               'Score: $_sessionScore',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.purple),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple),
             ),
+            const SizedBox(height: 20),
             Center(
-              child: QuestionCard(
+              child: AnimatedQuestionCard(
                 imagePath: questionData["image"],
                 question: questionData["question"],
                 options: List<String>.from(questionData["options"]),
@@ -206,6 +217,144 @@ class _McqState extends State<Mcq> {
   }
 }
 
+class AnimatedQuestionCard extends StatefulWidget {
+  final String imagePath;
+  final String question;
+  final List<String> options;
+  final Function(String) onOptionSelected;
+  final String? selectedOption;
+  final bool? isCorrect;
+
+  const AnimatedQuestionCard({
+    required this.imagePath,
+    required this.question,
+    required this.options,
+    required this.onOptionSelected,
+    this.selectedOption,
+    this.isCorrect,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _AnimatedQuestionCardState createState() => _AnimatedQuestionCardState();
+}
+
+class _AnimatedQuestionCardState extends State<AnimatedQuestionCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  Timer? _timer;
+  final _random = Random();
+
+  late Animation<Offset> _bottomAnimation;
+  late Animation<Offset> _leftAnimation;
+  late Animation<Offset> _rightAnimation;
+  Alignment _alignment = Alignment.bottomCenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _bottomAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.0),
+      end: const Offset(0.0, 1.0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _leftAnimation = Tween<Offset>(
+      begin:  const Offset(0.2, 0.0),
+      end: const Offset(-0.8, 0.0),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _rightAnimation = Tween<Offset>(
+      begin: const Offset(-0.2, 0.0),
+      end: const Offset(0.8, 0.0) ,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _offsetAnimation = _bottomAnimation; // Default animation
+
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _playAnimation();
+    });
+  }
+
+  void _playAnimation() {
+    final orientation = MediaQuery.of(context).orientation;
+    int count = 0;
+    setState(() {
+      if (orientation == Orientation.portrait) {
+        final side = _random.nextInt(3); // 0: bottom, 1: left, 2: right
+        if (side == 0) {
+          _alignment = Alignment.bottomCenter;
+          _offsetAnimation = _bottomAnimation;
+          print("goin bottom");
+        } else if (side == 1) {
+          _alignment = Alignment.centerLeft;
+          _offsetAnimation = _leftAnimation;
+          print("goin left");
+        } else {
+          _alignment = Alignment.centerRight;
+          _offsetAnimation = _rightAnimation;
+          print("goin right");
+        }
+      } else { // Landscape
+        final side = _random.nextInt(2); // 0: left, 1: right
+        // int side = count % 2;
+        if (side == 0) {
+          _alignment = Alignment.centerLeft;
+          _offsetAnimation = _leftAnimation;
+          print("goin left");
+        } else {
+          _alignment = Alignment.centerRight;
+          _offsetAnimation = _rightAnimation;
+          print("goin right");
+        }
+        // count = count +1;
+      }
+    });
+
+    _controller.forward().then((_) {
+      Future.delayed(const Duration(seconds: 1), () {
+        _controller.reverse();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none, // Allow image to pop out
+      alignment: _alignment,
+      children: [
+        // The monkey/character that pops up
+        SlideTransition(
+          position: _offsetAnimation,
+          child: Image.asset('assets/monkey.webp', height: 200), // Placeholder
+        ),
+        // The actual question card
+        QuestionCard(
+          imagePath: widget.imagePath,
+          question: widget.question,
+          options: widget.options,
+          onOptionSelected: widget.onOptionSelected,
+          selectedOption: widget.selectedOption,
+          isCorrect: widget.isCorrect,
+        ),
+      ],
+    );
+  }
+}
+
 class QuestionCard extends StatelessWidget {
   final String imagePath;
   final String question;
@@ -229,83 +378,91 @@ class QuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      color: const Color(0xFFF5F5F5),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 15,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           // Top image
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 100),
-            child: Image.asset(imagePath, height: 250),
-          ),
-          // Card for the question and options
+          Image.asset(imagePath, height: 150),
+          const SizedBox(height: 20),
+          // Question text
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Card(
-              color: Colors.white,
-              elevation: 10,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 40, 10, 20),
-                child: Column(
-                  children: [
-                    // Question text
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        question,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    // Option buttons
-                    Column(
-                      children: options.map((option) {
-                        // Decide button color based on selection
-                        Color buttonColor = Colors.white;
-                        Color textColor = Colors.black;
-
-                        if (selectedOption == option) {
-                          // The user has selected this option
-                          if (isCorrect == true) {
-                            buttonColor = Colors.green;
-                            textColor = Colors.white;
-                          } else if (isCorrect == false) {
-                            buttonColor = Colors.red;
-                            textColor = Colors.white;
-                          }
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 20,
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () => onOptionSelected(option),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(250, 50),
-                              backgroundColor: buttonColor,
-                              foregroundColor: textColor,
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: const BorderSide(
-                                  color: Color(0xFFC0BABA),
-                                ),
-                              ),
-                            ),
-                            child: Text(option),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
+            child: Text(
+              question,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Sunshine'
               ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          // Option buttons
+          Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              children: options.map((option) {
+                bool isSelected = selectedOption == option;
+                Color buttonColor;
+                Widget? trailingIcon;
+
+                if (isSelected) {
+                  if (isCorrect == true) {
+                    buttonColor = Colors.green.shade400;
+                    trailingIcon =
+                        const Icon(Icons.check_circle, color: Colors.white);
+                  } else {
+                    buttonColor = Colors.red.shade400;
+                    trailingIcon =
+                        const Icon(Icons.cancel, color: Colors.white);
+                  }
+                } else {
+                  buttonColor = Colors.orange.shade400;
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 20,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () => onOptionSelected(option),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(250, 55),
+                      backgroundColor: buttonColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      elevation: 5,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(option,
+                            style: const TextStyle(
+                                fontSize: 18, color: Colors.white)),
+                        if (trailingIcon != null) ...[
+                          const SizedBox(width: 10),
+                          trailingIcon,
+                        ]
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],

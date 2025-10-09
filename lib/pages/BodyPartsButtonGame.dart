@@ -361,7 +361,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
-              colors: [Colors.purple.shade50, Colors.purple.shade100],
+              colors: [Colors.orange.shade50, Colors.orange.shade100],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -380,7 +380,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple.shade800,
+                      color: Colors.orange.shade800,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -658,7 +658,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
     return Container(
         height: size.height * 0.15, // Taller for better visibility
         decoration: BoxDecoration(
-          color: Colors.purple.shade100,
+          color: Colors.orange.shade100,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
@@ -725,7 +725,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
     ? part['color']
         : (isCurrent
     ? Colors.white
-        : Colors.purple.shade50),
+        : Colors.orange.shade50),
     borderRadius: BorderRadius.circular(12), // More rounded
     border: isCurrent && !isSelected
     ? Border.all(color: Colors.yellow, width: 3) // Thicker border
@@ -829,7 +829,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
     }
 
     return Scaffold(
-      backgroundColor: Colors.purple.shade50,
+      backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(_isSpanish ? 'Juego de Partes del Cuerpo' : 'Body Parts Game'),
         backgroundColor: Colors.purple.shade300,
@@ -876,10 +876,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purple.shade50, Colors.purple.shade100],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+                              colors: [Colors.orange.shade50, Colors.orange.shade100],              ),
             ),
           ),
 
@@ -958,7 +955,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple.shade700,
+                      color: Colors.orange.shade700,
                     ),
                   ),
                   const SizedBox(height: 6),
