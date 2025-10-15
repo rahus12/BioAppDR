@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class IndexCard extends StatelessWidget {
   final String? title;
@@ -23,21 +24,36 @@ class IndexCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
-          height: 116,
           decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "$title",
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "$title",
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                        fontFamily: 'Sunshine',
+                      ),
+                    ),
+                  ),
+                  Icon(Icons.sports_esports, color: Colors.orange.shade800, size: 28),
+                ],
               ),
               Text(
                 "$questions Questions",
@@ -53,31 +69,32 @@ class IndexCard extends StatelessWidget {
                 children: [
                   Text(
                     "Progress $progress%",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFFFFD166),
+                      color: Colors.orange.shade800, // Changed for contrast
                     ),
                   ),
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFD166),
-                      foregroundColor: Colors.black,
-                      fixedSize: const Size(55, 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.orange.shade300, // Restoring original color
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      elevation: 5,
+                      shadowColor: Colors.orange.withOpacity(0.5),
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, onPress);
                     },
-                    child: const Text(
-                      "Start",
-                      style: TextStyle(fontSize: 16),
+                    icon: const Icon(Icons.rocket_launch, size: 18),
+                    label: const Text(
+                      "Play!",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                  ).animate().fadeIn(delay: 300.ms).scale(duration: 500.ms, begin: const Offset(0.8, 0.8)),
                 ],
               ),
             ],

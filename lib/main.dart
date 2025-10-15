@@ -21,6 +21,14 @@ void main() {
   );
 
   runApp(MaterialApp(
+    theme: ThemeData(
+      primarySwatch: Colors.orange,
+      fontFamily: 'Luckiest Guy', // Set default fun font
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(fontSize: 16.0),
+        bodyLarge: TextStyle(fontSize: 18.0),
+      ),
+    ),
     initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
@@ -29,7 +37,7 @@ void main() {
       '/facelesson': (context) => const FaceLesson(),
       '/memorygame': (context) => const MemoryGame(),
       '/dragdrop': (context) => const DragDrop(),
-      "/wordscramble": (context) => const WordScrambleGameV2(), 
+      "/wordscramble": (context) => const WordScrambleGameV2(),
       "/facequizgame": (context) => const FaceQuizGame(),
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
@@ -64,7 +72,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed(target);
             });
-            return const Scaffold(
+            return Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           },
