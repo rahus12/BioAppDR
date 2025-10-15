@@ -206,6 +206,13 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
     await _flutterTts.speak(text);
   }
 
+  void _speakInstructions() {
+    final text = _isSpanish
+        ? 'Conecta la imagen con su pareja correcta'
+        : 'Connect the image with its correct match';
+    _speakText(text);
+  }
+
   Future<void> _addToTotalScore(double sessionScore) async {
     final prefs = await SharedPreferences.getInstance();
     double total = prefs.getDouble('totalScore') ?? 0.0;
@@ -316,8 +323,9 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                           }
                         },
                         style: IconButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            foregroundColor: Colors.white),
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
                     ],
                   ),
@@ -342,17 +350,28 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_isSpanish ? 'Conexiones del Cuerpo' : 'Body Parts Connections'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
-        actions: [IconButton(icon: const Icon(Icons.translate), onPressed: _toggleLanguage)],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: _isSpanish ? 'Traducir' : 'Translate',
+            onPressed: _toggleLanguage,
+          ),
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            tooltip: _isSpanish ? 'Escuchar instrucciones' : 'Hear instructions',
+            onPressed: _speakInstructions,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAiAssistant,
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
+
         child: const Icon(Icons.assistant),
         tooltip: 'AI Assistant',
       ),
@@ -368,7 +387,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-              color: Colors.deepPurple.withOpacity(0.1),
+              color: colorScheme.primaryContainer.withOpacity(0.3),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -378,16 +397,16 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                       const SizedBox(width: 8),
                       Text(
                         '${_isSpanish ? 'Puntuación' : 'Score'}: $_score',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: colorScheme.primary),
                       ),
                     ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(color: Colors.deepPurple, borderRadius: BorderRadius.circular(16)),
+                    decoration: BoxDecoration(color: colorScheme.primary, borderRadius: BorderRadius.circular(16)),
                     child: Text(
                       '${_isSpanish ? 'Nivel' : 'Level'} $_level',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary),
                     ),
                   ),
                 ],
@@ -403,7 +422,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                       const SizedBox(height: 20),
                       Text(
                         _isSpanish ? '¡Felicidades!' : 'Congratulations!',
-                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: colorScheme.primary),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -422,8 +441,8 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                           ElevatedButton(
                             onPressed: _restartGame,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.purple,
-                              foregroundColor: Colors.white,
+                              backgroundColor: colorScheme.secondary,
+                              foregroundColor:colorScheme.onSecondary,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                                 vertical: 16,
@@ -443,8 +462,8 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
+                              backgroundColor: colorScheme.primary,
+                              foregroundColor: colorScheme.onPrimary,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 24,
                                 vertical: 16,
@@ -478,18 +497,18 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: _isCorrect ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                          color: _isCorrect ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.errorContainer,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: _isCorrect ? Colors.green : Colors.red, width: 2),
+                          border: Border.all(color: _isCorrect ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error, width: 2),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(_isCorrect ? Icons.check_circle : Icons.cancel, color: _isCorrect ? Colors.green : Colors.red),
+                            Icon(_isCorrect ? Icons.check_circle : Icons.cancel, color: _isCorrect ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error),
                             const SizedBox(width: 8),
                             Text(
                               _feedbackMessage,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _isCorrect ? Colors.green : Colors.red),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: _isCorrect ? Theme.of(context).colorScheme.onSecondaryContainer : Theme.of(context).colorScheme.onErrorContainer),
                             ),
                           ],
                         ),
@@ -548,9 +567,10 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
     final text = _isSpanish ? (isLeft ? data['left_es'] : data['right_es']) : (isLeft ? data['left_en'] : data['right_en']);
     final imagePath = isLeft ? data['image'] : null;
 
-    final Color baseColor = isLeft ? Colors.blue : Colors.green;
-    final Color bgColor = isCompleted ? Colors.grey.shade300 : isSelected ? baseColor.withOpacity(0.3) : Colors.white;
-    final Color borderColor = isCompleted ? Colors.grey.shade400 : isSelected ? baseColor : baseColor.withOpacity(0.5);
+    final theme = Theme.of(context);
+    final Color baseColor = isLeft ? theme.colorScheme.primary : theme.colorScheme.secondary;
+    final Color bgColor = isCompleted ? theme.colorScheme.surfaceVariant : isSelected ? baseColor.withOpacity(0.3) : theme.colorScheme.surface;
+    final Color borderColor = isCompleted ? theme.colorScheme.outline : isSelected ? baseColor : baseColor.withOpacity(0.5);
 
     Widget cardContent;
     if (isLeft && imagePath != null) {
@@ -561,7 +581,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
             flex: 3,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Image.asset(imagePath, fit: BoxFit.contain, color: isCompleted ? Colors.grey.shade600 : null),
+              child: Image.asset(imagePath, fit: BoxFit.contain, color: isCompleted ? theme.colorScheme.onSurfaceVariant : null),
             ),
           ),
           Expanded(
@@ -573,7 +593,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: isCompleted ? Colors.grey.shade600 : Colors.black87,
+                  color: isCompleted ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.onSurface,
                   decoration: isCompleted ? TextDecoration.lineThrough : null,
                 ),
               ),
@@ -589,7 +609,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: isCompleted ? Colors.grey.shade600 : Colors.black87,
+            color: isCompleted ? theme.colorScheme.onSurfaceVariant : theme.colorScheme.onSurface,
             decoration: isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),

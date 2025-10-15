@@ -108,7 +108,7 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
         // Ensures the screen is scrollable if content is large
         child: Container(
-          color: const Color(0xFFFFF3E0), // Changed background to light orange
+          color: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,11 +168,11 @@ class _HomeState extends State<Home> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.amber.shade100,
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.amber.withOpacity(0.2),
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -181,14 +181,14 @@ class _HomeState extends State<Home> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 28),
+                      Icon(Icons.star, color: Theme.of(context).colorScheme.secondary, size: 28),
                       const SizedBox(width: 10),
                       Text(
                         'Total Score: $_totalScore',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Colors.brown,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ],
@@ -207,7 +207,6 @@ class _HomeState extends State<Home> {
               ),
               const Divider(
                 thickness: 2,
-                color: Colors.black12,
                 height: 30,
               ),
 
@@ -294,9 +293,10 @@ class _HomeState extends State<Home> {
       ),
       // Bottom Nav
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        // Colors now inherited from global theme's BottomNavigationBarTheme
         currentIndex: 0,
         onTap: (index) {
           if (index == 1) {

@@ -5,38 +5,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bilingual Body Parts',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        fontFamily: 'Nunito',
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orangeAccent,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            textStyle: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-      ),
-      home: const LearningPage(),
-    );
-  }
-}
-
 class LearningPage extends StatefulWidget {
   const LearningPage({Key? key}) : super(key: key);
 
@@ -312,9 +280,8 @@ class _LearningPageState extends State<LearningPage> {
         : (_isSpanish ? 'Explorador del Cuerpo 🚀' : 'Body Explorer Adventure! 🚀');
     return Scaffold(
       appBar: AppBar(
-        title: Text(title, style: const TextStyle(color: Colors.white)),
+        title: Text(title),
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
             icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
@@ -329,7 +296,7 @@ class _LearningPageState extends State<LearningPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.face_retouching_natural, size: 40, color: Colors.amber[800]),
+                Icon(Icons.face_retouching_natural, size: 40, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 10),
                 Text(
                   _isSpanish ? '¡Hola!' : 'Hi!',
@@ -352,22 +319,22 @@ class _LearningPageState extends State<LearningPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.purple[50],
+        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 5, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(0.15), blurRadius: 5, offset: const Offset(0, 3))],
       ),
       child: Column(
         children: [
           Text(
             _isSpanish ? '¡Toca una Parte del Cuerpo!' : 'Tap a Body Part!',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.purple[200]),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: 15),
           Image.asset(
             img,
             height: MediaQuery.of(context).size.height * 0.2,
             fit: BoxFit.contain,
-            errorBuilder: (ctx, e, st) => Center(child: Text('Image not found', style: TextStyle(color: Colors.grey[600]))),
+            errorBuilder: (ctx, e, st) => Center(child: Text('Image not found', style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant))),
           ).animate().fadeIn(duration: 500.ms),
           const SizedBox(height: 20),
           Wrap(
@@ -378,11 +345,11 @@ class _LearningPageState extends State<LearningPage> {
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: sel
-                      ? Colors.amber[700]
-                      : Colors.deepPurple[100],   // lighter purple shade
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.primaryContainer,
                   foregroundColor: sel
-                      ? Colors.white
-                      : Colors.black,             // darker text on light background
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
@@ -407,26 +374,27 @@ class _LearningPageState extends State<LearningPage> {
       return Container(
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(color: Colors.green[50], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.5), borderRadius: BorderRadius.circular(12)),
         child: Text(
           _isSpanish
               ? '¡Selecciona una parte del cuerpo arriba para aprender más!'
               : 'Select a body part above to learn more!',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, color: Colors.green[800], fontStyle: FontStyle.italic),
+          style: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onSecondaryContainer, fontStyle: FontStyle.italic),
         ),
       ).animate().fadeIn(delay: 300.ms, duration: 500.ms);
     }
     final lesson = _selectedLesson!;
     final hasFunc = lesson.containsKey('function_en');
+    final cs = Theme.of(context).colorScheme;
     final blocks = hasFunc
         ? [
-      _colorBlock(Icons.functions_outlined, 'Function', lesson['function_en']!, Colors.blueAccent),
-      _colorBlock(Icons.location_on_outlined, 'Location', lesson['location_en']!, Colors.green),
-      _colorBlock(Icons.star_outline, 'Importance', lesson['importance_en']!, Colors.orange),
+      _colorBlock(Icons.functions_outlined, 'Function', lesson['function_en']!, cs.primary),
+      _colorBlock(Icons.location_on_outlined, 'Location', lesson['location_en']!, cs.secondary),
+      _colorBlock(Icons.star_outline, 'Importance', lesson['importance_en']!, cs.tertiary),
     ]
         : [
-      _colorBlock(Icons.info_outline, 'Description', lesson['description_en']!, Colors.teal),
+      _colorBlock(Icons.info_outline, 'Description', lesson['description_en']!, cs.secondary),
     ];
     return Card(
       elevation: 4,
@@ -521,7 +489,7 @@ class _LearningPageState extends State<LearningPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 17,
-              color: _isListening ? Colors.redAccent : Colors.blueGrey[700],
+              color: _isListening ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -531,11 +499,11 @@ class _LearningPageState extends State<LearningPage> {
             child: CircleAvatar(
               radius: 35,
               backgroundColor: _selectedLesson == null
-                  ? Colors.grey[400]
-                  : (_isListening ? Colors.red[400] : Theme.of(context).primaryColor),
+                  ? Theme.of(context).colorScheme.surfaceVariant
+                  : (_isListening ? Theme.of(context).colorScheme.errorContainer : Theme.of(context).colorScheme.primary),
               child: Icon(
                 _isListening ? Icons.mic_off : Icons.mic,
-                color: Colors.white,
+                color: _isListening ? Theme.of(context).colorScheme.onErrorContainer : Theme.of(context).colorScheme.onPrimary,
                 size: 30,
               ),
             ),

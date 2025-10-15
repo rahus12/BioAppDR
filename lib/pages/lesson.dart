@@ -12,8 +12,6 @@ class Lesson extends StatefulWidget {
 class _LessonState extends State<Lesson> {
   int currentIndex = 0;
   final FlutterTts flutterTts = FlutterTts();
-
-  // Toggle: false = English, true = Spanish
   bool _isSpanish = false;
 
   final List<Map<String, String>> lessons = [
@@ -22,9 +20,9 @@ class _LessonState extends State<Lesson> {
       "title_en": "Human Body",
       "title_es": "Cuerpo Humano",
       "description_en":
-      "The heart is a powerful organ that pumps blood throughout the body, delivering oxygen and nutrients to cells. It beats about 100,000 times a day and is about the size of your fist!",
+      "The human body is a complex and amazing system of organs and structures working together to sustain life. Let's explore some of its key components!",
       "description_es":
-      "El corazón es un órgano poderoso que bombea sangre a todo el cuerpo, suministrando oxígeno y nutrientes a las células. ¡Late alrededor de 100,000 veces al día y es del tamaño de tu puño!"
+      "¡El cuerpo humano es un sistema complejo y asombroso de órganos y estructuras que trabajan juntos para mantener la vida. ¡Exploremos algunos de sus componentes clave!"
     },
     {
       "image": "assets/Heart.png",
@@ -34,12 +32,12 @@ class _LessonState extends State<Lesson> {
       "Pumps blood, delivering oxygen and nutrients to the body while removing waste products.",
       "function_es":
       "Bombea sangre, entregando oxígeno y nutrientes al cuerpo mientras elimina desechos.",
-      "location_en": "Center of the chest.",
-      "location_es": "Centro del pecho.",
+      "location_en": "Center of the chest, slightly to the left.",
+      "location_es": "Centro del pecho, ligeramente a la izquierda.",
       "importance_en":
-      "Essential for circulation; without it, life cannot be sustained",
+      "Essential for circulation; without it, life cannot be sustained.",
       "importance_es":
-      "Esencial para la circulación; sin él, la vida no puede sostenerse"
+      "Esencial para la circulación; sin él, la vida no puede sostenerse."
     },
     {
       "image": "assets/lungs.jpeg",
@@ -51,9 +49,9 @@ class _LessonState extends State<Lesson> {
       "Facilitan el intercambio de oxígeno y dióxido de carbono entre el aire y la sangre.",
       "location_en": "On either side of the chest.",
       "location_es": "A cada lado del pecho.",
-      "importance_en": "Vital for breathing and oxygen supply to tissues",
+      "importance_en": "Vital for breathing and oxygen supply to tissues.",
       "importance_es":
-      "Vitales para la respiración y el suministro de oxígeno a los tejidos"
+      "Vitales para la respiración y el suministro de oxígeno a los tejidos."
     },
     {
       "image": "assets/brain.jpg",
@@ -63,26 +61,26 @@ class _LessonState extends State<Lesson> {
       "Controls all bodily functions, thoughts, emotions, and memory.",
       "function_es":
       "Controla todas las funciones corporales, pensamientos, emociones y memoria.",
-      "location_en": "Inside the skull",
+      "location_en": "Inside the skull.",
       "location_es": "Dentro del cráneo.",
       "importance_en":
-      "Acts as the control center of the body; damage can severely impair or end life",
+      "Acts as the control center of the body; damage can severely impair or end life.",
       "importance_es":
-      "Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida"
+      "Actúa como el centro de control del cuerpo; su daño puede perjudicar gravemente o terminar la vida."
     },
     {
       "image": "assets/stomach.jpeg",
       "title_en": "Stomach",
       "title_es": "Estómago",
-      "function_en": "Food storage, mixing, and initial digestion",
+      "function_en": "Food storage, mixing, and initial digestion.",
       "function_es":
       "Almacena, mezcla e inicia la digestión de los alimentos.",
-      "location_en": "Center of the body.",
-      "location_es": "Centro del cuerpo.",
+      "location_en": "Upper abdomen, between the esophagus and small intestine.",
+      "location_es": "Abdomen superior, entre el esófago y el intestino delgado.",
       "importance_en":
-      "Essential for digestion; without it, life cannot be sustained",
+      "Breaks down food into a usable form for the body.",
       "importance_es":
-      "Esencial para la digestión; sin él, la vida no puede sostenerse"
+      "Descompone los alimentos en una forma utilizable para el cuerpo."
     },
     {
       "image": "assets/liver.jpeg",
@@ -95,9 +93,9 @@ class _LessonState extends State<Lesson> {
       "location_en": "Upper right abdomen.",
       "location_es": "Parte superior derecha del abdomen.",
       "importance_en":
-      "Performs over 500 essential functions; damage can lead to severe health issues",
+      "Performs over 500 essential functions; damage can lead to severe health issues.",
       "importance_es":
-      "Realiza más de 500 funciones esenciales; su daño puede causar graves problemas de salud"
+      "Realiza más de 500 funciones esenciales; su daño puede causar graves problemas de salud."
     },
     {
       "image": "assets/kidney.jpeg",
@@ -107,49 +105,39 @@ class _LessonState extends State<Lesson> {
       "Filter blood to remove waste and excess fluids, producing urine.",
       "function_es":
       "Filtran la sangre para eliminar desechos y exceso de fluidos, produciendo orina.",
-      "location_en": "Center of the chest.",
-      "location_es": "Centro del pecho.",
+      "location_en": "Lower back, on each side of the spine.",
+      "location_es": "Parte baja de la espalda, a cada lado de la columna.",
       "importance_en":
-      "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis",
+      "Maintain fluid balance and remove toxins; failure requires medical intervention like dialysis.",
       "importance_es":
-      "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis"
+      "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis."
     },
     {
       "image": "assets/bone.jpeg",
       "title_en": "Bones",
       "title_es": "Huesos",
       "function_en":
-      "Provide structure, support, and protection for the body",
+      "Provide structure, support, and protection for the body.",
       "function_es":
       "Brindan estructura, soporte y protección para el cuerpo.",
-      "location_en": "Everywhere",
-      "location_es": "En todas partes.",
+      "location_en": "Throughout the body.",
+      "location_es": "En todo el cuerpo.",
       "importance_en":
-      "Essential for support; without it, life cannot be sustained",
+      "Form the skeleton, which allows movement and protects vital organs.",
       "importance_es":
-      "Esenciales para el soporte; sin ellos, la vida no puede sostenerse"
+      "Forman el esqueleto, que permite el movimiento y protege los órganos vitales."
     },
   ];
 
   @override
   void initState() {
     super.initState();
-    // Configure TTS settings.
     flutterTts.setSpeechRate(0.5);
     flutterTts.setVolume(1.0);
-    // For debugging: print supported languages if not on web.
-    if (!kIsWeb) {
-      // getLanguages is a getter that returns a Future<dynamic>; do not use parentheses.
-      Future<dynamic> languagesFuture = flutterTts.getLanguages;
-      languagesFuture.then((langs) {
-        print("Supported languages: $langs");
-      });
-    }
   }
 
   @override
   void dispose() {
-    // Stop any ongoing speech when the widget is disposed.
     flutterTts.stop();
     super.dispose();
   }
@@ -167,9 +155,7 @@ class _LessonState extends State<Lesson> {
   }
 
   void speak(String text) async {
-    // Stop any ongoing speech before starting a new one.
     await flutterTts.stop();
-    // Set language based on the toggle.
     await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
@@ -177,43 +163,30 @@ class _LessonState extends State<Lesson> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     final lesson = lessons[currentIndex];
+    final String title = _isSpanish ? (lesson["title_es"] ?? "") : (lesson["title_en"] ?? "");
+    final bool hasFunctionBlock = lesson.containsKey("function_en");
 
-    // Decide which title to display.
-    final String title = _isSpanish
-        ? (lesson["title_es"] ?? lesson["title_en"] ?? "")
-        : (lesson["title_en"] ?? "");
-
-    // Check if we have function-based fields.
-    final bool hasFunctionBlock = lesson.containsKey("function_en") ||
-        lesson.containsKey("function_es");
-
-    // Prepare text for TTS.
     String speakText;
     if (hasFunctionBlock) {
-      final String func = _isSpanish
-          ? (lesson["function_es"] ?? lesson["function_en"] ?? "")
-          : (lesson["function_en"] ?? "");
-      final String loc = _isSpanish
-          ? (lesson["location_es"] ?? lesson["location_en"] ?? "")
-          : (lesson["location_en"] ?? "");
-      final String imp = _isSpanish
-          ? (lesson["importance_es"] ?? lesson["importance_en"] ?? "")
-          : (lesson["importance_en"] ?? "");
-      speakText = "Function: $func\nLocation: $loc\nImportance: $imp";
+      final String func = _isSpanish ? (lesson["function_es"] ?? "") : (lesson["function_en"] ?? "");
+      final String loc = _isSpanish ? (lesson["location_es"] ?? "") : (lesson["location_en"] ?? "");
+      final String imp = _isSpanish ? (lesson["importance_es"] ?? "") : (lesson["importance_en"] ?? "");
+      speakText = "Function: $func. Location: $loc. Importance: $imp";
     } else {
-      final String desc = _isSpanish
-          ? (lesson["description_es"] ?? lesson["description_en"] ?? "")
-          : (lesson["description_en"] ?? "");
+      final String desc = _isSpanish ? (lesson["description_es"] ?? "") : (lesson["description_en"] ?? "");
       speakText = desc;
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF3E0),
+      // The background color is inherited from the global theme's scaffoldBackgroundColor
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
+        // No hardcoded colors; it correctly uses the theme's AppBar color
         actions: [
           IconButton(
             icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
@@ -226,73 +199,66 @@ class _LessonState extends State<Lesson> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              lesson["image"] ?? "",
-              height: 200,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: Image.asset(lesson["image"] ?? "", height: 200, fit: BoxFit.cover),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             if (hasFunctionBlock) ...[
               _buildColorfulBlock(
-                icon: Icons.build,
+                icon: Icons.functions,
                 label: _isSpanish ? "Función" : "Function",
-                text: _isSpanish
-                    ? (lesson["function_es"] ?? lesson["function_en"] ?? "")
-                    : (lesson["function_en"] ?? ""),
-                backgroundColor: Colors.blueAccent.withOpacity(0.1),
-                iconColor: Colors.blueAccent,
+                text: _isSpanish ? (lesson["function_es"] ?? "") : (lesson["function_en"] ?? ""),
+                // Use theme colors
+                backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                iconColor: colorScheme.primary,
               ),
               _buildColorfulBlock(
                 icon: Icons.location_on,
                 label: _isSpanish ? "Ubicación" : "Location",
-                text: _isSpanish
-                    ? (lesson["location_es"] ?? lesson["location_en"] ?? "")
-                    : (lesson["location_en"] ?? ""),
-                backgroundColor: Colors.greenAccent.withOpacity(0.1),
-                iconColor: Colors.green,
+                text: _isSpanish ? (lesson["location_es"] ?? "") : (lesson["location_en"] ?? ""),
+                // Use theme colors
+                backgroundColor: colorScheme.secondaryContainer.withOpacity(0.5),
+                iconColor: colorScheme.secondary,
               ),
               _buildColorfulBlock(
-                icon: Icons.warning,
+                icon: Icons.star,
                 label: _isSpanish ? "Importancia" : "Importance",
-                text: _isSpanish
-                    ? (lesson["importance_es"] ?? lesson["importance_en"] ?? "")
-                    : (lesson["importance_en"] ?? ""),
-                backgroundColor: Colors.yellowAccent.withOpacity(0.1),
-                iconColor: Colors.orange,
+                text: _isSpanish ? (lesson["importance_es"] ?? "") : (lesson["importance_en"] ?? ""),
+                // Use theme colors
+                backgroundColor: colorScheme.tertiaryContainer.withOpacity(0.5),
+                iconColor: colorScheme.tertiary,
               ),
             ] else ...[
               _buildColorfulBlock(
-                icon: Icons.info,
+                icon: Icons.info_outline,
                 label: _isSpanish ? "Descripción" : "Description",
-                text: _isSpanish
-                    ? (lesson["description_es"] ?? lesson["description_en"] ?? "")
-                    : (lesson["description_en"] ?? ""),
-                backgroundColor: Colors.tealAccent.withOpacity(0.1),
-                iconColor: Colors.teal,
+                text: _isSpanish ? (lesson["description_es"] ?? "") : (lesson["description_en"] ?? ""),
+                // Use theme colors
+                backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                iconColor: colorScheme.primary,
               ),
             ],
             const SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: Text(_isSpanish ? "Siguiente" : "Next"),
               onPressed: nextLesson,
+              // The style is inherited from the global theme's ElevatedButtonTheme
               style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 15,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                textStyle: theme.textTheme.titleMedium,
               ),
-              child: Text(_isSpanish ? "Siguiente" : "Next"),
             ),
             const SizedBox(height: 20),
           ],
@@ -301,6 +267,7 @@ class _LessonState extends State<Lesson> {
     );
   }
 
+  // This widget now builds using colors passed from the build method
   Widget _buildColorfulBlock({
     required IconData icon,
     required String label,
@@ -309,20 +276,40 @@ class _LessonState extends State<Lesson> {
     required Color iconColor,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: iconColor.withOpacity(0.5)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: iconColor),
-          const SizedBox(width: 10),
+          Icon(icon, color: iconColor, size: 28),
+          const SizedBox(width: 16),
           Expanded(
-            child: Text(
-              "$label: $text",
-              style: const TextStyle(fontSize: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: iconColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    height: 1.4,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

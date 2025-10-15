@@ -12,9 +12,7 @@ class _FaceLessonState extends State<FaceLesson> {
   int currentIndex = 0;
   final FlutterTts flutterTts = FlutterTts();
 
-
   bool _isSpanish = false;
-
 
   final List<Map<String, String>> faceLessons = [
     {
@@ -98,14 +96,11 @@ class _FaceLessonState extends State<FaceLesson> {
   }
 
   void speak(String text) async {
-
     await flutterTts.stop();
-
     await flutterTts.setLanguage(_isSpanish ? "es-ES" : "en-US");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
-
 
   void _toggleLanguage() {
     setState(() {
@@ -115,7 +110,6 @@ class _FaceLessonState extends State<FaceLesson> {
 
   @override
   void dispose() {
-
     flutterTts.stop();
     super.dispose();
   }
@@ -124,12 +118,10 @@ class _FaceLessonState extends State<FaceLesson> {
   Widget build(BuildContext context) {
     final lesson = faceLessons[currentIndex];
 
-
     final title = _isSpanish ? lesson["title_es"] : lesson["title_en"];
     final func = _isSpanish ? lesson["function_es"] : lesson["function_en"];
     final loc = _isSpanish ? lesson["location_es"] : lesson["location_en"];
     final imp = _isSpanish ? lesson["importance_es"] : lesson["importance_en"];
-
 
     String speakText = "";
     if (func != null && loc != null && imp != null) {
@@ -137,13 +129,11 @@ class _FaceLessonState extends State<FaceLesson> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF3E0),
+      backgroundColor: const Color(0xFFFFF3E0), // This can be themed as well if needed
       appBar: AppBar(
         title: Text(title ?? ""),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
+        // No hardcoded colors here. It will use the theme from main.dart
         actions: [
-
           IconButton(
             icon: Icon(_isSpanish ? Icons.translate : Icons.g_translate),
             onPressed: _toggleLanguage,
@@ -200,14 +190,8 @@ class _FaceLessonState extends State<FaceLesson> {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: nextLesson,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 15,
-                ),
-              ),
+              // The style will be inherited from the global theme
+              // No need for a custom style unless you want to override it
               child: Text(_isSpanish ? "Siguiente" : "Next"),
             ),
             const SizedBox(height: 20),

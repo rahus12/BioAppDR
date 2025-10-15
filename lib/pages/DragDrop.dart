@@ -374,7 +374,7 @@ class _DragDropQuizState extends State<DragDrop> {
               height: 120,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: Theme.of(context).colorScheme.outline),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
@@ -392,7 +392,7 @@ class _DragDropQuizState extends State<DragDrop> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Theme.of(context).shadowColor.withOpacity(0.2),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, 3),
@@ -442,14 +442,14 @@ class _DragDropQuizState extends State<DragDrop> {
       builder: (context, candidateData, rejectedData) {
         // Compute border and background color based on correctness
         Color borderColor = _isCorrectMatch
-            ? Colors.green
+            ? theme.colorScheme.secondary
             : _isWrongMatch
-            ? Colors.red
-            : theme.colorScheme.onSurface;
+            ? theme.colorScheme.error
+            : theme.colorScheme.outline;
         Color fillColor = _isCorrectMatch
-            ? Colors.green.withOpacity(0.2)
+            ? theme.colorScheme.secondaryContainer
             : _isWrongMatch
-            ? Colors.red.withOpacity(0.2)
+            ? theme.colorScheme.errorContainer
             : theme.colorScheme.surfaceContainerHighest.withOpacity(0.8);
 
         return AnimatedContainer(

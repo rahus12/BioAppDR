@@ -23,11 +23,11 @@ class LessonCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -43,15 +43,15 @@ class LessonCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title ?? "",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontFamily: 'Sunshine',
                       ),
                     ),
                   ),
-                  Icon(Icons.menu_book, color: Colors.blue.shade800, size: 28),
+                  Icon(Icons.menu_book, color: Theme.of(context).colorScheme.primary, size: 28),
                 ],
               ),
               // Slides
@@ -71,13 +71,13 @@ class LessonCard extends StatelessWidget {
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.orange.shade300, // Restoring original color
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       elevation: 5,
-                      shadowColor: Colors.orange.withOpacity(0.5),
+                      shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, onPress);

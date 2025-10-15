@@ -129,7 +129,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                 children: [
                   Icon(
                     _sessionScore >= _lessons.length * 0.7 ? Icons.stars : Icons.star,
-                    color: Colors.amber,
+                    color: Theme.of(context).colorScheme.tertiary,
                     size: 50,
                   ),
                   const SizedBox(height: 16),
@@ -139,8 +139,8 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _sessionScore >= _lessons.length * 0.7 
-                        ? 'Great job!' 
+                    _sessionScore >= _lessons.length * 0.7
+                        ? 'Great job!'
                         : 'Keep practicing!',
                     style: const TextStyle(fontSize: 16),
                   ),
@@ -210,6 +210,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = Theme.of(context).colorScheme.primary;
     final lesson = _lessons[_questionOrder[_currentQuestion]];
     final questionText = _isSpanish
         ? '¿Para qué sirven los ${lesson['title_en']?.toLowerCase()}?'
@@ -218,8 +219,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
     return Scaffold(
       appBar: AppBar(
         title: Text(_isSpanish ? 'Juego Facial' : 'Face Quiz'),
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
+        // No hardcoded colors, will use the theme
         actions: [
           IconButton(
             icon: const Icon(Icons.translate),
@@ -239,20 +239,20 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.1),
+                color: primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.star, color: Colors.amber),
+                  Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary),
                   const SizedBox(width: 10),
                   Text(
                     'Score: ${_sessionScore.toStringAsFixed(1)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.purple,
+                      color: primaryColor,
                     ),
                   ),
                 ],
@@ -276,7 +276,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.purple.withOpacity(0.3),
+                            color: primaryColor.withOpacity(0.3),
                             blurRadius: 15,
                             spreadRadius: 2,
                           ),
@@ -301,10 +301,10 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
             Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.1),
+                color: primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
-                  color: Colors.purple.withOpacity(0.3),
+                  color: primaryColor.withOpacity(0.3),
                   width: 2,
                 ),
               ),
@@ -326,16 +326,16 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                 child: ElevatedButton(
                   onPressed: () => _checkAnswer(opt),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black87,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
                     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     minimumSize: const Size(double.infinity, 65),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
-                      side: BorderSide(color: Colors.purple.withOpacity(0.5), width: 2),
+                      side: BorderSide(color: primaryColor.withOpacity(0.5), width: 2),
                     ),
                     elevation: 5,
-                    shadowColor: Colors.purple.withOpacity(0.3),
+                    shadowColor: Theme.of(context).shadowColor.withOpacity(0.3),
                   ),
                   child: Text(
                     opt,
@@ -348,39 +348,21 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: _isCorrect
-                      ? Colors.green.withOpacity(0.2)
-                      : Colors.red.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(15),
+                  color: _isCorrect ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(15.0),
                   border: Border.all(
-                    color: _isCorrect ? Colors.green : Colors.red,
-                    width: 2,
+                    color: _isCorrect ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error,
+                    width: 2.0,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: (_isCorrect ? Colors.green : Colors.red).withOpacity(0.3),
-                      blurRadius: 10,
-                      spreadRadius: 1,
-                    ),
-                  ],
                 ),
-                child: Column(
-                  children: [
-                    Icon(
-                      _isCorrect ? Icons.check_circle : Icons.cancel,
-                      color: _isCorrect ? Colors.green : Colors.red,
-                      size: 50,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      _feedbackMessage,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                child: Text(
+                  _feedbackMessage,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _isCorrect ? Theme.of(context).colorScheme.onSecondaryContainer : Theme.of(context).colorScheme.onErrorContainer,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
           ],

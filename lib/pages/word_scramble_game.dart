@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:math' as math show sin, pi;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bioappdr/pages/Home.dart';
 
@@ -61,6 +62,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   late List<String> _pool;
   final List<String> _typed = [];
   late final AnimationController _shake;
+  final FlutterTts _flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -105,10 +107,14 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   }
 
   void _tap(int i) {
+    final letter = _pool[i];
     setState(() {
       _typed.add(_pool[i]);
       _pool[i] = '';
     });
+    if (letter.isNotEmpty) {
+      _speakLetter(letter);
+    }
     _verify();
   }
 
@@ -159,13 +165,30 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
     } else {
       msg = _spanish ? 'Inténtalo de nuevo' : 'Try again';
     }
+    final theme = Theme.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg + (_gameOver ? '' : '  Score: ${_sessionScore.toStringAsFixed(1)}')),
-        backgroundColor: good ? Colors.green : Colors.red,
+        backgroundColor: good ? theme.colorScheme.secondary : theme.colorScheme.error,
         duration: const Duration(milliseconds: 800),
       ),
     );
+  }
+
+  Future<void> _speakHint() async {
+    final item = _items[_wordOrder[_currentWord]];
+    final hint = _spanish ? (item['hint_es'] ?? '') : (item['hint_en'] ?? '');
+    await _flutterTts.setLanguage(_spanish ? 'es-ES' : 'en-US');
+    if (hint.isNotEmpty) {
+      await _flutterTts.speak(hint);
+    }
+  }
+
+  Future<void> _speakLetter(String l) async {
+    await _flutterTts.setLanguage(_spanish ? 'es-ES' : 'en-US');
+    if (l.isNotEmpty) {
+      await _flutterTts.speak(l);
+    }
   }
 
   Future<void> _onGameComplete() async {
@@ -256,6 +279,11 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
             icon: const Icon(Icons.translate),
             onPressed: () => setState(() => _spanish = !_spanish),
           ),
+          IconButton(
+            tooltip: _spanish ? 'Escuchar pista' : 'Speak hint',
+            icon: const Icon(Icons.volume_up),
+            onPressed: _speakHint,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Center(
@@ -324,7 +352,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
               const SizedBox(height: 24),
               Text(
                 (_spanish ? 'Puntuación de la sesión: ' : 'Session Score: ') + _sessionScore.toStringAsFixed(1),
-                style: theme.textTheme.titleMedium?.copyWith(color: Colors.blueGrey, fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -337,7 +365,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
     margin: const EdgeInsets.all(4),
     padding: const EdgeInsets.all(12),
     decoration: BoxDecoration(
-      color: filled ? Colors.green.shade100 : Colors.grey.shade300,
+      color: filled ? theme.colorScheme.secondaryContainer : theme.colorScheme.surfaceVariant,
       borderRadius: BorderRadius.circular(6),
     ),
     child: Text(letter, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -346,6 +374,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
   @override
   void dispose() {
     _shake.dispose();
+    _flutterTts.stop();
     super.dispose();
   }
 }
