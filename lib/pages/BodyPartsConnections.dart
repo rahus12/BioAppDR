@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
 class BodyPartsConnections extends StatefulWidget {
@@ -157,10 +159,14 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
         _rightCompleted[rightOriginalIndex] = true;
         _feedbackMessage = _isSpanish ? '¡Correcto!' : 'Correct!';
 
-        if (_leftCompleted.every((c) => c)) {
+        // Check if level completed
+        if (_leftCompleted.every((complete) => complete)) {
+          _updateProgress(_level); // Update progress for each completed level
           if (_level >= _levels.length) {
             _gameOver = true;
             _feedbackMessage = _isSpanish ? '¡Juego completado!' : 'Game completed!';
+            // Add score to total
+            _addToTotalScore(_score.toDouble());
           } else {
             _feedbackMessage = _isSpanish ? '¡Nivel completado!' : 'Level completed!';
             Future.delayed(const Duration(seconds: 2), () {
@@ -198,6 +204,18 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
   void _speakText(String text) async {
     await _flutterTts.setLanguage(_isSpanish ? 'es-ES' : 'en-US');
     await _flutterTts.speak(text);
+  }
+
+  Future<void> _addToTotalScore(double sessionScore) async {
+    final prefs = await SharedPreferences.getInstance();
+    double total = prefs.getDouble('totalScore') ?? 0.0;
+    total += sessionScore;
+    await prefs.setDouble('totalScore', total);
+  }
+
+  Future<void> _updateProgress(int levelsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('connections_progress', levelsCompleted);
   }
 
   void _restartGame() {
@@ -398,15 +416,46 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 32),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.refresh),
-                        label: Text(_isSpanish ? 'Jugar de nuevo' : 'Play Again', style: const TextStyle(fontSize: 18)),
-                        onPressed: _restartGame,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _restartGame,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.purple,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 16,
+                              ),
+                            ),
+                            child: Text(
+                              _isSpanish ? 'Jugar de nuevo' : 'Play Again',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(context, '/');
+                              // Refresh home data after navigation
+                              Future.delayed(const Duration(milliseconds: 100), () {
+                                Home.refreshHomeData();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 16,
+                              ),
+                            ),
+                            child: Text(
+                              _isSpanish ? 'Volver al inicio' : 'Return to Home',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

@@ -9,24 +9,41 @@ class Home extends StatefulWidget {
 
   @override
   State<Home> createState() => _HomeState();
+
+  // Static method to refresh home data from other pages
+  static void refreshHomeData() {
+    _HomeState.refreshHomeData();
+  }
 }
 
 class _HomeState extends State<Home> {
   int _totalScore = 0;
+  Map<String, int> _quizProgress = {};
+  static _HomeState? _instance;
 
   @override
   void initState() {
     super.initState();
+    _instance = this;
     _loadTotalScore();
+    _loadQuizProgress();
+  }
+
+  @override
+  void dispose() {
+    _instance = null;
+    super.dispose();
+  }
+
+  static void refreshHomeData() {
+    _instance?._refreshData();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Use addPostFrameCallback to avoid setState during build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadTotalScore();
-    });
+    // Refresh data whenever the page becomes visible
+    _refreshData();
   }
 
   Future<void> _loadTotalScore() async {
@@ -34,6 +51,31 @@ class _HomeState extends State<Home> {
     setState(() {
       _totalScore = prefs.getDouble('totalScore')?.round() ?? 0;
     });
+  }
+
+  Future<void> _loadQuizProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _quizProgress = {
+        'mcq_progress': prefs.getInt('mcq_progress') ?? 0,
+        'wordscramble_progress': prefs.getInt('wordscramble_progress') ?? 0,
+        'memory_progress': prefs.getInt('memory_progress') ?? 0,
+        'dragdrop_progress': prefs.getInt('dragdrop_progress') ?? 0,
+        'facequiz_progress': prefs.getInt('facequiz_progress') ?? 0,
+        'connections_progress': prefs.getInt('connections_progress') ?? 0,
+        'assembly_progress': prefs.getInt('assembly_progress') ?? 0,
+      };
+    });
+  }
+
+  int _calculateProgress(int completed, int total) {
+    if (total == 0) return 0;
+    return ((completed / total) * 100).round();
+  }
+
+  Future<void> _refreshData() async {
+    await _loadTotalScore();
+    await _loadQuizProgress();
   }
 
   @override
@@ -172,41 +214,41 @@ class _HomeState extends State<Home> {
               // QUIZ CARD
               IndexCard(
                 title: "Human Body Quiz",
-                questions: "13",
-                progress: "17",
+                questions: "3",
+                progress: "${_calculateProgress(_quizProgress['mcq_progress'] ?? 0, 3)}",
                 onPress: "/question", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
               IndexCard(
                 title: "Organ Word Scramble",
                 questions: "5", // number of words to scramble
-                progress: "0",  // your desired progress (or logic to track it)
+                progress: "${_calculateProgress(_quizProgress['wordscramble_progress'] ?? 0, 5)}",
                 onPress: "/wordscramble",
               ),
               IndexCard(
                 title: "Memory Game",
-                questions: "8", // e.g., 8 total cards or 4 pairs
-                progress: "0",
+                questions: "4", // e.g., 4 pairs to match
+                progress: "${_calculateProgress(_quizProgress['memory_progress'] ?? 0, 4)}",
                 onPress: "/memorygame",
               ),
               IndexCard(
                 title: "Drag drop Quiz",
-                questions: "7",
-                progress: "69",
+                questions: "4",
+                progress: "${_calculateProgress(_quizProgress['dragdrop_progress'] ?? 0, 4)}",
                 onPress: "/dragdrop", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
               IndexCard(
-                title: "Game",
-                questions: "7",
-                progress: "90",
+                title: "Face Quiz Game",
+                questions: "6",
+                progress: "${_calculateProgress(_quizProgress['facequiz_progress'] ?? 0, 6)}",
                 onPress: "/facequizgame", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
               IndexCard(
                 title: "Body Parts Connections Game",
-                questions: "7",
-                progress: "90",
+                questions: "3",
+                progress: "${_calculateProgress(_quizProgress['connections_progress'] ?? 0, 3)}",
                 onPress: "/bodypartsconnections", // Named route for MCQ page
               ),
               const SizedBox(height: 16),
@@ -214,7 +256,7 @@ class _HomeState extends State<Home> {
               IndexCard(
                 title: "Body Parts Assembly",
                 questions: "6", // Number of body parts to place
-                progress: "0",  // Start at 0 progress
+                progress: "${_calculateProgress(_quizProgress['assembly_progress'] ?? 0, 6)}",
                 onPress: "/bodyassembly", // Named route for the new game
               ),
               const SizedBox(height: 16),

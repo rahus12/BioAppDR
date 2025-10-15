@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 
 class FaceQuizGame extends StatefulWidget {
   const FaceQuizGame({Key? key}) : super(key: key);
@@ -107,6 +108,7 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
 
     if (_isCorrect) {
       await Future.delayed(const Duration(seconds: 2));
+      _updateProgress(_currentQuestion + 1); // Update progress for each correct answer
       if (_currentQuestion < _lessons.length - 1) {
         setState(() {
           _currentQuestion++;
@@ -149,6 +151,10 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
                   onPressed: () {
                     Navigator.of(ctx).pop();
                     Navigator.pushReplacementNamed(context, '/');
+                    // Refresh home data after navigation
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      Home.refreshHomeData();
+                    });
                   },
                   child: const Text('Return to Home'),
                 ),
@@ -179,6 +185,11 @@ class _FaceQuizGameState extends State<FaceQuizGame> with TickerProviderStateMix
     double total = prefs.getDouble('totalScore') ?? 0.0;
     total += sessionScore;
     await prefs.setDouble('totalScore', total);
+  }
+
+  Future<void> _updateProgress(int questionsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('facequiz_progress', questionsCompleted);
   }
 
   void _toggleLanguage() {

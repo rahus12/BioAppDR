@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 
 class Mcq extends StatefulWidget {
   const Mcq({Key? key}) : super(key: key);
@@ -55,6 +56,8 @@ class _McqState extends State<Mcq> {
       } else if (_attempts == 1) {
         _sessionScore += 0.5;
       }
+      // Update progress for each correct answer
+      _updateProgress(currentIndex + 1);
       Future.delayed(const Duration(seconds: 1), () {
         if (currentIndex < questions.length - 1) {
           setState(() {
@@ -65,6 +68,7 @@ class _McqState extends State<Mcq> {
           });
         } else {
           _addToTotalScore(_sessionScore); // Save to total score
+          _updateProgress(questions.length); // Mark quiz as completed
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -76,6 +80,10 @@ class _McqState extends State<Mcq> {
                   onPressed: () {
                     Navigator.of(ctx).pop();
                     Navigator.pushReplacementNamed(context, '/');
+                    // Refresh home data after navigation
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      Home.refreshHomeData();
+                    });
                   },
                   child: const Text('Return to Home'),
                 ),
@@ -127,6 +135,11 @@ class _McqState extends State<Mcq> {
     double total = prefs.getDouble('totalScore') ?? 0.0;
     total += sessionScore;
     await prefs.setDouble('totalScore', total);
+  }
+
+  Future<void> _updateProgress(int questionsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('mcq_progress', questionsCompleted);
   }
 
   @override

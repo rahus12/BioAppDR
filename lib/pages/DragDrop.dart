@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bioappdr/pages/Home.dart';
 
 class DragDrop extends StatefulWidget {
   const DragDrop({super.key});
@@ -97,7 +99,22 @@ class _DragDropQuizState extends State<DragDrop> {
     });
   }
 
+  Future<void> _addToTotalScore(double sessionScore) async {
+    final prefs = await SharedPreferences.getInstance();
+    double total = prefs.getDouble('totalScore') ?? 0.0;
+    total += sessionScore;
+    await prefs.setDouble('totalScore', total);
+  }
+
+  Future<void> _updateProgress(int questionsCompleted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('dragdrop_progress', questionsCompleted);
+  }
+
   void _showQuizCompletionDialog() {
+    // Add score to total before showing dialog
+    _addToTotalScore(_score.toDouble());
+    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -137,6 +154,17 @@ class _DragDropQuizState extends State<DragDrop> {
                   _score = 0;
                 });
                 Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(_showSpanish ? 'Volver al inicio' : 'Return to Home'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacementNamed(context, '/');
+                // Refresh home data after navigation
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  Home.refreshHomeData();
+                });
               },
             ),
           ],
@@ -396,6 +424,7 @@ class _DragDropQuizState extends State<DragDrop> {
             _isCorrectMatch = true;
             _isWrongMatch = false;
             _score++;
+            _updateProgress(_score); // Update progress for each correct answer
 
             // Success sound could be added here
 
