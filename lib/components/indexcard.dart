@@ -25,7 +25,7 @@ class IndexCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -52,7 +52,7 @@ class IndexCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(Icons.sports_esports, color: Theme.of(context).colorScheme.primary, size: 28),
+                  Icon(Icons.sports_esports, color: Colors.blue.shade800, size: 28),
                 ],
               ),
               Text(
@@ -92,7 +92,7 @@ class IndexCard extends StatelessWidget {
                     icon: const Icon(Icons.rocket_launch, size: 18),
                     label: const Text(
                       "Play!",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ).animate().fadeIn(delay: 300.ms).scale(duration: 500.ms, begin: const Offset(0.8, 0.8)),
                 ],
