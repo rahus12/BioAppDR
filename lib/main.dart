@@ -13,6 +13,7 @@ import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
+import 'package:bioappdr/pages/living_non_living_lesson.dart';
 
 void main() {
   // 2. Initialize Gemini with your API Key
@@ -67,6 +68,7 @@ void main() {
       "/learningpage": (context) => const LearningPage(),
       "/facelearningpage": (context) => const Facelearningpage(),
       '/search': (context) => const SearchPage(),
+      '/living_non_living_lesson': (context) => const LivingNonLivingLesson(),
     },
     onGenerateRoute: (settings) {
       final String? name = settings.name;

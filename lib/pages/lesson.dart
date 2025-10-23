@@ -16,7 +16,7 @@ class _LessonState extends State<Lesson> {
 
   final List<Map<String, String>> lessons = [
     {
-      "image": "assets/body.jpg",
+      "image": "assets/internal-organs.jpg",
       "title_en": "Human Body",
       "title_es": "Cuerpo Humano",
       "description_en":
@@ -25,7 +25,7 @@ class _LessonState extends State<Lesson> {
       "¡El cuerpo humano es un sistema complejo y asombroso de órganos y estructuras que trabajan juntos para mantener la vida. ¡Exploremos algunos de sus componentes clave!"
     },
     {
-      "image": "assets/Heart.png",
+      "image": "assets/Heart.gif",
       "title_en": "Heart",
       "title_es": "Corazón",
       "function_en":
@@ -54,7 +54,7 @@ class _LessonState extends State<Lesson> {
       "Vitales para la respiración y el suministro de oxígeno a los tejidos."
     },
     {
-      "image": "assets/brain.jpg",
+      "image": "assets/brain.gif",
       "title_en": "Brain",
       "title_es": "Cerebro",
       "function_en":
@@ -113,7 +113,7 @@ class _LessonState extends State<Lesson> {
       "Mantienen el equilibrio de líquidos y eliminan toxinas; su falla requiere intervención médica como la diálisis."
     },
     {
-      "image": "assets/bone.jpeg",
+      "image": "assets/bones.gif",
       "title_en": "Bones",
       "title_es": "Huesos",
       "function_en":
@@ -198,71 +198,165 @@ class _LessonState extends State<Lesson> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.asset(lesson["image"] ?? "", height: 200, fit: BoxFit.cover),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              title,
-              style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            if (hasFunctionBlock) ...[
-              _buildColorfulBlock(
-                icon: Icons.functions,
-                label: _isSpanish ? "Función" : "Function",
-                text: _isSpanish ? (lesson["function_es"] ?? "") : (lesson["function_en"] ?? ""),
-                // Use theme colors
-                backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
-                iconColor: colorScheme.primary,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          if (orientation == Orientation.landscape) {
+            // Landscape layout
+            return Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.asset(lesson["image"] ?? "", height: 400, fit: BoxFit.cover),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            title,
+                            style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          if (hasFunctionBlock) ...[
+                            _buildColorfulBlock(
+                              icon: Icons.functions,
+                              label: _isSpanish ? "Función" : "Function",
+                              text: _isSpanish ? (lesson["function_es"] ?? "") : (lesson["function_en"] ?? ""),
+                              // Use theme colors
+                              backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                              iconColor: colorScheme.primary,
+                            ),
+                            _buildColorfulBlock(
+                              icon: Icons.location_on,
+                              label: _isSpanish ? "Ubicación" : "Location",
+                              text: _isSpanish ? (lesson["location_es"] ?? "") : (lesson["location_en"] ?? ""),
+                              // Use theme colors
+                              backgroundColor: colorScheme.secondaryContainer.withOpacity(0.5),
+                              iconColor: colorScheme.secondary,
+                            ),
+                            _buildColorfulBlock(
+                              icon: Icons.star,
+                              label: _isSpanish ? "Importancia" : "Importance",
+                              text: _isSpanish ? (lesson["importance_es"] ?? "") : (lesson["importance_en"] ?? ""),
+                              // Use theme colors
+                              backgroundColor: colorScheme.tertiaryContainer.withOpacity(0.5),
+                              iconColor: colorScheme.tertiary,
+                            ),
+                          ] else ...[
+                            _buildColorfulBlock(
+                              icon: Icons.info_outline,
+                              label: _isSpanish ? "Descripción" : "Description",
+                              text: _isSpanish ? (lesson["description_es"] ?? "") : (lesson["description_en"] ?? ""),
+                              // Use theme colors
+                              backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                              iconColor: colorScheme.primary,
+                            ),
+                          ],
+                          const SizedBox(height: 30),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.arrow_forward),
+                            label: Text(_isSpanish ? "Siguiente" : "Next"),
+                            onPressed: nextLesson,
+                            // The style is inherited from the global theme's ElevatedButtonTheme
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                              textStyle: theme.textTheme.titleMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              _buildColorfulBlock(
-                icon: Icons.location_on,
-                label: _isSpanish ? "Ubicación" : "Location",
-                text: _isSpanish ? (lesson["location_es"] ?? "") : (lesson["location_en"] ?? ""),
-                // Use theme colors
-                backgroundColor: colorScheme.secondaryContainer.withOpacity(0.5),
-                iconColor: colorScheme.secondary,
+            );
+          } else {
+            // Portrait layout
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.asset(lesson["image"] ?? "", height: 400, fit: BoxFit.cover),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: colorScheme.primary),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  if (hasFunctionBlock) ...[
+                    _buildColorfulBlock(
+                      icon: Icons.functions,
+                      label: _isSpanish ? "Función" : "Function",
+                      text: _isSpanish ? (lesson["function_es"] ?? "") : (lesson["function_en"] ?? ""),
+                      // Use theme colors
+                      backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                      iconColor: colorScheme.primary,
+                    ),
+                    _buildColorfulBlock(
+                      icon: Icons.location_on,
+                      label: _isSpanish ? "Ubicación" : "Location",
+                      text: _isSpanish ? (lesson["location_es"] ?? "") : (lesson["location_en"] ?? ""),
+                      // Use theme colors
+                      backgroundColor: colorScheme.secondaryContainer.withOpacity(0.5),
+                      iconColor: colorScheme.secondary,
+                    ),
+                    _buildColorfulBlock(
+                      icon: Icons.star,
+                      label: _isSpanish ? "Importancia" : "Importance",
+                      text: _isSpanish ? (lesson["importance_es"] ?? "") : (lesson["importance_en"] ?? ""),
+                      // Use theme colors
+                      backgroundColor: colorScheme.tertiaryContainer.withOpacity(0.5),
+                      iconColor: colorScheme.tertiary,
+                    ),
+                  ] else ...[
+                    _buildColorfulBlock(
+                      icon: Icons.info_outline,
+                      label: _isSpanish ? "Descripción" : "Description",
+                      text: _isSpanish ? (lesson["description_es"] ?? "") : (lesson["description_en"] ?? ""),
+                      // Use theme colors
+                      backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
+                      iconColor: colorScheme.primary,
+                    ),
+                  ],
+                  const SizedBox(height: 30),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.arrow_forward),
+                    label: Text(_isSpanish ? "Siguiente" : "Next"),
+                    onPressed: nextLesson,
+                    // The style is inherited from the global theme's ElevatedButtonTheme
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      textStyle: theme.textTheme.titleMedium,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              _buildColorfulBlock(
-                icon: Icons.star,
-                label: _isSpanish ? "Importancia" : "Importance",
-                text: _isSpanish ? (lesson["importance_es"] ?? "") : (lesson["importance_en"] ?? ""),
-                // Use theme colors
-                backgroundColor: colorScheme.tertiaryContainer.withOpacity(0.5),
-                iconColor: colorScheme.tertiary,
-              ),
-            ] else ...[
-              _buildColorfulBlock(
-                icon: Icons.info_outline,
-                label: _isSpanish ? "Descripción" : "Description",
-                text: _isSpanish ? (lesson["description_es"] ?? "") : (lesson["description_en"] ?? ""),
-                // Use theme colors
-                backgroundColor: colorScheme.primaryContainer.withOpacity(0.5),
-                iconColor: colorScheme.primary,
-              ),
-            ],
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.arrow_forward),
-              label: Text(_isSpanish ? "Siguiente" : "Next"),
-              onPressed: nextLesson,
-              // The style is inherited from the global theme's ElevatedButtonTheme
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                textStyle: theme.textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }

@@ -390,7 +390,7 @@ class _AnimatedQuestionCardState extends State<AnimatedQuestionCard>
         // The monkey/character that pops up
         SlideTransition(
           position: _offsetAnimation,
-          child: Image.asset('assets/monkey.webp', height: 200), // Placeholder
+          child: Image.asset('assets/monkey.gif', height: 200), // Placeholder
         ),
         // The actual question card
         QuestionCard(
