@@ -3,8 +3,6 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bioappdr/pages/Home.dart';
 
 class BodyPartsButtonGame extends StatefulWidget {
   const BodyPartsButtonGame({Key? key}) : super(key: key);
@@ -271,10 +269,6 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
         // Correct part selected
         _partsPlaced[idx] = true;
         _score += 10;
-        
-        // Update progress for each completed part
-        int completedParts = _partsPlaced.where((placed) => placed).length;
-        _updateProgress(completedParts);
 
         _isCorrect = true;
         _feedbackMessage = _isSpanish ? '¡Correcto! (+10)' : 'Correct! (+10)';
@@ -286,7 +280,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
         // Check for game completion or advance to next part
         Future.delayed(const Duration(milliseconds: 800), () {
           if (_partsPlaced.every((placed) => placed)) {
-            _onGameComplete();
+            _showCompletionDialog();
           } else {
             _advanceToNextPart();
           }
@@ -326,25 +320,6 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
     _speakCurrentPartDescription();
   }
 
-  Future<void> _addToTotalScore(double sessionScore) async {
-    final prefs = await SharedPreferences.getInstance();
-    double total = prefs.getDouble('totalScore') ?? 0.0;
-    total += sessionScore;
-    await prefs.setDouble('totalScore', total);
-  }
-
-  Future<void> _updateProgress(int partsCompleted) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('assembly_progress', partsCompleted);
-  }
-
-  Future<void> _onGameComplete() async {
-    // Save score and progress before showing dialog
-    await _addToTotalScore(_score.toDouble());
-    await _updateProgress(_bodyParts.length); // Mark all parts as completed
-    _showCompletionDialog();
-  }
-
   void _showCompletionDialog() {
     _flutterTts.speak(_isSpanish ? '¡Felicidades! Has completado el juego!' : 'Congratulations! You completed the game!');
 
@@ -361,7 +336,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
-              colors: [Colors.orange.shade50, Colors.orange.shade100],
+              colors: [Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.6), Theme.of(context).colorScheme.secondaryContainer],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -373,18 +348,18 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.celebration, color: Colors.amber, size: 28),
+                  Icon(Icons.celebration, color: Theme.of(context).colorScheme.tertiary, size: 28),
                   const SizedBox(width: 10),
                   Text(
                     _isSpanish ? '¡Felicidades!' : 'Congratulations!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade800,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Icon(Icons.celebration, color: Colors.amber, size: 28),
+                  Icon(Icons.celebration, color: Theme.of(context).colorScheme.tertiary, size: 28),
                 ],
               ),
 
@@ -405,11 +380,11 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.surface.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Theme.of(context).shadowColor.withOpacity(0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -418,7 +393,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 30),
+                    Icon(Icons.star, color: Theme.of(context).colorScheme.tertiary, size: 30),
                     const SizedBox(width: 12),
                     Text(
                       '${_isSpanish ? 'Puntuación Final' : 'Final Score'}: $_score',
@@ -433,62 +408,32 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
 
               const SizedBox(height: 24),
 
-              // Buttons row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Play again button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      setState(() => _imagesLoaded = false);
-                      _preloadImages().then((_) {
-                        if (mounted) {
-                          setState(() => _imagesLoaded = true);
-                          _setupGame();
-                          _speakCurrentPartDescription();
-                        }
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: Text(
-                      _isSpanish ? 'Jugar de Nuevo' : 'Play Again',
-                      style: const TextStyle(fontSize: 14),
-                    ),
+              // Play again button
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() => _imagesLoaded = false);
+                  _preloadImages().then((_) {
+                    if (mounted) {
+                      setState(() => _imagesLoaded = true);
+                      _setupGame();
+                      _speakCurrentPartDescription();
+                    }
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  // Return to home button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(context, '/');
-                      // Refresh home data after navigation
-                      Future.delayed(const Duration(milliseconds: 100), () {
-                        Home.refreshHomeData();
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: Text(
-                      _isSpanish ? 'Volver al Inicio' : 'Return to Home',
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ),
-                ],
+                  elevation: 4,
+                ),
+                child: Text(
+                  _isSpanish ? 'Jugar de Nuevo' : 'Play Again',
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
@@ -544,21 +489,21 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
                 borderRadius: BorderRadius.circular(12), // More rounded
                 border: Border.all(
                   color: _selectedPartIndex != null
-                      ? Colors.white
+                      ? Theme.of(context).colorScheme.onPrimary
                       : (part['color'] as Color),
                   width: 3, // Thicker border
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Theme.of(context).shadowColor.withOpacity(0.2),
                     blurRadius: 6,
                     spreadRadius: 1,
                   ),
                 ],
               ),
               child: _selectedPartIndex != null
-                  ? Icon(Icons.add_circle, color: Colors.white, size: 24) // Larger icon
-                  : Icon(Icons.circle_outlined, color: Colors.white.withOpacity(0.7), size: 18), // Visible indicator
+                  ? Icon(Icons.add_circle, color: Theme.of(context).colorScheme.onPrimary, size: 24) // Larger icon
+                  : Icon(Icons.circle_outlined, color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.7), size: 18), // Visible indicator
             ),
           ),
         );
@@ -656,124 +601,124 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
   // Modified: Build bottom grid with better fitting buttons and images
   Widget _buildPartButtonsGrid(Size size) {
     return Container(
-        height: size.height * 0.15, // Taller for better visibility
-        decoration: BoxDecoration(
-          color: Colors.orange.shade100,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: GridView.builder(
-        padding: const EdgeInsets.all(10),
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 6,
-    childAspectRatio: 0.8, // Taller buttons
-    crossAxisSpacing: 8, // More spacing
-    mainAxisSpacing: 8,
-    ),
-    itemCount: _bodyParts.length,
-    itemBuilder: (context, idx) {
-    final part = _bodyParts[idx];
-    final isPlaced = _partsPlaced[idx];
-    final isSelected = _selectedPartIndex == idx;
-    final isCurrent = idx == _currentPartIndex;
-
-    // Skip already placed parts
-    if (isPlaced) {
-    return Container(
-    decoration: BoxDecoration(
-    color: Colors.grey.withOpacity(0.3),
-    borderRadius: BorderRadius.circular(12),
-    ),
-    child: Center(
-    child: Icon(
-    Icons.check_circle,
-    color: Colors.green.withOpacity(0.5),
-    size: 24, // Larger icon
-    ),
-    ),
-    );
-    }
-
-    // Return button with builder to measure its position
-    return LayoutBuilder(
-    builder: (context, constraints) {
-    return Container(
-    key: GlobalKey(),
-    child: InkWell(
-    onTap: () {
-    // Get the button's render box to find its position
-    final RenderBox box = context.findRenderObject() as RenderBox;
-    final Offset position = box.localToGlobal(Offset.zero);
-
-    // Store button center position
-    _buttonPositions[idx] = Offset(
-    position.dx + box.size.width / 2,
-    position.dy + box.size.height / 2,
-    );
-
-    _selectPart(idx);
-    },
-    child: Container(
-    decoration: BoxDecoration(
-    color: isSelected
-    ? part['color']
-        : (isCurrent
-    ? Colors.white
-        : Colors.orange.shade50),
-    borderRadius: BorderRadius.circular(12), // More rounded
-    border: isCurrent && !isSelected
-    ? Border.all(color: Colors.yellow, width: 3) // Thicker border
-        : null,
-    boxShadow: [
-    BoxShadow(
-        color: isSelected
-        ? (part['color'] as Color).withOpacity(0.7)
-        : Colors.black.withOpacity(0.1),
-      blurRadius: 4,
-      spreadRadius: 0,
-      offset: const Offset(0, 2),
-    ),
-    ],
-    ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Image.asset(
-                  part['imagePath'],
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                _isSpanish ? part['name_es'] : part['name_en'],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.white : Colors.black87,
-                ),
-              ),
-            ],
+      height: size.height * 0.15, // Taller for better visibility
+      decoration: BoxDecoration(
+        color: Colors.orange.shade100,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
           ),
-        ),
+        ],
       ),
-    ),
-    ),
-    );
-    },
-    );
-    },
+      child: GridView.builder(
+        padding: const EdgeInsets.all(10),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 6,
+          childAspectRatio: 0.8, // Taller buttons
+          crossAxisSpacing: 8, // More spacing
+          mainAxisSpacing: 8,
         ),
+        itemCount: _bodyParts.length,
+        itemBuilder: (context, idx) {
+          final part = _bodyParts[idx];
+          final isPlaced = _partsPlaced[idx];
+          final isSelected = _selectedPartIndex == idx;
+          final isCurrent = idx == _currentPartIndex;
+
+          // Skip already placed parts
+          if (isPlaced) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.green.withOpacity(0.5),
+                  size: 24, // Larger icon
+                ),
+              ),
+            );
+          }
+
+          // Return button with builder to measure its position
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                key: GlobalKey(),
+                child: InkWell(
+                  onTap: () {
+                    // Get the button's render box to find its position
+                    final RenderBox box = context.findRenderObject() as RenderBox;
+                    final Offset position = box.localToGlobal(Offset.zero);
+
+                    // Store button center position
+                    _buttonPositions[idx] = Offset(
+                      position.dx + box.size.width / 2,
+                      position.dy + box.size.height / 2,
+                    );
+
+                    _selectPart(idx);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? part['color']
+                          : (isCurrent
+                          ? Colors.white
+                          : Colors.orange.shade50),
+                      borderRadius: BorderRadius.circular(12), // More rounded
+                      border: isCurrent && !isSelected
+                          ? Border.all(color: Colors.yellow, width: 3) // Thicker border
+                          : null,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isSelected
+                              ? (part['color'] as Color).withOpacity(0.7)
+                              : Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Image.asset(
+                                part['imagePath'],
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              _isSpanish ? part['name_es'] : part['name_en'],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -832,7 +777,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
       backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
         title: Text(_isSpanish ? 'Juego de Partes del Cuerpo' : 'Body Parts Game'),
-        backgroundColor: Colors.purple.shade300,
+        backgroundColor: Colors.orange.shade300,
         actions: [
           // Score display
           Container(
@@ -876,7 +821,7 @@ class _BodyPartsButtonGameState extends State<BodyPartsButtonGame> with TickerPr
             height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                              colors: [Colors.orange.shade50, Colors.orange.shade100],              ),
+                colors: [Colors.orange.shade50, Colors.orange.shade100],              ),
             ),
           ),
 

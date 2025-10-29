@@ -84,7 +84,7 @@ class _SelectImagePageState extends State<SelectImagePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(isCorrect ? "Correct Answer!" : "Incorrect Answer!"),
-        backgroundColor: isCorrect ? Colors.green : Colors.red,
+        backgroundColor: isCorrect ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -125,11 +125,11 @@ class _SelectImagePageState extends State<SelectImagePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('DR Biology'),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
-        foregroundColor: Colors.black87, // Make AppBar text/icon black
+        foregroundColor: Theme.of(context).colorScheme.onSurface, // Use theme foreground
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -153,14 +153,14 @@ class _SelectImagePageState extends State<SelectImagePage> {
                       // Play TTS for the current question's Spanish text
                       _speak(question['spanish']);
                     },
-                    icon: const Icon(Icons.volume_up),
-                    color: Colors.blueAccent,
+                  icon: const Icon(Icons.volume_up),
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   Text(
                     question['spanish'],
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
-                      color: Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -190,9 +190,11 @@ class _SelectImagePageState extends State<SelectImagePage> {
 
       // Example Bottom Navigation Bar with navigation logic
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.blueAccent,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -240,9 +242,9 @@ class _SelectImagePageState extends State<SelectImagePage> {
             const SizedBox(height: 4),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),

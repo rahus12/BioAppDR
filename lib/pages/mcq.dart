@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bioappdr/pages/Home.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class Mcq extends StatefulWidget {
   const Mcq({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class Mcq extends StatefulWidget {
 
 class _McqState extends State<Mcq> {
   int currentIndex = 0;
+  final FlutterTts _flutterTts = FlutterTts();
+  bool _isSpanish = false;
 
   // Track the user's selection
   String? _selectedOption;
@@ -23,30 +26,48 @@ class _McqState extends State<Mcq> {
   final List<Map<String, dynamic>> questions = [
     {
       "image": "assets/heart.jpeg",
-      "question": "What does the heart do?",
-      "options": ["Pumps blood", "Helps breathe", "Digests food", "Sees light"],
-      "correctOption": "Pumps blood",
+      "question_en": "What does the heart do?",
+      "question_es": "¿Qué hace el corazón?",
+      "options_en": ["Pumps blood", "Helps breathe", "Digests food", "Sees light"],
+      "options_es": ["Bombea sangre", "Ayuda a respirar", "Digiere comida", "Ve la luz"],
+      "correct_en": "Pumps blood",
     },
     {
       "image": "assets/lungs.jpeg",
-      "question": "Which organ helps us breathe?",
-      "options": ["Heart", "Lungs", "Liver", "Stomach"],
-      "correctOption": "Lungs",
+      "question_en": "Which organ helps us breathe?",
+      "question_es": "¿Qué órgano nos ayuda a respirar?",
+      "options_en": ["Heart", "Lungs", "Liver", "Stomach"],
+      "options_es": ["Corazón", "Pulmones", "Hígado", "Estómago"],
+      "correct_en": "Lungs",
     },
     {
       "image": "assets/bone.jpeg",
-      "question": "What gives our body structure?",
-      "options": ["Bones", "Skin", "Lungs", "Eyes"],
-      "correctOption": "Bones",
+      "question_en": "What gives our body structure?",
+      "question_es": "¿Qué le da estructura a nuestro cuerpo?",
+      "options_en": ["Bones", "Skin", "Lungs", "Eyes"],
+      "options_es": ["Huesos", "Piel", "Pulmones", "Ojos"],
+      "correct_en": "Bones",
     },
   ];
 
   /// Checks the answer, highlights if correct, shows popup if wrong
   void checkAnswer(String selectedOption) {
-    final correct = questions[currentIndex]["correctOption"];
+    final q = questions[currentIndex];
+    final String correct = q["correct_en"];
     if (_selectedOption != null && _isCorrect == true) return; // Prevent further scoring after correct
 
-    if (selectedOption == correct) {
+    // Map Spanish option back to English for comparison if needed
+    String normalizedSelected = selectedOption;
+    if (_isSpanish) {
+      final List<String> optionsEs = List<String>.from(q["options_es"]);
+      final List<String> optionsEn = List<String>.from(q["options_en"]);
+      final int idx = optionsEs.indexOf(selectedOption);
+      if (idx != -1) {
+        normalizedSelected = optionsEn[idx];
+      }
+    }
+
+    if (normalizedSelected == correct) {
       setState(() {
         _selectedOption = selectedOption;
         _isCorrect = true;
@@ -130,6 +151,31 @@ class _McqState extends State<Mcq> {
     }
   }
 
+  void _toggleLanguage() {
+    setState(() {
+      _isSpanish = !_isSpanish;
+    });
+  }
+
+  Future<void> _speakQuestionAndOptions() async {
+    final q = questions[currentIndex];
+    final String questionText = _isSpanish ? q["question_es"] : q["question_en"];
+    final List<String> opts = List<String>.from(_isSpanish ? q["options_es"] : q["options_en"]);
+    final String text = _isSpanish
+        ? "Pregunta: $questionText. Opciones: ${opts.join(', ')}."
+        : "Question: $questionText. Options: ${opts.join(', ')}.";
+    try {
+      await _flutterTts.stop();
+      await _flutterTts.setLanguage(_isSpanish ? 'es-ES' : 'en-US');
+      await _flutterTts.setSpeechRate(0.5);
+      await _flutterTts.setPitch(1.0);
+      await _flutterTts.setVolume(1.0);
+      await _flutterTts.speak(text);
+    } catch (e) {
+      // Silently ignore TTS errors to avoid disrupting gameplay
+    }
+  }
+
   Future<void> _addToTotalScore(double sessionScore) async {
     final prefs = await SharedPreferences.getInstance();
     double total = prefs.getDouble('totalScore') ?? 0.0;
@@ -145,30 +191,31 @@ class _McqState extends State<Mcq> {
   @override
   Widget build(BuildContext context) {
     final questionData = questions[currentIndex];
+    final String questionText = _isSpanish ? questionData["question_es"] : questionData["question_en"];
+    final List<String> displayOptions = List<String>.from(_isSpanish ? questionData["options_es"] : questionData["options_en"]);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFF3E0),
       appBar: AppBar(
-        title: const Text(
-            "Science MCQ",
+        title: Text(
+            _isSpanish ? "Ciencias (Opciones Múltiples)" : "Science MCQ",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 35,
                 letterSpacing: 0.5,
                 fontFamily:'LuckiestGuy')),
-
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.orange.shade300,
-                Colors.orange.shade500,
-              ],
-            ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: _isSpanish ? 'Switch to English' : 'Cambiar a Español',
+            onPressed: _toggleLanguage,
           ),
-        ),
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            tooltip: _isSpanish ? 'Leer pregunta' : 'Speak question',
+            onPressed: _speakQuestionAndOptions,
+          ),
+        ],
       ),
       // Wrap body in a SingleChildScrollView
       body: SingleChildScrollView(
@@ -178,14 +225,18 @@ class _McqState extends State<Mcq> {
             // Score display
             Text(
               'Score: $_sessionScore',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const SizedBox(height: 20),
             Center(
               child: AnimatedQuestionCard(
                 imagePath: questionData["image"],
-                question: questionData["question"],
-                options: List<String>.from(questionData["options"]),
+                question: questionText,
+                options: displayOptions,
                 onOptionSelected: checkAnswer,
                 selectedOption: _selectedOption,
                 isCorrect: _isCorrect,
@@ -195,9 +246,9 @@ class _McqState extends State<Mcq> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -381,11 +432,11 @@ class QuestionCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
             blurRadius: 15,
             offset: const Offset(0, 10),
           ),
@@ -416,21 +467,24 @@ class QuestionCard extends StatelessWidget {
             child: Column(
               children: options.map((option) {
                 bool isSelected = selectedOption == option;
+                final cs = Theme.of(context).colorScheme;
                 Color buttonColor;
+                Color foregroundColor;
                 Widget? trailingIcon;
 
                 if (isSelected) {
                   if (isCorrect == true) {
-                    buttonColor = Colors.green.shade400;
-                    trailingIcon =
-                        const Icon(Icons.check_circle, color: Colors.white);
+                    buttonColor = cs.secondary;
+                    foregroundColor = cs.onSecondary;
+                    trailingIcon = Icon(Icons.check_circle, color: cs.onSecondary);
                   } else {
-                    buttonColor = Colors.red.shade400;
-                    trailingIcon =
-                        const Icon(Icons.cancel, color: Colors.white);
+                    buttonColor = cs.error;
+                    foregroundColor = cs.onError;
+                    trailingIcon = Icon(Icons.cancel, color: cs.onError);
                   }
                 } else {
-                  buttonColor = Colors.orange.shade400;
+                  buttonColor = cs.primary;
+                  foregroundColor = cs.onPrimary;
                 }
 
                 return Padding(
@@ -443,6 +497,7 @@ class QuestionCard extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(250, 55),
                       backgroundColor: buttonColor,
+                      foregroundColor: foregroundColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -453,7 +508,7 @@ class QuestionCard extends StatelessWidget {
                       children: [
                         Text(option,
                             style: const TextStyle(
-                                fontSize: 18, color: Colors.white)),
+                                fontSize: 18)),
                         if (trailingIcon != null) ...[
                           const SizedBox(width: 10),
                           trailingIcon,

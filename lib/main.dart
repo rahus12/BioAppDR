@@ -22,8 +22,27 @@ void main() {
 
   runApp(MaterialApp(
     theme: ThemeData(
-      primarySwatch: Colors.orange,
-      fontFamily: 'Luckiest Guy', // Set default fun font
+      // Use fromSeed to generate a complete and modern color scheme.
+      // This is the recommended approach for new Flutter apps.
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+      useMaterial3: true, // Recommended for modern UI
+      fontFamily: 'LuckiestGuy', // Match pubspec font family
+      appBarTheme: const AppBarTheme(
+        centerTitle: false,
+      ),
+      scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        // Colors will adapt from selected/unselected item colors
+        backgroundColor: Colors.transparent,
+      ),
+      dividerTheme: const DividerThemeData(thickness: 1),
+      chipTheme: const ChipThemeData(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      ),
+      cardTheme: const CardTheme(
+        elevation: 2,
+        margin: EdgeInsets.all(8),
+      ),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(fontSize: 16.0),
         bodyLarge: TextStyle(fontSize: 18.0),
@@ -72,7 +91,7 @@ void main() {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed(target);
             });
-            return Scaffold(
+            return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
           },
@@ -81,7 +100,7 @@ void main() {
       }
 
       return null; // Fallback to routes or onUnknownRoute
-
     },
   ));
 }
+

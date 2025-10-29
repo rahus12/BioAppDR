@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 // Card model with image path, description, and type (image or name)
 class _CardModel {
@@ -25,6 +26,8 @@ class MemoryGame extends StatefulWidget {
 }
 
 class _MemoryGameState extends State<MemoryGame> {
+  final FlutterTts _flutterTts = FlutterTts();
+  bool _isSpanish = false;
   // List of image paths and their names
   final List<String> _images = [
     'assets/heart.jpeg',
@@ -39,6 +42,12 @@ class _MemoryGameState extends State<MemoryGame> {
     'Brain',
     'Liver',
   ];
+  final List<String> _namesEs = [
+    'Corazón',
+    'Pulmones',
+    'Cerebro',
+    'Hígado',
+  ];
 
   late List<_CardModel> _cards;
   int? _firstFlippedIndex;
@@ -50,6 +59,23 @@ class _MemoryGameState extends State<MemoryGame> {
   void initState() {
     super.initState();
     _setupCards();
+  }
+
+  void _toggleLanguage() {
+    setState(() {
+      _isSpanish = !_isSpanish;
+    });
+  }
+
+  Future<void> _speak(String text) async {
+    try {
+      await _flutterTts.stop();
+      await _flutterTts.setLanguage(_isSpanish ? 'es-ES' : 'en-US');
+      await _flutterTts.setSpeechRate(0.5);
+      await _flutterTts.setPitch(1.0);
+      await _flutterTts.setVolume(1.0);
+      if (text.isNotEmpty) await _flutterTts.speak(text);
+    } catch (_) {}
   }
 
   void _setupCards() {
@@ -92,6 +118,11 @@ class _MemoryGameState extends State<MemoryGame> {
 
       if (_firstFlippedIndex == null) {
         _firstFlippedIndex = cardIndex;
+        // Speak the name when a name card is flipped
+        if (!clickedCard.isImage) {
+          final name = _isSpanish ? _namesEs[clickedCard.index] : _names[clickedCard.index];
+          _speak(name);
+        }
       } else if (_secondFlippedIndex == null) {
         _secondFlippedIndex = cardIndex;
         _checkForMatch();
@@ -139,15 +170,15 @@ class _MemoryGameState extends State<MemoryGame> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Congratulations!"),
-        content: const Text("You matched all the pairs!"),
+        title: Text(_isSpanish ? "¡Felicidades!" : "Congratulations!"),
+        content: Text(_isSpanish ? "¡Has encontrado todas las parejas!" : "You matched all the pairs!"),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               _setupCards();
             },
-            child: const Text("Play Again"),
+            child: Text(_isSpanish ? "Jugar de nuevo" : "Play Again"),
           ),
         ],
       ),
@@ -158,7 +189,24 @@ class _MemoryGameState extends State<MemoryGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Memory Game"),
+        title: Text(_isSpanish ? "Juego de Memoria" : "Memory Game"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: _isSpanish ? 'Switch to English' : 'Cambiar a Español',
+            onPressed: _toggleLanguage,
+          ),
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            tooltip: _isSpanish ? 'Leer instrucciones' : 'Speak instructions',
+            onPressed: () {
+              final instructions = _isSpanish
+                  ? 'Encuentra pares coincidentes para ganar.'
+                  : 'Find matching pairs to win.';
+              _speak(instructions);
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -175,46 +223,49 @@ class _MemoryGameState extends State<MemoryGame> {
               onTap: () => _onCardTap(index),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
-                      color: Colors.grey,
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
                       blurRadius: 4,
-                      offset: Offset(2, 2),
+                      offset: const Offset(2, 2),
                     ),
                   ],
                 ),
                 child: card.isFlipped || card.isMatched
                     ? card.isImage
-                    ? Image.asset(
-                  card.value,
-                  fit: BoxFit.cover,
-                )
-                    : Center(
-                  child: Text(
-                    card.value,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                )
+                        ? Image.asset(
+                            card.value,
+                            fit: BoxFit.cover,
+                          )
+                        : Center(
+                            child: Text(
+                              _isSpanish ? _namesEs[card.index] : _names[card.index],
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          )
                     : Container(
-                  color: Colors.grey,
-                  child: const Center(
-                    child: Text(
-                      "Tap",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        child: Center(
+                          child: Text(
+                            _isSpanish ? "Toca" : "Tap",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ),
             );
           },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
