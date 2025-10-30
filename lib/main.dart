@@ -13,6 +13,7 @@ import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
+import 'package:bioappdr/pages/nutrition_digestion.dart';
 
 void main() {
   // 2. Initialize Gemini with your API Key
@@ -39,7 +40,7 @@ void main() {
       chipTheme: const ChipThemeData(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       ),
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 2,
         margin: EdgeInsets.all(8),
       ),
@@ -63,6 +64,7 @@ void main() {
       "/learningpage": (context) => const LearningPage(),
       "/facelearningpage": (context) => const Facelearningpage(),
       '/search': (context) => const SearchPage(),
+      '/nutrition': (context) => const NutritionDigestionPage(),
     },
     onGenerateRoute: (settings) {
       final String? name = settings.name;
