@@ -292,6 +292,12 @@ class _HomeState extends State<Home> {
                 slides: "6",
                 onPress: "/facelearningpage", // Named route for Face lesson page
               ),
+              const SizedBox(height: 16),
+              LessonCard(
+                title: "Nutrition & Digestion",
+                slides: "8",
+                onPress: "/nutrition",
+              ),
               const SizedBox(height: 40),
             ],
           ),

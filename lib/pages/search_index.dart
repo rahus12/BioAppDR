@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+// Search index model and helpers
 
 class SearchItem {
   final String title;
@@ -81,6 +81,12 @@ const List<SearchItem> searchItems = [
     title: 'Face learning - Speech recognition',
     route: '/facelearningpage',
     keywords: ['speech', 'voice', 'face', 'learn'],
+    type: 'lesson',
+  ),
+  SearchItem(
+    title: 'Nutrition & Digestion',
+    route: '/nutrition',
+    keywords: ['food', 'nutrition', 'digestion', 'healthy', 'plate'],
     type: 'lesson',
   ),
 ];
