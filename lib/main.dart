@@ -25,7 +25,11 @@ void main() {
     theme: ThemeData(
       // Use fromSeed to generate a complete and modern color scheme.
       // This is the recommended approach for new Flutter apps.
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange).copyWith(
+        primary: Colors.orange.shade800,
+        surface: const Color(0xFFFFF3E0),
+        surfaceContainerHighest: Colors.white,
+      ),
       useMaterial3: true, // Recommended for modern UI
       fontFamily: 'LuckiestGuy', // Match pubspec font family
       appBarTheme: const AppBarTheme(
