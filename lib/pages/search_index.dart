@@ -89,6 +89,12 @@ const List<SearchItem> searchItems = [
     keywords: ['food', 'nutrition', 'digestion', 'healthy', 'plate'],
     type: 'lesson',
   ),
+  SearchItem(
+    title: 'Lesson Planner & Tasks',
+    route: '/voice_tutor',
+    keywords: ['planner', 'schedule', 'tasks', 'lessons'],
+    type: 'lesson',
+  ),
 ];
 
 List<SearchItem> filterSearchItems(String query, {String? type}) {

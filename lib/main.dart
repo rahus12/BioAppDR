@@ -14,6 +14,8 @@ import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
 import 'package:bioappdr/pages/nutrition_digestion.dart';
+import 'package:bioappdr/pages/living_non_living_lesson.dart';
+import 'package:bioappdr/pages/ai_voice_tutor.dart';
 
 void main() {
   // 2. Initialize Gemini with your API Key
@@ -69,6 +71,8 @@ void main() {
       "/facelearningpage": (context) => const Facelearningpage(),
       '/search': (context) => const SearchPage(),
       '/nutrition': (context) => const NutritionDigestionPage(),
+      '/living_non_living_lesson': (context) => const LivingNonLivingLesson(),
+      '/voice_tutor': (context) => const AiVoiceTutorPage(),
     },
     onGenerateRoute: (settings) {
       final String? name = settings.name;

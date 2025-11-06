@@ -294,6 +294,12 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 16),
               LessonCard(
+                title: "Lesson Planner & Tasks",
+                slides: "∞",
+                onPress: "/voice_tutor",
+              ),
+              const SizedBox(height: 16),
+              LessonCard(
                 title: "Nutrition & Digestion",
                 slides: "8",
                 onPress: "/nutrition",

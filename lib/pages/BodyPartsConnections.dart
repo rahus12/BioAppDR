@@ -158,6 +158,7 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
         _leftCompleted[leftOriginalIndex] = true;
         _rightCompleted[rightOriginalIndex] = true;
         _feedbackMessage = _isSpanish ? '¡Correcto!' : 'Correct!';
+        _speakFeedback(_feedbackMessage);
 
         // Check if level completed
         if (_leftCompleted.every((complete) => complete)) {
@@ -167,8 +168,10 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
             _feedbackMessage = _isSpanish ? '¡Juego completado!' : 'Game completed!';
             // Add score to total
             _addToTotalScore(_score.toDouble());
+            _speakFeedback(_feedbackMessage);
           } else {
             _feedbackMessage = _isSpanish ? '¡Nivel completado!' : 'Level completed!';
+            _speakFeedback(_feedbackMessage);
             Future.delayed(const Duration(seconds: 2), () {
               setState(() {
                 _level++;
@@ -197,6 +200,11 @@ class _BodyPartsConnectionsState extends State<BodyPartsConnections> with Ticker
         });
       }
     });
+  }
+
+  Future<void> _speakFeedback(String text) async {
+    await _flutterTts.setLanguage(_isSpanish ? 'es-ES' : 'en-US');
+    await _flutterTts.speak(text);
   }
 
   void _toggleLanguage() => setState(() => _isSpanish = !_isSpanish);

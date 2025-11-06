@@ -132,6 +132,7 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
       }
       _sessionScore += earned;
       _updateProgress(_currentWord + 1); // Update progress for each completed word
+      _speakSuccess(earned);
       _showSnack(true, earned);
       Future.delayed(const Duration(milliseconds: 600), _next);
     } else {
@@ -191,8 +192,25 @@ class _WordScrambleGameV2State extends State<WordScrambleGameV2>
     }
   }
 
+  Future<void> _speakSuccess(double earned) async {
+    final item = _items[_wordOrder[_currentWord]];
+    final wordEn = item['en'] ?? '';
+    final wordEs = item['es'] ?? '';
+    await _flutterTts.setLanguage(_spanish ? 'es-ES' : 'en-US');
+    final msg = _spanish
+        ? '¡Correcto! +${earned.toStringAsFixed(1)} puntos. Has deletreado $wordEs.'
+        : 'Correct! +${earned.toStringAsFixed(1)} points. You spelled $wordEn.';
+    await _flutterTts.speak(msg);
+  }
+
   Future<void> _onGameComplete() async {
     await _addToTotalScore(); // Ensure score is saved before showing dialog
+    await _flutterTts.setLanguage(_spanish ? 'es-ES' : 'en-US');
+    await _flutterTts.speak(
+        _spanish
+            ? '¡Juego terminado! Puntuación de la sesión: ${_sessionScore.toStringAsFixed(1)}.'
+            : 'Game complete! Session score: ${_sessionScore.toStringAsFixed(1)}.'
+    );
     if (!mounted) return;
     showDialog(
       context: context,
