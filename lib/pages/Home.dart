@@ -80,13 +80,21 @@ class _HomeState extends State<Home> {
 
   Widget _buildSectionDivider(BuildContext context, String title) {
     final theme = Theme.of(context);
-    final dividerColor = theme.dividerColor;
+    final dividerColor = theme.dividerColor.withOpacity(0.3);
     
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Expanded(
+            child: Divider(
+              thickness: 2,
+              color: dividerColor,
+              endIndent: 12,
+            ),
+          ),
           Text(
             title,
             style: const TextStyle(
@@ -95,12 +103,13 @@ class _HomeState extends State<Home> {
               letterSpacing: 0.3,
               fontFamily: 'Roboto',
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(width: 12),
           Expanded(
             child: Divider(
               thickness: 2,
               color: dividerColor,
+              indent: 12,
             ),
           ),
         ],
