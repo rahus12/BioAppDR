@@ -209,7 +209,18 @@ class _HomeState extends State<Home> {
                 thickness: 2,
                 height: 30,
               ),
-
+              LessonCard(
+                title: "Living and Non-Living Things",
+                slides: "5",
+                onPress: "/living_non_living_lesson",
+              ),
+              const SizedBox(height: 16),
+              LessonCard(
+                title: "Important parts of the Human Body",
+                slides: "6", // Example: 6 slides
+                onPress: "/lesson", // Named route for Lesson page
+              ),
+              const SizedBox(height: 16),
               // QUIZ CARD
               IndexCard(
                 title: "Human Body Quiz",
@@ -260,12 +271,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 16),
               // LESSON CARDS
-              LessonCard(
-                title: "Important parts of the Human Body",
-                slides: "6", // Example: 6 slides
-                onPress: "/lesson", // Named route for Lesson page
-              ),
-              const SizedBox(height: 16),
+
 
               LessonCard(
                 title: "Important parts of the Face",
@@ -285,6 +291,12 @@ class _HomeState extends State<Home> {
                 title: "Face learning - Speech recognition",
                 slides: "6",
                 onPress: "/facelearningpage", // Named route for Face lesson page
+              ),
+              const SizedBox(height: 16),
+              LessonCard(
+                title: "Lesson Planner & Tasks",
+                slides: "∞",
+                onPress: "/voice_tutor",
               ),
               const SizedBox(height: 16),
               LessonCard(

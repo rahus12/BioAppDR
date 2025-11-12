@@ -390,7 +390,7 @@ class _AnimatedQuestionCardState extends State<AnimatedQuestionCard>
         // The monkey/character that pops up
         SlideTransition(
           position: _offsetAnimation,
-          child: Image.asset('assets/monkey.webp', height: 200), // Placeholder
+          child: Image.asset('assets/monkey.gif', height: 200), // Placeholder
         ),
         // The actual question card
         QuestionCard(
@@ -432,7 +432,7 @@ class QuestionCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(

@@ -23,7 +23,7 @@ class LessonCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -51,7 +51,7 @@ class LessonCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Icon(Icons.menu_book, color: Theme.of(context).colorScheme.primary, size: 28),
+                  Icon(Icons.menu_book, color: Colors.blue.shade800, size: 28),
                 ],
               ),
               // Slides
@@ -85,7 +85,7 @@ class LessonCard extends StatelessWidget {
                     icon: const Icon(Icons.lightbulb_outline, size: 18),
                     label: const Text(
                       "Learn!",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ).animate().fadeIn(delay: 300.ms).scale(duration: 500.ms, begin: const Offset(0.8, 0.8)),
                 ],
