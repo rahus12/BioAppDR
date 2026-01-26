@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
 import 'package:bioappdr/components/lesson_card.dart';
+import 'package:bioappdr/components/bio_assistant.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,13 +106,15 @@ class _HomeState extends State<Home> {
         ),
       ),
       // Main content
-      body: SingleChildScrollView(
-        // Ensures the screen is scrollable if content is large
-        child: Container(
-          color: Theme.of(context).colorScheme.surface,
-          padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            // Ensures the screen is scrollable if content is large
+            child: Container(
+              color: Theme.of(context).colorScheme.surface,
+              padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Greeting + Profile Picture
               Row(
@@ -309,6 +312,10 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+      // Bio Assistant Floating Bot
+      const BioAssistant(),
+    ],
+  ),
       // Bottom Nav
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).colorScheme.surface,

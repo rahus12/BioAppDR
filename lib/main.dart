@@ -20,7 +20,7 @@ import 'package:bioappdr/pages/ai_voice_tutor.dart';
 void main() {
   // 2. Initialize Gemini with your API Key
   Gemini.init(
-    apiKey: " ",
+    apiKey: "AIzaSyBWpbdMnfd5q-tbu-TiAddJIzB_GgSBTug",
   );
 
   runApp(MaterialApp(
