@@ -79,6 +79,45 @@ class _HomeState extends State<Home> {
     await _loadQuizProgress();
   }
 
+  Widget _buildSectionDivider(BuildContext context, String title) {
+    final theme = Theme.of(context);
+    final dividerColor = theme.dividerColor.withOpacity(0.3);
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Divider(
+              thickness: 2,
+              color: dividerColor,
+              endIndent: 12,
+            ),
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+              fontFamily: 'Roboto',
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: Divider(
+              thickness: 2,
+              color: dividerColor,
+              indent: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,19 +251,10 @@ class _HomeState extends State<Home> {
                 thickness: 2,
                 height: 30,
               ),
-              LessonCard(
-                title: "Living and Non-Living Things",
-                slides: "5",
-                onPress: "/living_non_living_lesson",
-              ),
-              const SizedBox(height: 16),
-              LessonCard(
-                title: "Important parts of the Human Body",
-                slides: "6", // Example: 6 slides
-                onPress: "/lesson", // Named route for Lesson page
-              ),
-              const SizedBox(height: 16),
-              // QUIZ CARD
+
+              // Games Section
+              _buildSectionDivider(context, "Games"),
+              const SizedBox(height: 8),
               IndexCard(
                 title: "Human Body Quiz",
                 questions: "3",
@@ -238,12 +268,14 @@ class _HomeState extends State<Home> {
                 progress: "${_calculateProgress(_quizProgress['wordscramble_progress'] ?? 0, 5)}",
                 onPress: "/wordscramble",
               ),
+              const SizedBox(height: 16),
               IndexCard(
                 title: "Memory Game",
                 questions: "4", // e.g., 4 pairs to match
                 progress: "${_calculateProgress(_quizProgress['memory_progress'] ?? 0, 4)}",
                 onPress: "/memorygame",
               ),
+              const SizedBox(height: 16),
               IndexCard(
                 title: "Drag drop Quiz",
                 questions: "4",
@@ -272,24 +304,27 @@ class _HomeState extends State<Home> {
                 progress: "${_calculateProgress(_quizProgress['assembly_progress'] ?? 0, 6)}",
                 onPress: "/bodyassembly", // Named route for the new game
               ),
+              const SizedBox(height: 30),
+              _buildSectionDivider(context, "Lessons"),
+              const SizedBox(height: 8),
+              LessonCard(
+                title: "Important parts of the Human Body",
+                slides: "6", // Example: 6 slides
+                onPress: "/lesson", // Named route for Lesson page
+              ),
               const SizedBox(height: 16),
-              // LESSON CARDS
-
-
               LessonCard(
                 title: "Important parts of the Face",
                 slides: "6",
                 onPress: "/facelesson", // Named route for Face lesson page
               ),
-              const SizedBox(height: 40),
-
+              const SizedBox(height: 16),
               LessonCard(
                 title: "Body learning - Speech recognition",
                 slides: "6",
                 onPress: "/learningpage", // Named route for Face lesson page
               ),
-              const SizedBox(height: 40),
-
+              const SizedBox(height: 16),
               LessonCard(
                 title: "Face learning - Speech recognition",
                 slides: "6",
@@ -297,17 +332,11 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 16),
               LessonCard(
-                title: "Lesson Planner & Tasks",
-                slides: "∞",
-                onPress: "/voice_tutor",
-              ),
-              const SizedBox(height: 16),
-              LessonCard(
                 title: "Nutrition & Digestion",
                 slides: "8",
                 onPress: "/nutrition",
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 16),
             ],
           ),
         ),
