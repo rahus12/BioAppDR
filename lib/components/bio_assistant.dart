@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:bioappdr/utils/navigator_key.dart';
 
 class BioAssistant extends StatefulWidget {
   const BioAssistant({super.key});
@@ -174,6 +175,18 @@ class _BioAssistantState extends State<BioAssistant>
           route: "/voice_tutor",
           description: _t('tutor_desc'),
         ),
+        NavItem(
+          icon: Icons.calendar_month,
+          label: _isSpanish ? 'Planificador' : 'Planner',
+          route: "/lesson_planner",
+          description: _isSpanish ? 'Planifica tus lecciones' : 'Plan your lessons',
+        ),
+        NavItem(
+          icon: Icons.analytics,
+          label: _isSpanish ? 'Evaluador' : 'Evaluator',
+          route: "/evaluator",
+          description: _isSpanish ? 'Calidad del tutor' : 'Tutor quality',
+        ),
       ],
     ),
   ];
@@ -326,7 +339,8 @@ class _BioAssistantState extends State<BioAssistant>
   }
 
   void _navigateTo(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
+    // Use global navigator key for navigation from overlay
+    navigatorKey.currentState?.pushNamed(route);
     setState(() {
       _isExpanded = false;
     });

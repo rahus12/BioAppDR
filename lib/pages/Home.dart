@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bioappdr/components/indexcard.dart';
 import 'package:bioappdr/components/lesson_card.dart';
-import 'package:bioappdr/components/bio_assistant.dart';
 import 'package:bioappdr/pages/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,6 +113,89 @@ class _HomeState extends State<Home> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBioBuddyChatCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/voice_tutor'),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.orange.shade400,
+              Colors.deepOrange.shade500,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.orange.withOpacity(0.4),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Bot Avatar with pulsing effect
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Text(
+                "🤖",
+                style: TextStyle(fontSize: 40),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Chat with Bio Buddy!",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'LuckiestGuy',
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Ask me anything about the human body! 🧠❤️🦴",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Arrow icon
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -237,6 +319,11 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
+              const SizedBox(height: 24),
+
+              // Bio Buddy Chat Card - Direct Access
+              _buildBioBuddyChatCard(context),
+              
               const SizedBox(height: 30),
 
               // "Explore" heading
@@ -341,8 +428,6 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      // Bio Assistant Floating Bot
-      const BioAssistant(),
     ],
   ),
       // Bottom Nav

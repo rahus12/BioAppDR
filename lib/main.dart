@@ -12,18 +12,30 @@ import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
-import 'package:flutter_gemini/flutter_gemini.dart'; // 1. Import Gemini
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:bioappdr/pages/nutrition_digestion.dart';
 import 'package:bioappdr/pages/living_non_living_lesson.dart';
-import 'package:bioappdr/pages/ai_voice_tutor.dart';
+import 'package:bioappdr/pages/lesson_planner.dart';
+import 'package:bioappdr/pages/ai_tutor_chat.dart';
+import 'package:bioappdr/pages/evaluator_dashboard.dart';
+import 'package:bioappdr/components/bio_assistant.dart'; // Bio Buddy global overlay
+import 'package:bioappdr/utils/navigator_key.dart'; // Global navigator key
 
-void main() {
-  // 2. Initialize Gemini with your API Key
+Future<void> main() async {
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load environment variables from .env file
+  await dotenv.load(fileName: ".env");
+  
+  // Initialize Gemini with API Key from environment
   Gemini.init(
-    apiKey: "AIzaSyBWpbdMnfd5q-tbu-TiAddJIzB_GgSBTug",
+    apiKey: dotenv.env['GEMINI_API_KEY'] ?? '',
   );
 
   runApp(MaterialApp(
+    navigatorKey: navigatorKey, // Global navigator key for Bio Buddy
     theme: ThemeData(
       // Use fromSeed to generate a complete and modern color scheme.
       // This is the recommended approach for new Flutter apps.
@@ -55,6 +67,15 @@ void main() {
         bodyLarge: TextStyle(fontSize: 18.0),
       ),
     ),
+    // Add Bio Buddy as a global overlay on all pages
+    builder: (context, child) {
+      return Stack(
+        children: [
+          child ?? const SizedBox.shrink(),
+          const BioAssistant(),
+        ],
+      );
+    },
     initialRoute: '/',
     routes: {
       '/': (context) => const Home(),
@@ -72,7 +93,9 @@ void main() {
       '/search': (context) => const SearchPage(),
       '/nutrition': (context) => const NutritionDigestionPage(),
       '/living_non_living_lesson': (context) => const LivingNonLivingLesson(),
-      '/voice_tutor': (context) => const AiVoiceTutorPage(),
+      '/voice_tutor': (context) => const AiTutorChatPage(),
+      '/lesson_planner': (context) => const LessonPlannerPage(),
+      '/evaluator': (context) => const EvaluatorDashboardPage(),
     },
     onGenerateRoute: (settings) {
       final String? name = settings.name;
