@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bioappdr/pages/search_index.dart';
 
-/// Lesson Planner & Task Manager (replaces AI Voice Tutor)
+/// Lesson Planner & Task Manager
 /// - Bilingual (English/Spanish)
 /// - Uses app theme
 /// - Kid-friendly UI with GIFs and subtle animations
 /// - Persists data via SharedPreferences
-class AiVoiceTutorPage extends StatefulWidget {
-  const AiVoiceTutorPage({super.key});
+class LessonPlannerPage extends StatefulWidget {
+  const LessonPlannerPage({super.key});
 
   @override
-  State<AiVoiceTutorPage> createState() => _LessonPlannerPageState();
+  State<LessonPlannerPage> createState() => _LessonPlannerPageState();
 }
 
-class _LessonPlannerPageState extends State<AiVoiceTutorPage> {
+class _LessonPlannerPageState extends State<LessonPlannerPage> {
   bool _isSpanish = false;
   bool _loaded = false;
   List<Map<String, dynamic>> _lessons = [];
@@ -492,7 +492,7 @@ class _LessonPlannerPageState extends State<AiVoiceTutorPage> {
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: cs.surfaceVariant,
+                        color: cs.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       padding: const EdgeInsets.all(16),
