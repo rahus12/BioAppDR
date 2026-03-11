@@ -191,9 +191,14 @@ class _BioAssistantState extends State<BioAssistant>
     ),
   ];
 
+  bool get _isOnBioBuddyChat =>
+      BioBuddyRouteObserver.instance.currentRoute.value == '/voice_tutor';
+
   @override
   void initState() {
     super.initState();
+    BioBuddyRouteObserver.instance.currentRoute.addListener(_onRouteChanged);
+    isChatDropdownOpen.addListener(_onRouteChanged);
     _bounceController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -326,10 +331,16 @@ class _BioAssistantState extends State<BioAssistant>
 
   @override
   void dispose() {
+    BioBuddyRouteObserver.instance.currentRoute.removeListener(_onRouteChanged);
+    isChatDropdownOpen.removeListener(_onRouteChanged);
     _bounceController.dispose();
     _flutterTts.stop();
     _speech.stop();
     super.dispose();
+  }
+
+  void _onRouteChanged() {
+    setState(() {});
   }
 
   void _toggleExpanded() {
@@ -348,6 +359,9 @@ class _BioAssistantState extends State<BioAssistant>
 
   @override
   Widget build(BuildContext context) {
+    if (_isOnBioBuddyChat) {
+      return const SizedBox.shrink();
+    }
     return Stack(
       children: [
         // Expanded navigation panel
@@ -522,11 +536,16 @@ class _BioAssistantState extends State<BioAssistant>
             ),
           ),
 
-        // Floating action button
+        // Floating action button - hidden when panel is open
         Positioned(
           bottom: 16,
           right: 16,
-          child: ListenableBuilder(
+          child: Visibility(
+            visible: !_isExpanded && !isChatDropdownOpen.value,
+            maintainSize: false,
+            maintainAnimation: false,
+            maintainState: false,
+            child: ListenableBuilder(
             listenable: _bounceAnimation,
             builder: (context, child) {
               return Transform.translate(
@@ -602,6 +621,7 @@ class _BioAssistantState extends State<BioAssistant>
               ),
             ),
           ),
+        ),
         ),
       ],
     );

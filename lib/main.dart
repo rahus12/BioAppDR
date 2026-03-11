@@ -20,7 +20,7 @@ import 'package:bioappdr/pages/lesson_planner.dart';
 import 'package:bioappdr/pages/ai_tutor_chat.dart';
 import 'package:bioappdr/pages/evaluator_dashboard.dart';
 import 'package:bioappdr/components/bio_assistant.dart'; // Bio Buddy global overlay
-import 'package:bioappdr/utils/navigator_key.dart'; // Global navigator key
+import 'package:bioappdr/utils/navigator_key.dart'; // Global navigator key, BioBuddyRouteObserver
 
 Future<void> main() async {
   // Ensure Flutter is initialized
@@ -36,6 +36,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     navigatorKey: navigatorKey, // Global navigator key for Bio Buddy
+    navigatorObservers: [BioBuddyRouteObserver.instance],
     theme: ThemeData(
       // Use fromSeed to generate a complete and modern color scheme.
       // This is the recommended approach for new Flutter apps.
