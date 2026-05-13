@@ -10,6 +10,7 @@ import 'package:bioappdr/pages/BodyPartsConnections.dart';
 import 'package:bioappdr/pages/search.dart';
 import 'package:bioappdr/pages/DragDrop.dart';
 import 'package:bioappdr/pages/BodyPartsButtonGame.dart';
+import 'package:bioappdr/pages/odd_one_out_game.dart';
 import 'package:bioappdr/pages/LearningPage.dart';
 import 'package:bioappdr/pages/FaceLearningPage.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -89,6 +90,7 @@ Future<void> main() async {
       "/facequizgame": (context) => const FaceQuizGame(),
       "/bodypartsconnections": (context) => const BodyPartsConnections(),
       "/bodyassembly": (context) => const BodyPartsButtonGame(),
+      "/oddoneout": (context) => const OddOneOutGame(),
       "/learningpage": (context) => const LearningPage(),
       "/facelearningpage": (context) => const Facelearningpage(),
       '/search': (context) => const SearchPage(),

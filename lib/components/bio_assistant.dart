@@ -55,6 +55,8 @@ class _BioAssistantState extends State<BioAssistant>
     'connect_desc': {'en': 'Connect body parts', 'es': 'Conecta partes del cuerpo'},
     'body_assembly': {'en': 'Body Assembly', 'es': 'Ensamblar Cuerpo'},
     'assembly_desc': {'en': 'Build a body!', 'es': '¡Construye un cuerpo!'},
+    'odd_one_out': {'en': 'Odd One Out', 'es': 'Impar / Clasificar'},
+    'odd_one_out_desc': {'en': 'Find what does not belong!', 'es': '¡Encuentra lo que no encaja!'},
     'body_speech': {'en': 'Body Learning (Speech)', 'es': 'Cuerpo (Voz)'},
     'speech_desc': {'en': 'Learn with your voice', 'es': 'Aprende con tu voz'},
     'face_speech': {'en': 'Face Learning (Speech)', 'es': 'Cara (Voz)'},
@@ -150,6 +152,12 @@ class _BioAssistantState extends State<BioAssistant>
           label: _t('body_assembly'),
           route: "/bodyassembly",
           description: _t('assembly_desc'),
+        ),
+        NavItem(
+          icon: Icons.category,
+          label: _t('odd_one_out'),
+          route: "/oddoneout",
+          description: _t('odd_one_out_desc'),
         ),
       ],
     ),
@@ -306,6 +314,10 @@ class _BioAssistantState extends State<BioAssistant>
       'nutrición': '/nutrition',
       'living': '/living_non_living_lesson',
       'vivo': '/living_non_living_lesson',
+      'odd': '/oddoneout',
+      'impar': '/oddoneout',
+      'classification': '/oddoneout',
+      'clasificar': '/oddoneout',
     };
 
     for (var entry in voiceRoutes.entries) {

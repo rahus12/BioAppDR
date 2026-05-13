@@ -60,6 +60,12 @@ const List<SearchItem> searchItems = [
     type: 'game',
   ),
   SearchItem(
+    title: 'Odd One Out',
+    route: '/oddoneout',
+    keywords: ['odd', 'out', 'classification', 'classify', 'sort', 'group', 'living'],
+    type: 'game',
+  ),
+  SearchItem(
     title: 'Important parts of the Human Body',
     route: '/lesson',
     keywords: ['lesson', 'body', 'organs', 'learn'],

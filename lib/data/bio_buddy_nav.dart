@@ -150,6 +150,14 @@ const List<BioBuddyNavCategory> bioBuddyNavCategories = [
         descriptionEs: '¡Construye un cuerpo!',
         icon: Icons.build,
       ),
+      BioBuddyNavItem(
+        route: '/oddoneout',
+        labelEn: 'Odd One Out',
+        labelEs: 'Impar / Clasificar',
+        descriptionEn: 'Find what does not belong!',
+        descriptionEs: '¡Encuentra lo que no encaja!',
+        icon: Icons.category,
+      ),
     ],
   ),
   BioBuddyNavCategory(

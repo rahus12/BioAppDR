@@ -64,6 +64,7 @@ class _HomeState extends State<Home> {
         'facequiz_progress': prefs.getInt('facequiz_progress') ?? 0,
         'connections_progress': prefs.getInt('connections_progress') ?? 0,
         'assembly_progress': prefs.getInt('assembly_progress') ?? 0,
+        'oddoneout_progress': prefs.getInt('oddoneout_progress') ?? 0,
       };
     });
   }
@@ -390,6 +391,13 @@ class _HomeState extends State<Home> {
                 questions: "6", // Number of body parts to place
                 progress: "${_calculateProgress(_quizProgress['assembly_progress'] ?? 0, 6)}",
                 onPress: "/bodyassembly", // Named route for the new game
+              ),
+              const SizedBox(height: 16),
+              IndexCard(
+                title: "Odd One Out",
+                questions: "6",
+                progress: "${_calculateProgress(_quizProgress['oddoneout_progress'] ?? 0, 6)}",
+                onPress: "/oddoneout",
               ),
               const SizedBox(height: 30),
               _buildSectionDivider(context, "Lessons"),
